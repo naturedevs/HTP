@@ -42,22 +42,21 @@ export function NavBar({backend}) {
   }, []);
   return (
     <>
-      <div className="top-0 sticky z-50">
-        <div className="py-2 px-5 flex flex-row border border-color-black w-full sticky top-0 bg-white">
+      <div className="top-0 sticky z-50 flex">
+        <div className="py-2 flex flex-row w-full lg:justify-between md:justify-center sm:justify-between xs:justify-between sticky top-0 max-w-[1280px] mx-auto px-[15px]">
           <div className="flex h-[99px]">
             <Link href="/" className={backend?"sm:ml-0 ml-10 transition-all":""}>
-              {/* <CubeIcon className='h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all ' /> */}
               <Image
                 src="/logo.svg"
                 alt="Kiwi Farms - Premium Cannabis"
                 width={342}
                 height={30}
-                className="md:max-lg:hidden mt-[34px] ml-[311px]"
+                className="md:max-lg:hidden mt-[34px]"
               />
             </Link>
           </div>
           <div className="flex">
-            <div className="flex flex-row gap-5 items-center">
+            <div className="flex flex-row gap-5 items-center w-full">
                 <NavMenu />
                 <MobileNavBar />
             </div>

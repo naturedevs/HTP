@@ -16,6 +16,7 @@ import {
   selectIsNothing
 } from "@/store/features/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { Button } from "./ui/button";
 
 export function NavMenu() {
   const router = useRouter();
@@ -37,37 +38,55 @@ export function NavMenu() {
   }
 
   return (
-    <NavigationMenu className="hidden md:flex">
-      <NavigationMenuList>
-        <NavigationMenuItem>
-          <Link href="/" legacyBehavior passHref>
-            <NavigationMenuLink className="mt-[44px] ml-[861px]">
-              HOME
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+    <NavigationMenu className="hidden md:flex w-full">
+      <NavigationMenuList className="w-full">
+        <div className="space-x-6 flex">
+          <NavigationMenuItem>
+            <Link href="/" legacyBehavior passHref>
+              <NavigationMenuLink>
+                HOME
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
 
-        <NavigationMenuItem>
-          <Link href="/flower" legacyBehavior passHref>
-            <NavigationMenuLink className="mt-[44px]">
-              FIND EVENTS
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+          <NavigationMenuItem>
+            <Link href="/flower" legacyBehavior passHref>
+              <NavigationMenuLink>
+                FIND EVENTS
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
 
+          <NavigationMenuItem>
+            <Link href="/edibles" legacyBehavior passHref>
+              <NavigationMenuLink>
+                MEDIA
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <Link href="/extracts" legacyBehavior passHref>
+              <NavigationMenuLink>
+                Our Services
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+        </div>
+  
         <NavigationMenuItem>
-          <Link href="/edibles" legacyBehavior passHref>
-            <NavigationMenuLink className="mt-[44px]">
-              MEDIA
-            </NavigationMenuLink>
+          <Link href="/extracts" legacyBehavior passHref>
+            <button className="bg-black text-gray-50 w-[136px] h-[42px] rounded-[21px] ml-4">
+              SIGN UP
+            </button>
           </Link>
         </NavigationMenuItem>
 
         <NavigationMenuItem>
           <Link href="/extracts" legacyBehavior passHref>
-            <NavigationMenuLink className="mt-[44px]">
-              Our Services
-            </NavigationMenuLink>
+            <button className="bg-[#34A853] text-gray-50 w-[136px] h-[42px] rounded-[24.5px] ml-2">
+              LOGIN
+            </button>
           </Link>
         </NavigationMenuItem>
 
