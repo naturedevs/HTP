@@ -1,11 +1,54 @@
-import Link from "next/link";
 import Image from "next/image";
 import "./footer.css";
 
 export default function Footer() {
   return (
-    <div className="left-0 bottom-0 w-full pt-10 pb-4 text-center h-[1062px]">
-      <div className="top-[253px] bg1 absolute">
+    <div className="left-0 bottom-0 w-full pt-10 pb-4 text-center relative">
+      <div className="absolute top-0 left-0 right-0 z-10">
+        <div className="relative max-w-[1280px] m-auto bg2 h-[505px] rounded-[45px]">
+          <div className="absolute left-0 right-0 top-0 bottom-0 bg-primaryColor opacity-60 rounded-[45px] px-10 grid grid-cols-5">
+            <Image
+              src="/footer_bg4.svg"
+              alt=""
+              width={403}
+              height={505}
+              className="col-span-2"
+            />
+            <div className="col-span-3 flex items-center content-center">
+              <div className="text-left">
+                <p className="text-[42px] leading-[63px] text-[#ffffff] font-bold">Sign Up For Newsletter</p>
+                <p className="text-[15px] leading-[23px] text-[#ffffff] mt-3">
+                  MUSIC CAN CHANGE LIVES. WHETHER YOU ARE HAVING A GOOD OR A BAD <br/>
+                  DAY, THE POWER OF MUSIC CAN CHANGE YOUR MOOD.
+                </p>
+                <div className="relative flex items-center mt-6 bg-white rounded-[4px] h-[67px]">
+                  <Image
+                    src="/mail.svg"
+                    alt=""
+                    width={20}
+                    height={20}
+                    className="col-span-2 ml-8"
+                  />
+                  <input
+                    type="text"
+                    className="flex h-10 w-full rounded-md bg-white px-5 py-2 text-sm outline-none"
+                  />
+                  <div className="bg-primaryColor w-[57px] h-[46px] content-center rounded-full overflow-hidden mr-4 ">
+                    <Image
+                      src="/send.svg"
+                      alt=""
+                      width={16}
+                      height={15}
+                      className="col-span-2 ml-3"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>    
+      </div>
+      <div className="top-[253px] bg1 relative">
         <div className="max-w-[1280px] m-auto grid grid-cols-5 relative top-[326px]">
           <div className="col-span-2 grid grid-rows-2">
             <div className="h-[245px]">
@@ -94,7 +137,7 @@ export default function Footer() {
           </div>
 
         </div>
-        <div className="max-w-[1280px] m-auto relative flex justify-between mt-96">
+        <div className="max-w-[1280px] m-auto relative flex justify-between mt-60">
           <p className="text-[#FFFFFF] text-[17px] leading-7">© 2024 House The Party. All Rights Reserved.</p>
           <div className="flex gap-7">
             <p className="text-[#FFFFFF] text-[17px] leading-7">Purchase Policy</p>

@@ -55,6 +55,7 @@ module.exports = {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
         },
+        primaryColor: "#34A853"
       },
       spacing: {
         '128': '32rem',
