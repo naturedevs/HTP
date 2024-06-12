@@ -42,7 +42,7 @@ export function NavBar({backend}) {
   }, []);
   return (
     <>
-      <div className="top-0 sticky z-50 flex">
+      <div className="top-0 sticky z-50 flex bg-white">
         <div className="py-2 flex flex-row w-full lg:justify-between md:justify-center sm:justify-between xs:justify-between sticky top-0 max-w-[1280px] mx-auto px-[15px]">
           <div className="flex h-[99px]">
             <Link href="/" className={backend?"sm:ml-0 ml-10 transition-all":""}>

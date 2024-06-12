@@ -1,0 +1,23 @@
+/* styles/BackgroundLayer.css */
+.bg1 {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Adjust as needed */
+    background-image: url('../../public/footer_bg2.png'); /* Path to your image */
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .bg1::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('../../public/footer_bg1.svg'); /* Path to your SVG */
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+  }
+  
