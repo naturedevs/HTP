@@ -4,12 +4,12 @@ import "./footer.css";
 export default function Footer() {
   return (
     <div className="left-0 bottom-0 w-full pt-10 pb-4 text-center relative">
-      <div className="absolute top-0 left-0 right-0 z-10 px-[15px]">
-        <div className="relative max-w-[1280px] m-auto bg2 h-[505px] rounded-[45px] overflow-hidden">
-          <div className="absolute left-0 right-0 top-0 bottom-0 bg-primaryColor opacity-60 rounded-[45px] px-10 grid grid-cols-5">
+      <div className="absolute top-0 left-0 right-0 z-10 lg:px-[15px] md:px-[15px] sm:px-0">
+        <div className="relative max-w-[1280px] m-auto bg2 xl:h-[505px] lg:rounded-[45px] md:rounded-[45px] sm:rounded-none overflow-hidden">
+          <div className="absolute left-0 right-0 top-0 bottom-0 bg-primaryColor opacity-60 lg:rounded-[45px] md:rounded-[45px] sm:rounded-none grid grid-cols-5">
           </div>
-          <div className="relative px-10 grid grid-cols-5">
-          <Image 
+          <div className="lg:relative md:relative lg:px-10 md:px-10 lg:grid md:grid lg:grid-cols-5 md:grid-cols-5 sm:flex-col-reverse sm:flex sm:items-center sm:mt-8">
+            <Image 
               src="/footer_bg4.svg"
               alt=""
               width={403}
@@ -18,12 +18,12 @@ export default function Footer() {
             />
             <div className="col-span-3 flex items-center content-center">
               <div className="text-left">
-                <p className="text-[42px] leading-[63px] text-[#ffffff] font-bold">Sign Up For Newsletter</p>
+                <p className="lg:text-[42px] text-[30px] leading-[63px] text-[#ffffff] font-bold">Sign Up For Newsletter</p>
                 <p className="text-[15px] leading-[23px] text-[#ffffff] mt-3">
                   MUSIC CAN CHANGE LIVES. WHETHER YOU ARE HAVING A GOOD OR A BAD <br/>
                   DAY, THE POWER OF MUSIC CAN CHANGE YOUR MOOD.
                 </p>
-                <div className="relative flex items-center mt-6 bg-white rounded-[4px] h-[67px]">
+                <div className="relative flex items-center mt-6 bg-white rounded-[4px] lg:h-[67px] h-[45px]">
                   <Image
                     src="/mail.svg"
                     alt=""
@@ -35,13 +35,13 @@ export default function Footer() {
                     type="text"
                     className="flex h-10 w-full rounded-md bg-white px-5 py-2 text-sm outline-none"
                   />
-                  <div className="bg-primaryColor w-[57px] h-[46px] content-center rounded-full overflow-hidden mr-4 ">
+                  <div className="bg-primaryColor lg:w-[57px] lg:h-[46px] w-[45px] h-[37px] content-center rounded-full overflow-hidden mr-4 ">
                     <Image
                       src="/send.svg"
                       alt=""
                       width={16}
                       height={15}
-                      className="col-span-2 ml-3"
+                      className="col-span-2 lg:ml-3 ml-2"
                     />
                   </div>
                 </div>
@@ -50,8 +50,8 @@ export default function Footer() {
           </div>
         </div>    
       </div>
-      <div className="top-[253px] bg1 relative px-[15px]">
-        <div className="max-w-[1280px] m-auto grid grid-cols-5 relative top-[326px]">
+      <div className="top-[225px] lg:top-[253px] bg1 relative px-[15px]">
+        <div className="max-w-[1280px] m-auto grid grid-cols-5 relative lg:top-[326px] md:top-[200px]">
           <div className="col-span-2 grid grid-rows-2">
             <div className="h-[245px]">
               <Image
