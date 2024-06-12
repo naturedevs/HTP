@@ -4,10 +4,12 @@ import "./footer.css";
 export default function Footer() {
   return (
     <div className="left-0 bottom-0 w-full pt-10 pb-4 text-center relative">
-      <div className="absolute top-0 left-0 right-0 z-10">
-        <div className="relative max-w-[1280px] m-auto bg2 h-[505px] rounded-[45px]">
+      <div className="absolute top-0 left-0 right-0 z-10 px-[15px]">
+        <div className="relative max-w-[1280px] m-auto bg2 h-[505px] rounded-[45px] overflow-hidden">
           <div className="absolute left-0 right-0 top-0 bottom-0 bg-primaryColor opacity-60 rounded-[45px] px-10 grid grid-cols-5">
-            <Image
+          </div>
+          <div className="relative px-10 grid grid-cols-5">
+          <Image 
               src="/footer_bg4.svg"
               alt=""
               width={403}
@@ -48,7 +50,7 @@ export default function Footer() {
           </div>
         </div>    
       </div>
-      <div className="top-[253px] bg1 relative">
+      <div className="top-[253px] bg1 relative px-[15px]">
         <div className="max-w-[1280px] m-auto grid grid-cols-5 relative top-[326px]">
           <div className="col-span-2 grid grid-rows-2">
             <div className="h-[245px]">
@@ -94,8 +96,8 @@ export default function Footer() {
             </div>
             <div></div>
           </div>
-          <div className="col-span-3 grid grid-cols-3 space-x-16">
-            <div className="ml-16">
+          <div className="col-span-3 grid grid-cols-3 gap-16">
+            <div>
               <p className="text-[19px] text-[#ffffff] text-left font-bold">Events by City</p>
               <p className="text-[17px] text-[#ffffff] text-left mt-4 leading-9">
                 Atlanta, GA <br/>
