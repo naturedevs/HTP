@@ -555,6 +555,190 @@ function Home() {
         </div>
       </div>
 
+      <div className=" max-w-[1280px] m-auto py-[90px]">
+        <div className="flex justify-center mb-5">
+          <Image
+            src="/house_party.svg"
+            alt=""
+            width={308}
+            height={12}
+          />
+        </div>
+        <div className="flex justify-center my-5">
+          <p className="text-[37px] text-[#000000] leading-[49px] font-bold">In the Media</p>
+        </div>
+        <div className="w-full grid grid-cols-4 gap-5">
+          <div className="grid grid-rows-2">
+            <div className="w-full h-full">
+              <Image
+                src="/homeBg4_1.svg"
+                alt=""
+                width={302}
+                height={229}
+              />              
+            </div>
+            <div>
+              <div className="flex my-2 items-center">
+                <Image
+                  src="/avatar1.svg"
+                  alt=""
+                  width={34}
+                  height={34}
+                />
+                <p className="text-[#777777] text-[14px] leading-[14px] ml-2">Jenny kiaa</p>  
+                <Image
+                  src="/h_line.svg"
+                  alt=""
+                  width={2}
+                  height={12}
+                  className="mx-3"
+                />
+                <Image
+                  src="/calendar.svg"
+                  alt=""
+                  width={11}
+                  height={12}
+                />
+                <p className="text-[#777777] text-[14px] leading-[14px] ml-2">02 April 2022</p>  
+              </div>
+              <p className="text-[#010101] text-[21px] leading-[27px] font-[500]">Grad your spot fast before all the seats fill up.</p>
+              <p className="text-[#010101] text-[16px] leading-[22px] font-[400] my-2">Grad your spot fast before all the seats fill up, don’t miss it.....</p>
+              <div className="flex justify-start mt-2">
+                <button className="w-[167px] h-[51px] rounded-[25px] bg-primaryColor text-[17px] text-[#FFFFFF] mt-5 leading-[18.5px] font-[600]">
+                  READ MORE
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-rows-2">
+            <div className="w-full h-full">
+              <Image
+                src="/homeBg4_1.svg"
+                alt=""
+                width={302}
+                height={229}
+              />              
+            </div>
+            <div>
+              <div className="flex my-2 items-center">
+                <Image
+                  src="/avatar1.svg"
+                  alt=""
+                  width={34}
+                  height={34}
+                />
+                <p className="text-[#777777] text-[14px] leading-[14px] ml-2">Jenny kiaa</p>  
+                <Image
+                  src="/h_line.svg"
+                  alt=""
+                  width={2}
+                  height={12}
+                  className="mx-3"
+                />
+                <Image
+                  src="/calendar.svg"
+                  alt=""
+                  width={11}
+                  height={12}
+                />
+                <p className="text-[#777777] text-[14px] leading-[14px] ml-2">02 April 2022</p>  
+              </div>
+              <p className="text-[#010101] text-[21px] leading-[27px] font-[500]">Grad your spot fast before all the seats fill up.</p>
+              <p className="text-[#010101] text-[16px] leading-[22px] font-[400] my-2">Grad your spot fast before all the seats fill up, don’t miss it.....</p>
+              <div className="flex justify-start mt-2">
+                <button className="w-[167px] h-[51px] rounded-[25px] bg-primaryColor text-[17px] text-[#FFFFFF] mt-5 leading-[18.5px] font-[600]">
+                  READ MORE
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-rows-2">
+            <div className="w-full h-full">
+              <Image
+                src="/homeBg4_1.svg"
+                alt=""
+                width={302}
+                height={229}
+              />              
+            </div>
+            <div>
+              <div className="flex my-2 items-center">
+                <Image
+                  src="/avatar1.svg"
+                  alt=""
+                  width={34}
+                  height={34}
+                />
+                <p className="text-[#777777] text-[14px] leading-[14px] ml-2">Jenny kiaa</p>  
+                <Image
+                  src="/h_line.svg"
+                  alt=""
+                  width={2}
+                  height={12}
+                  className="mx-3"
+                />
+                <Image
+                  src="/calendar.svg"
+                  alt=""
+                  width={11}
+                  height={12}
+                />
+                <p className="text-[#777777] text-[14px] leading-[14px] ml-2">02 April 2022</p>  
+              </div>
+              <p className="text-[#010101] text-[21px] leading-[27px] font-[500]">Grad your spot fast before all the seats fill up.</p>
+              <p className="text-[#010101] text-[16px] leading-[22px] font-[400] my-2">Grad your spot fast before all the seats fill up, don’t miss it.....</p>
+              <div className="flex justify-start mt-2">
+                <button className="w-[167px] h-[51px] rounded-[25px] bg-primaryColor text-[17px] text-[#FFFFFF] mt-5 leading-[18.5px] font-[600]">
+                  READ MORE
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="grid grid-rows-2">
+            <div className="w-full h-full">
+              <Image
+                src="/homeBg4_1.svg"
+                alt=""
+                width={302}
+                height={229}
+              />              
+            </div>
+            <div>
+              <div className="flex my-2 items-center">
+                <Image
+                  src="/avatar1.svg"
+                  alt=""
+                  width={34}
+                  height={34}
+                />
+                <p className="text-[#777777] text-[14px] leading-[14px] ml-2">Jenny kiaa</p>  
+                <Image
+                  src="/h_line.svg"
+                  alt=""
+                  width={2}
+                  height={12}
+                  className="mx-3"
+                />
+                <Image
+                  src="/calendar.svg"
+                  alt=""
+                  width={11}
+                  height={12}
+                />
+                <p className="text-[#777777] text-[14px] leading-[14px] ml-2">02 April 2022</p>  
+              </div>
+              <p className="text-[#010101] text-[21px] leading-[27px] font-[500]">Grad your spot fast before all the seats fill up.</p>
+              <p className="text-[#010101] text-[16px] leading-[22px] font-[400] my-2">Grad your spot fast before all the seats fill up, don’t miss it.....</p>
+              <div className="flex justify-start mt-2">
+                <button className="w-[167px] h-[51px] rounded-[25px] bg-primaryColor text-[17px] text-[#FFFFFF] mt-5 leading-[18.5px] font-[600]">
+                  READ MORE
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   );
 }
