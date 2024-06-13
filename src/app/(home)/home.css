@@ -1,0 +1,8 @@
+.homeBg1 {
+    position: relative;
+    width: 100%;
+    height: 809px; /* Adjust as needed */
+    background-image: url('../../../public/homeBg1.png'); /* Path to your image */
+    background-size: cover;
+    background-position: center;
+  }
