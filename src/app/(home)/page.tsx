@@ -4,6 +4,7 @@ import Image from "next/image"
 function Home() {
   return (
     <div className="w-full">
+
       <div className="homeBg1 content-center">
         <div className="max-w-[1280px] m-auto grid grid-cols-5">
           <div className="col-span-3">
@@ -47,6 +48,7 @@ function Home() {
           </div>
         </div>
       </div>
+
       <div className="bg-[#F5F5F5]">
         <div className="max-w-[1280px] m-auto py-[90px]">
           <Image
@@ -252,6 +254,98 @@ function Home() {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="max-w-[888px] m-auto py-[90px]">
+        <div className="flex justify-center mb-5">
+          <Image
+            src="/house_party.svg"
+            alt=""
+            width={308}
+            height={12}
+          />
+        </div>
+        <div className="flex justify-center my-5">
+          <p className="text-[37px] text-[#000000] leading-[49px] font-bold">Host Your Event With House The Party</p>
+        </div>
+
+        <div className="flex justify-center my-10 rounded-[6px]">
+          <div className="p-3 grid grid-cols-2 drop-shadow-lg rounded-[6px] border-[1px] border-[#F3F3F3]">
+            <div className="bg-primaryColor flex items-center rounded-[6px] justify-center h-[58px] w-[305px]">
+              <p className="text-[16px] text-[#ffffff] leading-[18px] font-bold">List Your Event </p>
+            </div>
+            <div className="bg-[#F3F3F3] flex items-center rounded-[6px] justify-center h-[58px] w-[305px]">
+              <p className="text-[16px] text-[#212020] leading-[18px] font-bold">List Your Value </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2">
+          <div className="flex justify-start">
+            <Image
+              src="/homeBg2_1.svg"
+              alt=""
+              width={416.5}
+              height={419.92}
+            />
+          </div>
+          <div className="flex justify-end items-center">
+            <div className="w-[345px]">
+              <p className="text-center text-[16px] text-primaryColor leading-[18px] font-bold">Step 1</p>
+              <p className="text-center text-[30px] leading-[45px] text-black font-bold my-4">Upload Your Event</p>
+              <p className="text-center text-[17px] leading-[25px] text-black">
+                Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2">
+          <div className="flex justify-start items-center">
+            <div className="w-[345px]">
+              <p className="text-center text-[16px] text-primaryColor leading-[18px] font-bold">Step 2</p>
+              <p className="text-center text-[30px] leading-[45px] text-black font-bold my-4">Generate a Ticket Link</p>
+              <p className="text-center text-[17px] leading-[25px] text-black">
+                Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!
+              </p>
+            </div>
+          </div>
+          <div className="flex justify-end">
+            <Image
+              src="/homeBg2_2.svg"
+              alt=""
+              width={416.5}
+              height={419.92}
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2">
+          <div className="flex justify-start">
+            <Image
+              src="/homeBg2_3.svg"
+              alt=""
+              width={416.5}
+              height={419.92}
+            />
+          </div>
+          <div className="flex justify-end items-center">
+            <div className="w-[382px]">
+              <p className="text-center text-[16px] text-primaryColor leading-[18px] font-bold">Step 3</p>
+              <p className="text-center text-[30px] leading-[45px] text-black font-bold my-4">Promote on Our Platform</p>
+              <p className="text-center text-[17px] leading-[25px] text-black">
+                Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-center mt-7">
+          <button className="w-[254px] h-[60px] rounded-[30px] bg-primaryColor text-[17px] text-[#FFFFFF] mt-5 leading-[19px]">
+            GET STARTED
+          </button>
+        </div>
+
       </div>
     </div>
   );
