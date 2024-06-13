@@ -128,7 +128,7 @@ function Home() {
                 </div>
               </div>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end items-center">
               <button className="w-[245px] h-[51px] rounded-[25px] bg-primaryColor text-[17px] text-[#FFFFFF] leading-[18px]">
                 BUY TICKET
               </button>
@@ -167,7 +167,7 @@ function Home() {
                 </div>
               </div>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end items-center">
               <button className="w-[245px] h-[51px] rounded-[25px] bg-primaryColor text-[17px] text-[#FFFFFF] leading-[18px]">
                 BUY TICKET
               </button>
@@ -206,7 +206,7 @@ function Home() {
                 </div>
               </div>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end items-center">
               <button className="w-[245px] h-[51px] rounded-[25px] bg-primaryColor text-[17px] text-[#FFFFFF] leading-[18px]">
                 BUY TICKET
               </button>
@@ -245,7 +245,7 @@ function Home() {
                 </div>
               </div>
             </div>
-            <div className="flex justify-end">
+            <div className="flex justify-end items-center">
               <button className="w-[245px] h-[51px] rounded-[25px] bg-primaryColor text-[17px] text-[#FFFFFF] leading-[18px]">
                 BUY TICKET
               </button>
