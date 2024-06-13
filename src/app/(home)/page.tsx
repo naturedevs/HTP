@@ -47,6 +47,60 @@ function Home() {
           </div>
         </div>
       </div>
+      <div className="max-w-[1280px] m-auto py-[90px]">
+        <Image
+          src="/house_party.svg"
+          alt=""
+          width={308}
+          height={12}
+        />
+        <p className="text-[37px] leading-[49px] font-bold text-[#000000] my-5">Parties Happening Around You Now</p>
+        <p className="text-[17px] leading-[18.5px] text-[#000000]">Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!</p>
+        <div className="flex justify-between">
+          <div className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5">
+            <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <option value="">Select...</option>
+              <option value="a">Type of event</option>
+              <option value="b">Within 2 mile</option>
+              <option value="c">Within 3 mile</option>
+            </select>
+          </div>
+          <div className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5">
+            <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <option value="">Select...</option>
+              <option value="a">Music</option>
+              <option value="b">Within 2 mile</option>
+              <option value="c">Within 3 mile</option>
+            </select>
+          </div>
+          <div className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5">
+            <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <option value="">Select...</option>
+              <option value="a">Age</option>
+              <option value="b">Within 2 mile</option>
+              <option value="c">Within 3 mile</option>
+            </select>
+          </div>
+          <div className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5">
+            <input 
+              type="text"
+              value={"Cover Charge"}
+              className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-[160px]"
+            />
+          </div>
+          <div className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5">
+            <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <option value="">Select...</option>
+              <option value="a">Distance</option>
+              <option value="b">Within 2 mile</option>
+              <option value="c">Within 3 mile</option>
+            </select>
+          </div>
+          <button className="w-[264px] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF] mt-5">
+            Search for keyword
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
