@@ -5,6 +5,7 @@ function Home() {
   return (
     <div className="w-full">
 
+      {/* Section 1 */}
       <div className="homeBg1 content-center">
         <div className="max-w-[1280px] m-auto grid grid-cols-5">
           <div className="col-span-3">
@@ -49,6 +50,7 @@ function Home() {
         </div>
       </div>
 
+      {/* Section 2 */}
       <div className="bg-[#F5F5F5]">
         <div className="max-w-[1280px] m-auto py-[90px]">
           <Image
@@ -255,7 +257,8 @@ function Home() {
           </div>
         </div>
       </div>
-
+      
+      {/* Section 3 */}
       <div className="max-w-[888px] m-auto py-[90px]">
         <div className="flex justify-center mb-5">
           <Image
@@ -348,6 +351,7 @@ function Home() {
 
       </div>
 
+      {/* Section 4 */}
       <div className="bg-[#F5F5F5]">
         <div className="max-w-[1280px] m-auto py-[90px]">
           <Image
@@ -554,7 +558,8 @@ function Home() {
           </div>
         </div>
       </div>
-
+      
+      {/* Section 5 */}
       <div className=" max-w-[1280px] m-auto py-[90px]">
         <div className="flex justify-center mb-5">
           <Image
@@ -613,7 +618,7 @@ function Home() {
           <div className="grid grid-rows-2">
             <div className="w-full h-full">
               <Image
-                src="/homeBg4_1.svg"
+                src="/homeBg4_2.svg"
                 alt=""
                 width={302}
                 height={229}
@@ -655,7 +660,7 @@ function Home() {
           <div className="grid grid-rows-2">
             <div className="w-full h-full">
               <Image
-                src="/homeBg4_1.svg"
+                src="/homeBg4_3.svg"
                 alt=""
                 width={302}
                 height={229}
@@ -697,7 +702,7 @@ function Home() {
           <div className="grid grid-rows-2">
             <div className="w-full h-full">
               <Image
-                src="/homeBg4_1.svg"
+                src="/homeBg4_4.svg"
                 alt=""
                 width={302}
                 height={229}
