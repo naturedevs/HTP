@@ -12,41 +12,31 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 
 const components: { title: string; href: string }[] = [
   {
-    title: "Home",
+    title: "HOME",
     href: "/",
   },
   {
-    title: "Flower",
-    href: "/flower",
+    title: "Find Events",
+    href: "/find_events",
   },
   {
-    title: "Edibles",
-    href: "/edibles",
+    title: "MEDIA",
+    href: "/media",
   },
   {
-    title: "Extracts",
-    href: "/extracts",
+    title: "OUR SERVICES",
+    href: "/services",
   },
   {
-    title: "Pre-Rolls",
-    href: "/pre-rolls",
+    title: "SIGN UP",
+    href: "/signup",
   },
   {
-    title: "Our Story",
-    href: "/about",
-  },
-
-  {
-    title: "New Members",
-    href: "/membership",
-  },
-  {
-    title: "Login",
+    title: "LOGIN",
     href: "/login",
   },
 ];

@@ -80,8 +80,8 @@ function Home() {
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Select...</option>
                 <option value="a">Age</option>
-                <option value="b">Within 2 mile</option>
-                <option value="c">Within 3 mile</option>
+                <option value="b">30</option>
+                <option value="c">40</option>
               </select>
             </div>
             <div className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5">
@@ -379,8 +379,8 @@ function Home() {
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Select...</option>
                 <option value="a">Age</option>
-                <option value="b">Within 2 mile</option>
-                <option value="c">Within 3 mile</option>
+                <option value="b">30</option>
+                <option value="c">40</option>
               </select>
             </div>
             <div className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5">

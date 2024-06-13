@@ -50,7 +50,7 @@ export function NavMenu() {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <Link href="/flower" legacyBehavior passHref>
+            <Link href="/find_events" legacyBehavior passHref>
               <NavigationMenuLink>
                 FIND EVENTS
               </NavigationMenuLink>
@@ -58,7 +58,7 @@ export function NavMenu() {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <Link href="/edibles" legacyBehavior passHref>
+            <Link href="/media" legacyBehavior passHref>
               <NavigationMenuLink>
                 MEDIA
               </NavigationMenuLink>
@@ -66,16 +66,16 @@ export function NavMenu() {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <Link href="/extracts" legacyBehavior passHref>
+            <Link href="/services" legacyBehavior passHref>
               <NavigationMenuLink>
-                Our Services
+                OUR SERVICES
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
         </div>
   
         <NavigationMenuItem>
-          <Link href="/extracts" legacyBehavior passHref>
+          <Link href="/signup" legacyBehavior passHref>
             <button className="bg-black text-gray-50 w-[136px] h-[42px] rounded-[21px] ml-4">
               SIGN UP
             </button>
@@ -83,7 +83,7 @@ export function NavMenu() {
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <Link href="/extracts" legacyBehavior passHref>
+          <Link href="/login" legacyBehavior passHref>
             <button className="bg-[#34A853] text-gray-50 w-[136px] h-[42px] rounded-[24.5px] ml-2">
               LOGIN
             </button>
