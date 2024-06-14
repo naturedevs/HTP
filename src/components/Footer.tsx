@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="relative max-w-[1280px] m-auto bg2 xl:h-[505px] lg:rounded-[45px] md:rounded-[45px] sm:rounded-none overflow-hidden">
           <div className="absolute left-0 right-0 top-0 bottom-0 bg-primaryColor opacity-60 lg:rounded-[45px] md:rounded-[45px] sm:rounded-none grid grid-cols-5">
           </div>
-          <div className="lg:relative md:relative lg:px-10 md:px-10 lg:grid md:grid lg:grid-cols-5 md:grid-cols-5 sm:flex-col-reverse sm:flex sm:items-center sm:mt-8">
+          <div className="lg:relative md:relative lg:px-10 md:px-10 lg:grid md:grid lg:grid-cols-5 md:grid-cols-5 sm:flex-col-reverse sm:flex sm:items-center">
             <Image 
               src="/footer_bg4.svg"
               alt=""
