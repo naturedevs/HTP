@@ -50,7 +50,7 @@ export function NavMenu() {
           </NavigationMenuItem>
 
           <NavigationMenuItem>
-            <Link href="/find_events" legacyBehavior passHref>
+            <Link href="/events" legacyBehavior passHref>
               <NavigationMenuLink>
                 FIND EVENTS
               </NavigationMenuLink>

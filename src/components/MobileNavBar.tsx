@@ -21,7 +21,7 @@ const components: { title: string; href: string }[] = [
   },
   {
     title: "Find Events",
-    href: "/find_events",
+    href: "/events",
   },
   {
     title: "MEDIA",
