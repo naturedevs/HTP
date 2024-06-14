@@ -1,39 +1,54 @@
 import "./home.css";
 import Image from "next/image"
+import { Input } from "@/components/ui/input";
 
 function Home() {
   return (
     <div className="w-full">
 
       {/* Section 1 */}
-      <div className="homeBg1 content-center">
-        <div className="max-w-[1280px] m-auto grid grid-cols-5">
-          <div className="col-span-3">
+      <div className="homeBg1 lg:content-center content-end">
+        <div className="max-w-[1280px] m-auto grid grid-cols-5 items-center relative">
+          <div className="lg:col-span-3 col-span-5 w-fit m-auto">   
             <Image
-              src="/homeBg1_1.svg"
+              src="/house_party.svg"
               alt=""
-              width={777}
-              height={336}
+              width={308}
+              height={12}
+              className="mb-5"
             />
+            <div className="lg:text-[90px] text-[50px] lg:leading-[101px] leading-[50px] md:text-[70px] md:leading-[70px] font-[700] text-white">
+              <div className="flex">
+                <p>FIND</p>
+                <p className="text-primaryColor">&nbsp;MORE</p> 
+              </div>
+              <div className="flex">
+                <p className="text-primaryColor">OF&nbsp;THE</p>
+                <p>&nbsp;PARTY</p> 
+              </div>
+              NEAR YOU 
+            </div>
           </div>
-          <div className="relative col-span-2 flex justify-end">
-            <form className="relative col-span-2 w-[410px] py-12 px-8 rounded-[30px] ml-8">
+          <div className="relative lg:col-span-2 col-span-5 flex lg:justify-end justify-center px-5 pb-5">
+            <form className="relative col-span-2 lg:w-[410px] w-full py-4 lg:py-12 px-8 rounded-[30px] lg:ml-8">
               <div className="absolute left-0 right-0 top-0 bottom-0 bg-black opacity-50 rounded-[30px]">
               </div>
               <div className="relative">
-                <p className="text-[21px] text-[#ffffff] leading-[28px] font-bold">
-                  Search parties happening in <br/>
-                  your city today, tomorrow, and <br/>
-                  this weekend. <br/>
+                <p className="text-[21px] text-[#ffffff] leading-[28px] font-bold text-left">
+                  Search parties happening in your city today, tomorrow, and this weekend. 
                 </p>
-                <div className="w-[346px] h-[63px] rounded-[31.5px] border-[1px] border-[#FFFFFF] bg-white flex content-center mt-10">
-                  <input 
-                    type="text"
-                    value={"Enter City/Zipcode"}
-                    className="ml-6 text-[17px] leading-[18.5px] text-[#000000] outline-none"
-                  />
-                </div>
-                <div className="w-[346px] h-[63px] rounded-[31.5px] border-[1px] border-[#FFFFFF] bg-white flex content-center mt-5 px-6">
+                <Image
+                  src="/underline.svg"
+                  alt=""
+                  width={42}
+                  height={3}
+                  className="lg:my-5 my-2"
+                />
+                <Input 
+                  className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] bg-white px-7 text-[17px]"
+                  placeholder="Enter City/Zipcode"
+                />
+                <div className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] border-[1px] border-[#FFFFFF] bg-white flex content-center mt-5 px-6">
                   <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                     <option value="">Select...</option>
                     <option value="a">Within 1 mile</option>
@@ -41,7 +56,7 @@ function Home() {
                     <option value="c">Within 3 mile</option>
                   </select>
                 </div>
-                <button className="w-[346px] h-[63px] rounded-[31.5px] bg-primaryColor text-[17px] text-[#FFFFFF] mt-5">
+                <button className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] bg-primaryColor text-[17px] text-[#FFFFFF] mt-5">
                   LETS GO!
                 </button>
               </div>
@@ -51,7 +66,7 @@ function Home() {
       </div>
 
       {/* Section 2 */}
-      <div className="bg-[#F5F5F5]">
+      <div className="bg-[#F5F5F5] px-5">
         <div className="max-w-[1280px] m-auto py-[90px]">
           <Image
             src="/house_party.svg"
@@ -353,7 +368,7 @@ function Home() {
 
       {/* Section 4 */}
       <div className="bg-[#F5F5F5]">
-        <div className="max-w-[1280px] m-auto py-[90px]">
+        <div className="max-w-[1280px] m-auto py-[90px] px-5">
           <Image
             src="/house_party.svg"
             alt=""
@@ -560,7 +575,7 @@ function Home() {
       </div>
       
       {/* Section 5 */}
-      <div className=" max-w-[1280px] m-auto py-[90px]">
+      <div className=" max-w-[1280px] m-auto py-[90px] px-5">
         <div className="flex justify-center mb-5">
           <Image
             src="/house_party.svg"
