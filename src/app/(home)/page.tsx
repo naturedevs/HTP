@@ -8,7 +8,7 @@ function Home() {
     <div className="w-full">
 
       {/* Section 1 */}
-      <div className="homeBg1 lg:content-center content-end">
+      <div className="homeBg1 lg:content-center content-end pr-5">
         <div className="absolute left-0 right-0 top-0 bottom-0 bg-black opacity-50">
         </div>
         <div className="max-w-[1280px] m-auto grid grid-cols-5 items-center relative">
@@ -32,7 +32,7 @@ function Home() {
               NEAR YOU 
             </div>
           </div>
-          <div className="relative lg:col-span-2 col-span-5 flex lg:justify-end justify-center px-5 pb-5">
+          <div className="relative lg:col-span-2 col-span-5 flex lg:justify-end justify-center pb-5">
             <form className="relative col-span-2 lg:w-[410px] w-full py-4 lg:py-12 px-8 rounded-[30px] lg:ml-8">
               <div className="absolute left-0 right-0 top-0 bottom-0 bg-black opacity-50 rounded-[30px]">
               </div>
