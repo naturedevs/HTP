@@ -20,7 +20,7 @@ function Home() {
               height={12}
               className="mb-5"
             />
-            <div className="lg:text-[90px] text-[50px] lg:leading-[101px] leading-[50px] md:text-[70px] md:leading-[70px] font-[700] text-white">
+            <div className="lg:text-[90px] text-[45px] lg:leading-[101px] leading-[45px] md:text-[70px] md:leading-[70px] font-[700] text-white">
               <div className="flex">
                 <p>FIND</p>
                 <p className="text-primaryColor">&nbsp;MORE</p> 
@@ -37,7 +37,7 @@ function Home() {
               <div className="absolute left-0 right-0 top-0 bottom-0 bg-black opacity-50 rounded-[30px]">
               </div>
               <div className="relative">
-                <p className="text-[21px] text-[#ffffff] leading-[28px] font-bold text-left">
+                <p className="md:text-[21px] text-[17px] text-[#ffffff] md:leading-[28px] leading-[20px] font-bold text-left">
                   Search parties happening in your city today, tomorrow, and this weekend. 
                 </p>
                 <Image
@@ -48,11 +48,11 @@ function Home() {
                   className="lg:my-5 my-2"
                 />
                 <Input 
-                  className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] bg-white px-7 text-[17px]"
+                  className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] bg-white px-7 md:text-[17px] text-[14px]"
                   placeholder="Enter City/Zipcode"
                 />
                 <div className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] border-[1px] border-[#FFFFFF] bg-white flex content-center mt-5 px-6">
-                  <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <select value={'a'} className="md:text-[17px] text-[14px] leading-[18.5px] text-[#000000] outline-none w-full">
                     <option value="">Select...</option>
                     <option value="a">Within 1 mile</option>
                     <option value="b">Within 2 mile</option>
@@ -77,46 +77,46 @@ function Home() {
             width={308}
             height={12}
           />
-          <p className="lg:text-[37px] md:text-[37px] text-[30px] lg:leading-[49px] md:leading-[49px] leading-[30px] font-bold text-[#000000] my-5">Parties Happening Around You Now</p>
-          <p className="text-[17px] leading-[18.5px] text-[#000000]">Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!</p>
+          <p className="md:text-[37px] text-[22px] md:leading-[49px] leading-[23px] font-bold text-[#000000] my-5">Parties Happening Around You Now</p>
+          <p className="md:text-[17px] md:leading-[18.5px] text-[14px] leading-[16px] text-[#000000]">Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!</p>
           <Grid container className="md:flex justify-between py-3 items-center hidden">
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Select...</option>
                 <option value="a">Type of event</option>
-                <option value="b">Within 2 mile</option>
-                <option value="c">Within 3 mile</option>
+                <option value="b">Coming soon</option>
+                <option value="c">Coming soon</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Select...</option>
                 <option value="a">Music</option>
-                <option value="b">Within 2 mile</option>
-                <option value="c">Within 3 mile</option>
+                <option value="b">Coming soon</option>
+                <option value="c">Coming soon</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Select...</option>
                 <option value="a">Age</option>
-                <option value="b">30</option>
-                <option value="c">40</option>
+                <option value="b">Coming soon</option>
+                <option value="c">Coming soon</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
               <input 
                 type="text"
                 value={"Cover Charge"}
-                className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-[160px]"
+                className="text-[17px] leading-[17.5px] text-[#000000] outline-none w-[160px]"
               />
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Select...</option>
-                <option value="a">Distance</option>
-                <option value="b">Within 2 mile</option>
-                <option value="c">Within 3 mile</option>
+                <option value="a">Coming soon</option>
+                <option value="b">Coming soon</option>
+                <option value="c">Coming soon</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="flex items-center p-0">
@@ -401,16 +401,16 @@ function Home() {
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Select...</option>
                 <option value="a">Type of event</option>
-                <option value="b">Within 2 mile</option>
-                <option value="c">Within 3 mile</option>
+                <option value="b">Coming soon</option>
+                <option value="c">Coming soon</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Select...</option>
                 <option value="a">Music</option>
-                <option value="b">Within 2 mile</option>
-                <option value="c">Within 3 mile</option>
+                <option value="b">Coming soon</option>
+                <option value="c">Coming soon</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
@@ -432,8 +432,8 @@ function Home() {
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Select...</option>
                 <option value="a">Distance</option>
-                <option value="b">Within 2 mile</option>
-                <option value="c">Within 3 mile</option>
+                <option value="b">Coming soon</option>
+                <option value="c">Coming soon</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="flex items-center p-0">

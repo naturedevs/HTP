@@ -23,3 +23,12 @@
   background-size: cover;
   background-position: center;
 }
+
+.bg3 {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  background-image: url('../../public/circle.svg'); /* Path to your image */
+  background-size: cover;
+  background-position: center;
+}

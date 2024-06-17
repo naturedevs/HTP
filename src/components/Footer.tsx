@@ -22,7 +22,7 @@ export default function Footer() {
                 <p className="mmd:text-[15px] mmd:leading-[23px] text-[12px] leading-[20px] text-[#ffffff] mt-3">
                   MUSIC CAN CHANGE LIVES. WHETHER YOU ARE HAVING A GOOD OR A BAD DAY, THE POWER OF MUSIC CAN CHANGE YOUR MOOD.
                 </p>
-                <div className="relative flex items-center mt-6 bg-white rounded-[4px] lg:h-[67px] h-[45px]">
+                <div className="relative flex justify-between items-center mt-6 bg-white rounded-[4px] lg:h-[67px] h-[45px]">
                   <Image
                     src="/mail.svg"
                     alt=""
@@ -32,9 +32,9 @@ export default function Footer() {
                   />
                   <input
                     type="text"
-                    className="flex h-10 w-full rounded-md bg-white px-5 py-2 text-sm outline-none"
+                    className="flex h-10 rounded-md bg-white px-5 py-2 text-sm outline-none"
                   />
-                  <div className="bg-primaryColor md:w-[57px] md:h-[44px] w-[45px] mmd:h-[37px] h-[33px]  content-center rounded-full overflow-hidden mmd:mr-4 mr-2 ">
+                  <div className="bg3 content-center mmd:mr-4 mr-2 ">
                     <Image
                       src="/send.svg"
                       alt=""
