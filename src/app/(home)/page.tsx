@@ -290,7 +290,7 @@ function Home() {
       </div>
       
       {/* Section 3 */}
-      <div className="max-w-[888px] m-auto py-[90px] px-5">
+      <div className="max-w-[888px] m-auto mmd:py-[90px] py-10 px-5">
         <div className="flex justify-center mb-5">
           <Image
             src="/house_party.svg"
@@ -314,7 +314,7 @@ function Home() {
           </div>
         </div>
 
-        <div className="grid mmd:grid-cols-2 mmd:grid-rows-1 grid-rows-2">
+        <div className="mmd:grid mmd:grid-cols-2 mmd:grid-rows-1">
           <div className="flex mmd:justify-start justify-center">
             <Image
               src="/homeBg2_1.svg"
@@ -324,9 +324,9 @@ function Home() {
               className="mmd:w-[416px] mmd:h-[420px] w-[245.9px] h-[247.92px]"
             />
           </div>
-          <div className="flex mmd:justify-end justify-center items-center">
+          <div className="flex mmd:justify-end justify-center items-center mmd:mt-0 mt-5">
             <div className="w-[345px]">
-              <p className="text-center md:text-[16px] text-[12px] text-primaryColor md:leading-[18px] leading-[13px] font-bold">Step 1</p>
+              <p className="text-center md:text-[16px] text-[12px] text-primaryColor md:leading-[18px] leading-[13px] font-bold">STEP 1</p>
               <p className="text-center md:text-[30px] text-[18px] md:leading-[45px] leading-[27px] text-black font-bold my-4">Upload Your Event</p>
               <p className="text-center md:text-[17px] text-[15px] md:leading-[25px] leading-[25px] text-black">
                 Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!
@@ -335,8 +335,17 @@ function Home() {
           </div>
         </div>
 
-        <div className="grid mmd:grid-cols-2 mmd:grid-rows-1 grid-rows-2">
-          <div className="flex mmd:justify-start justify-center">
+        <div className="mmd:grid mmd:grid-cols-2 mmd:grid-rows-1 mmd:mt-0 mt-5">
+          <div className="mmd:flex mmd:justify-start justify-center items-center hidden">
+            <div className="w-[345px]">
+              <p className="text-center md:text-[16px] text-[12px] text-primaryColor md:leading-[18px] leading-[13px] font-bold">STEP 2</p>
+              <p className="text-center md:text-[30px] text-[18px] md:leading-[45px] leading-[27px] text-black font-bold my-4">Upload Your Event</p>
+              <p className="text-center md:text-[17px] text-[15px] md:leading-[25px] leading-[25px] text-black">
+                Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!
+              </p>
+            </div>
+          </div>
+          <div className="flex mmd:justify-end justify-center">
             <Image
               src="/homeBg2_2.svg"
               alt=""
@@ -345,9 +354,9 @@ function Home() {
               className="mmd:w-[416px] mmd:h-[420px] w-[245.9px] h-[247.92px]"
             />
           </div>
-          <div className="flex mmd:justify-end justify-center items-center">
+          <div className="flex mmd:justify-start justify-center items-center mmd:hidden mmd:mt-0 mt-5">
             <div className="w-[345px]">
-              <p className="text-center md:text-[16px] text-[12px] text-primaryColor md:leading-[18px] leading-[13px] font-bold">Step 1</p>
+              <p className="text-center md:text-[16px] text-[12px] text-primaryColor md:leading-[18px] leading-[13px] font-bold">STEP 2</p>
               <p className="text-center md:text-[30px] text-[18px] md:leading-[45px] leading-[27px] text-black font-bold my-4">Upload Your Event</p>
               <p className="text-center md:text-[17px] text-[15px] md:leading-[25px] leading-[25px] text-black">
                 Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!
@@ -356,7 +365,7 @@ function Home() {
           </div>
         </div>
 
-        <div className="grid mmd:grid-cols-2 mmd:grid-rows-1 grid-rows-2">
+        <div className="mmd:grid mmd:grid-cols-2 mmd:grid-rows-1 mmd:mt-0 mt-5">
           <div className="flex mmd:justify-start justify-center">
             <Image
               src="/homeBg2_3.svg"
@@ -368,7 +377,7 @@ function Home() {
           </div>
           <div className="flex mmd:justify-end justify-center items-center">
             <div className="w-[345px]">
-              <p className="text-center md:text-[16px] text-[12px] text-primaryColor md:leading-[18px] leading-[13px] font-bold">Step 1</p>
+              <p className="text-center md:text-[16px] text-[12px] text-primaryColor md:leading-[18px] leading-[13px] font-bold mmd:mt-0 mt-5">STEP 3</p>
               <p className="text-center md:text-[30px] text-[18px] md:leading-[45px] leading-[27px] text-black font-bold my-4">Upload Your Event</p>
               <p className="text-center md:text-[17px] text-[15px] md:leading-[25px] leading-[25px] text-black">
                 Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!
@@ -377,8 +386,8 @@ function Home() {
           </div>
         </div>
 
-        <div className="flex justify-center mt-7">
-          <button className="w-[254px] h-[60px] rounded-[30px] bg-primaryColor text-[17px] text-[#FFFFFF] mt-5 leading-[19px]">
+        <div className="flex justify-center mmd:mt-7 mt-0">
+          <button className="w-[254px] mmd:h-[60px] h-[45px] rounded-[30px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mt-5 leading-[19px]">
             GET STARTED
           </button>
         </div>
