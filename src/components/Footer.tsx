@@ -34,13 +34,13 @@ export default function Footer() {
                     type="text"
                     className="flex h-10 rounded-md bg-white px-5 py-2 text-sm outline-none"
                   />
-                  <div className="bg3 content-center mmd:mr-4 mr-2 ">
+                  <div className="bg3 content-center mmd:mr-4 mr-2">
                     <Image
                       src="/send.svg"
                       alt=""
                       width={16}
                       height={15}
-                      className="col-span-2 md:ml-3 ml-2"
+                      className="col-span-2 ml-3"
                     />
                   </div>
                 </div>

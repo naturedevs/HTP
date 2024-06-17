@@ -8,7 +8,7 @@ function Home() {
     <div className="w-full">
 
       {/* Section 1 */}
-      <div className="homeBg1 lg:content-center content-end pr-5">
+      <div className="homeBg1 lg:content-center content-end md:px-5 pr-5">
         <div className="absolute left-0 right-0 top-0 bottom-0 bg-black opacity-50">
         </div>
         <div className="max-w-[1280px] m-auto grid grid-cols-5 items-center relative">
