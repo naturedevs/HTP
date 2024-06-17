@@ -9,6 +9,8 @@ function Home() {
 
       {/* Section 1 */}
       <div className="homeBg1 lg:content-center content-end">
+        <div className="absolute left-0 right-0 top-0 bottom-0 bg-black opacity-50">
+        </div>
         <div className="max-w-[1280px] m-auto grid grid-cols-5 items-center relative">
           <div className="lg:col-span-3 col-span-5 w-fit m-auto">   
             <Image
