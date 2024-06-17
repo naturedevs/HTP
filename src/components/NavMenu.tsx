@@ -21,16 +21,7 @@ import { Button } from "./ui/button";
 export function NavMenu() {
   const router = useRouter();
   const isLogin = useAppSelector(selectIslogin); 
-  const isNothing = useAppSelector(selectIsNothing);
-  const isVisitor = useAppSelector(selectIsVisitor);
   const dispatch = useAppDispatch();
-
-  const handleLogin = () => {
-    if(isLogin) {
-      router.push('/dashboard');
-    }
-    router.push("/login");
-  }
 
   const handleLogout = () => {
     router.push("/");
@@ -73,22 +64,34 @@ export function NavMenu() {
             </Link>
           </NavigationMenuItem>
         </div>
-  
-        <NavigationMenuItem>
-          <Link href="/signup" legacyBehavior passHref>
-            <button className="bg-black text-gray-50 w-[136px] h-[42px] rounded-[21px] ml-4">
-              SIGN UP
-            </button>
-          </Link>
-        </NavigationMenuItem>
 
-        <NavigationMenuItem>
-          <Link href="/login" legacyBehavior passHref>
-            <button className="bg-[#34A853] text-gray-50 w-[136px] h-[42px] rounded-[24.5px] ml-2">
-              LOGIN
-            </button>
-          </Link>
-        </NavigationMenuItem>
+        {!isLogin && <>
+          <NavigationMenuItem>
+            <Link href="/signup" legacyBehavior passHref>
+              <button className="bg-black hover:bg-[#009688] text-gray-50 w-[136px] h-[42px] rounded-[21px] ml-4">
+                SIGN UP
+              </button>
+            </Link>
+          </NavigationMenuItem>
+
+          <NavigationMenuItem>
+            <Link href="/login" legacyBehavior passHref>
+              <button className="bg-[#34A853] hover:bg-[#009688] text-gray-50 w-[136px] h-[42px] rounded-[24.5px] ml-2">
+                LOGIN
+              </button>
+            </Link>
+          </NavigationMenuItem>
+        </>}
+
+        {isLogin &&
+          <NavigationMenuItem>
+            <div className="flex h-16 items-center" onClick={handleLogout}>
+              <div className="flex items-center justify-center text-xl py-2 px-4 rounded-sm bg-slate-50 hover:bg-slate-200 cursor-pointer">
+                <span ><ExitIcon width={30} height={30}/></span>
+              </div>
+            </div>
+          </NavigationMenuItem>
+        }
 
       </NavigationMenuList>
     </NavigationMenu>
