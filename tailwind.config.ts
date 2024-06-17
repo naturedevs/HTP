@@ -17,6 +17,11 @@ module.exports = {
         '2xl': '1400px',
       },
     },
+    screens:{
+      mmd: '500px',
+      md: '768px',
+      lg: '1024px'
+    },
 
 
     extend: {

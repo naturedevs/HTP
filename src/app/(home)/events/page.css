@@ -1,8 +1,8 @@
 .banner {
     position: relative;
     width: 1920px;
-    height: 409px; /* Adjust as needed */
-    background-image: url('../../../../public/banner1.png'); /* Path to your image */
+    height: 100%; /* Adjust as needed */
+    background-image: url('../../../../public/event_banner.svg'); /* Path to your image */
     background-size: cover;
     background-position: center;
   }
