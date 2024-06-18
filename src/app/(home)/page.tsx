@@ -1,9 +1,30 @@
+'use client'
 import "./home.css";
+import React from "react";
 import Image from "next/image"
 import { Input } from "@/components/ui/input";
 import Grid from "@mui/material/Grid";
+import Drawer from '@mui/material/Drawer';
+import { styled, useTheme } from '@mui/material/styles';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+const drawerWidth = 240;
 
 function Home() {
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const theme = useTheme();
+
+  const DrawerHeader = styled('div')(({ theme }) => ({
+    display: 'flex',
+    alignItems: 'center',
+    padding: theme.spacing(0, 1),
+    // necessary for content to be below app bar
+    ...theme.mixins.toolbar,
+    justifyContent: 'flex-end',
+  }));
+
   return (
     <div className="w-full">
 
@@ -79,44 +100,147 @@ function Home() {
           />
           <p className="md:text-[37px] text-[22px] md:leading-[49px] leading-[23px] font-bold text-[#000000] my-5">Parties Happening Around You Now</p>
           <p className="md:text-[17px] md:leading-[18.5px] text-[14px] leading-[16px] text-[#000000]">Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!</p>
+          <Drawer open={isDrawerOpen} onClose={()=>{setIsDrawerOpen(false);}}>
+            <DrawerHeader>
+              <IconButton onClick={()=>{setIsDrawerOpen(false);}}>
+                {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              </IconButton>
+            </DrawerHeader>
+            <Divider />
+            <p className="text-[25px] font-[600] text-black text-center mt-10 mb-3">Filter By:</p>
+            <Grid container className="flex justify-between py-3 items-center md:hidden">
+              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="a">Type of event</option>
+                  <option value="Bar party">Bar party</option>
+                  <option value="Club party">Club party</option>
+                  <option value="Warehouse rave">Warehouse rave</option>
+                  <option value="Outdoor rave">Outdoor rave</option>
+                  <option value="Megaclub party">Megaclub party</option>
+                  <option value="Pool party">Pool party</option>
+                  <option value="Block party">Block party</option>
+                  <option value="Rooftop party">Rooftop party</option>
+                  <option value="Other">Other</option>
+                </select>
+              </Grid>
+              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="a">Music</option>
+                  <option value="Top 40">Top 40</option>
+                  <option value="EDM">EDM</option>
+                  <option value="Pop">Pop</option>
+                  <option value="Rock">Rock</option>
+                  <option value="Techno/House">Techno/House</option>
+                  <option value="Hip-hop">Hip-hop</option>
+                  <option value="R&B">R&B</option>
+                  <option value="Dubstep">Dubstep</option>
+                  <option value="Latin">Latin</option>
+                  <option value="Salsa">Salsa</option>
+                  <option value="Reggaeton">Reggaeton</option>
+                  <option value="Country">Country</option>
+                  <option value="Jazz">Jazz</option>
+                  <option value="Metal">Metal</option>
+                </select>
+              </Grid>
+              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="a">Age</option>
+                  <option value="aa">18+</option>
+                  <option value="21+">21+</option>
+                  <option value="30+">30+</option>
+                  <option value="40+">40+</option>
+                </select>
+              </Grid>
+              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="a">Cover Charge</option>
+                  <option value="Free">Free</option>
+                  <option value="$5-$15">$5-$15</option>
+                  <option value="$20-$30">$20-$30</option>
+                  <option value="$30-$50">$30-$50</option>
+                  <option value="$50-$80">$50-$80</option>
+                  <option value="$80+">$80+</option>
+                </select>
+              </Grid>
+              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="a">Distance</option>
+                  <option value="1">1 mile</option>
+                  <option value="2-5">2-5 miles</option>
+                  <option value="5-10">5-10 miles</option>
+                  <option value="10-20">10-20 miles</option>
+                  <option value="20+">20+ miles</option>
+                </select>
+              </Grid>
+              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="flex items-center p-0">
+                <button className="w-[264px] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]">
+                  Search for keyword
+                </button>
+              </Grid>
+            </Grid>
+          </Drawer>
           <Grid container className="md:flex justify-between py-3 items-center hidden">
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="">Select...</option>
                 <option value="a">Type of event</option>
-                <option value="b">Coming soon</option>
-                <option value="c">Coming soon</option>
+                <option value="Bar party">Bar party</option>
+                <option value="Club party">Club party</option>
+                <option value="Warehouse rave">Warehouse rave</option>
+                <option value="Outdoor rave">Outdoor rave</option>
+                <option value="Megaclub party">Megaclub party</option>
+                <option value="Pool party">Pool party</option>
+                <option value="Block party">Block party</option>
+                <option value="Rooftop party">Rooftop party</option>
+                <option value="Other">Other</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="">Select...</option>
                 <option value="a">Music</option>
-                <option value="b">Coming soon</option>
-                <option value="c">Coming soon</option>
+                <option value="Top 40">Top 40</option>
+                <option value="EDM">EDM</option>
+                <option value="Pop">Pop</option>
+                <option value="Rock">Rock</option>
+                <option value="Techno/House">Techno/House</option>
+                <option value="Hip-hop">Hip-hop</option>
+                <option value="R&B">R&B</option>
+                <option value="Dubstep">Dubstep</option>
+                <option value="Latin">Latin</option>
+                <option value="Salsa">Salsa</option>
+                <option value="Reggaeton">Reggaeton</option>
+                <option value="Country">Country</option>
+                <option value="Jazz">Jazz</option>
+                <option value="Metal">Metal</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="">Select...</option>
                 <option value="a">Age</option>
-                <option value="b">Coming soon</option>
-                <option value="c">Coming soon</option>
+                <option value="aa">18+</option>
+                <option value="21+">21+</option>
+                <option value="30+">30+</option>
+                <option value="40+">40+</option>
+              </select>
+            </Grid>
+            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+              <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <option value="a">Cover Charge</option>
+                <option value="Free">Free</option>
+                <option value="$5-$15">$5-$15</option>
+                <option value="$20-$30">$20-$30</option>
+                <option value="$30-$50">$30-$50</option>
+                <option value="$50-$80">$50-$80</option>
+                <option value="$80+">$80+</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <input 
-                type="text"
-                value={"Cover Charge"}
-                className="text-[17px] leading-[17.5px] text-[#000000] outline-none w-[160px]"
-              />
-            </Grid>
-            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="">Select...</option>
-                <option value="a">Coming soon</option>
-                <option value="b">Coming soon</option>
-                <option value="c">Coming soon</option>
+                <option value="a">Distance</option>
+                <option value="1">1 mile</option>
+                <option value="2-5">2-5 miles</option>
+                <option value="5-10">5-10 miles</option>
+                <option value="10-20">10-20 miles</option>
+                <option value="20+">20+ miles</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="flex items-center p-0">
@@ -127,7 +251,7 @@ function Home() {
           </Grid>
           <div className="md:hidden flex bg-white rounded-[3px] p-2 justify-between items-center mt-6">
             <p className="text-black text-[17px] leading-[18.5px] font-[400] ml-3">Filter by:</p>
-            <div className="flex content-center bg-primaryColor w-[36px] h-[36px] justify-center rounded-[3px]">
+            <div className="flex content-center bg-primaryColor w-[36px] h-[36px] justify-center rounded-[3px]" onClick={()=> {setIsDrawerOpen(true)}}>
               <Image
                 src="/filter.svg"
                 alt=""
@@ -408,41 +532,65 @@ function Home() {
           <Grid container className="md:flex justify-between py-3 items-center hidden">
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="">Select...</option>
                 <option value="a">Type of event</option>
-                <option value="b">Coming soon</option>
-                <option value="c">Coming soon</option>
+                <option value="Bar party">Bar party</option>
+                <option value="Club party">Club party</option>
+                <option value="Warehouse rave">Warehouse rave</option>
+                <option value="Outdoor rave">Outdoor rave</option>
+                <option value="Megaclub party">Megaclub party</option>
+                <option value="Pool party">Pool party</option>
+                <option value="Block party">Block party</option>
+                <option value="Rooftop party">Rooftop party</option>
+                <option value="Other">Other</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="">Select...</option>
                 <option value="a">Music</option>
-                <option value="b">Coming soon</option>
-                <option value="c">Coming soon</option>
+                <option value="Top 40">Top 40</option>
+                <option value="EDM">EDM</option>
+                <option value="Pop">Pop</option>
+                <option value="Rock">Rock</option>
+                <option value="Techno/House">Techno/House</option>
+                <option value="Hip-hop">Hip-hop</option>
+                <option value="R&B">R&B</option>
+                <option value="Dubstep">Dubstep</option>
+                <option value="Latin">Latin</option>
+                <option value="Salsa">Salsa</option>
+                <option value="Reggaeton">Reggaeton</option>
+                <option value="Country">Country</option>
+                <option value="Jazz">Jazz</option>
+                <option value="Metal">Metal</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="">Select...</option>
                 <option value="a">Age</option>
-                <option value="b">30</option>
-                <option value="c">40</option>
+                <option value="aa">18+</option>
+                <option value="21+">21+</option>
+                <option value="30+">30+</option>
+                <option value="40+">40+</option>
+              </select>
+            </Grid>
+            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+              <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <option value="a">Cover Charge</option>
+                <option value="Free">Free</option>
+                <option value="$5-$15">$5-$15</option>
+                <option value="$20-$30">$20-$30</option>
+                <option value="$30-$50">$30-$50</option>
+                <option value="$50-$80">$50-$80</option>
+                <option value="$80+">$80+</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <input 
-                type="text"
-                value={"Cover Charge"}
-                className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-[160px]"
-              />
-            </Grid>
-            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
               <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="">Select...</option>
                 <option value="a">Distance</option>
-                <option value="b">Coming soon</option>
-                <option value="c">Coming soon</option>
+                <option value="1">1 mile</option>
+                <option value="2-5">2-5 miles</option>
+                <option value="5-10">5-10 miles</option>
+                <option value="10-20">10-20 miles</option>
+                <option value="20+">20+ miles</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="flex items-center p-0">
@@ -453,7 +601,7 @@ function Home() {
           </Grid>
           <div className="md:hidden flex bg-white rounded-[3px] p-2 justify-between items-center mt-6">
             <p className="text-black text-[17px] leading-[18.5px] font-[400] ml-3">Filter by:</p>
-            <div className="flex content-center bg-primaryColor w-[36px] h-[36px] justify-center rounded-[3px]">
+            <div className="flex content-center bg-primaryColor w-[36px] h-[36px] justify-center rounded-[3px]" onClick={()=> {setIsDrawerOpen(true);}}>
               <Image
                 src="/filter.svg"
                 alt=""

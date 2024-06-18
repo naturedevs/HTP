@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
+const withMT = require("@material-tailwind/react/utils/withMT");
 const { mauve, violet } = require('@radix-ui/colors');
-module.exports = {
+module.exports = withMT({
   darkMode: ['class'],
   content: [
     './pages/**/*.{ts,tsx}',
@@ -96,4 +97,4 @@ module.exports = {
     },
   },
   plugins: [require('tailwindcss-animate')],
-};
+});
