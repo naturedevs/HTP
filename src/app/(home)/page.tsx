@@ -1,6 +1,6 @@
 'use client'
 import "./home.css";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image"
 import { Input } from "@/components/ui/input";
 import Grid from "@mui/material/Grid";
@@ -10,20 +10,27 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { toast } from 'react-hot-toast';
+import { getEvents, selectEvents } from "@/store/features/events/eventsSlice";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 const drawerWidth = 240;
 
 function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const theme = useTheme();
+  const dispatch = useAppDispatch();
 
   const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     padding: theme.spacing(0, 1),
-    // necessary for content to be below app bar
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
   }));
+
+  useEffect(() => {
+    dispatch(getEvents({ filter: false, keyword: "" }));
+  }, [])
 
   return (
     <div className="w-full">
@@ -73,11 +80,13 @@ function Home() {
                   placeholder="Enter City/Zipcode"
                 />
                 <div className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] border-[1px] border-[#FFFFFF] bg-white flex content-center mt-5 px-6">
-                  <select value={'a'} className="md:text-[17px] text-[14px] leading-[18.5px] text-[#000000] outline-none w-full">
-                    <option value="">Select...</option>
-                    <option value="a">Within 1 mile</option>
-                    <option value="b">Within 2 mile</option>
-                    <option value="c">Within 3 mile</option>
+                  <select defaultValue={'a'} className="md:text-[17px] text-[14px] leading-[18.5px] text-[#000000] outline-none w-full">
+                    <option value="a">Distance</option>
+                    <option value="1">1 mile</option>
+                    <option value="2-5">2-5 miles</option>
+                    <option value="5-10">5-10 miles</option>
+                    <option value="10-20">10-20 miles</option>
+                    <option value="20+">20+ miles</option>
                   </select>
                 </div>
                 <button className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] bg-primaryColor text-[17px] text-[#FFFFFF] mt-5">
@@ -110,7 +119,7 @@ function Home() {
             <p className="text-[25px] font-[600] text-black text-center mt-10 mb-3">Filter By:</p>
             <Grid container className="flex justify-between py-3 items-center md:hidden">
               <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="a">Type of event</option>
                   <option value="Bar party">Bar party</option>
                   <option value="Club party">Club party</option>
@@ -124,7 +133,7 @@ function Home() {
                 </select>
               </Grid>
               <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="a">Music</option>
                   <option value="Top 40">Top 40</option>
                   <option value="EDM">EDM</option>
@@ -143,7 +152,7 @@ function Home() {
                 </select>
               </Grid>
               <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="a">Age</option>
                   <option value="aa">18+</option>
                   <option value="21+">21+</option>
@@ -152,7 +161,7 @@ function Home() {
                 </select>
               </Grid>
               <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="a">Cover Charge</option>
                   <option value="Free">Free</option>
                   <option value="$5-$15">$5-$15</option>
@@ -163,7 +172,7 @@ function Home() {
                 </select>
               </Grid>
               <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="a">Distance</option>
                   <option value="1">1 mile</option>
                   <option value="2-5">2-5 miles</option>
@@ -181,7 +190,7 @@ function Home() {
           </Drawer>
           <Grid container className="md:flex justify-between py-3 items-center hidden">
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="a">Type of event</option>
                 <option value="Bar party">Bar party</option>
                 <option value="Club party">Club party</option>
@@ -195,7 +204,7 @@ function Home() {
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="a">Music</option>
                 <option value="Top 40">Top 40</option>
                 <option value="EDM">EDM</option>
@@ -214,7 +223,7 @@ function Home() {
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="a">Age</option>
                 <option value="aa">18+</option>
                 <option value="21+">21+</option>
@@ -223,7 +232,7 @@ function Home() {
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="a">Cover Charge</option>
                 <option value="Free">Free</option>
                 <option value="$5-$15">$5-$15</option>
@@ -234,7 +243,7 @@ function Home() {
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="a">Distance</option>
                 <option value="1">1 mile</option>
                 <option value="2-5">2-5 miles</option>
@@ -260,14 +269,35 @@ function Home() {
               />
             </div>
           </div>
-          <div className="grid lg:grid-cols-2 md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2 lg:col-span-1">
-              <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+          <div className="grid md:grid-cols-3 py-7">
+            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
+              <div className="flex justify-between lg:space-x-10 md:space-x-2">
+                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+                </div>
+                <div className="flex mb-2 md:hidden">
+                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
+                  <Image
+                    src="/info.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                    className="h-fit"
+                  />
+                </div>
+                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
+                  <Image
+                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
+                    alt=""
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-md"
+                  />
+                </div>
               </div>
               <div className="my-5 md:my-0">
-                <div className="flex mb-2">
+                <div className="md:flex mb-2 hidden">
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
                   <Image
                     src="/info.svg"
@@ -278,8 +308,7 @@ function Home() {
                 </div>
                 <div>
                   <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater <br/>
-                    at Lakeview
+                    Empower Federal Credit Union Amphitheater at Lakeview
                   </p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
@@ -299,14 +328,35 @@ function Home() {
             width={1280}
             height={3}
           />
-          <div className="grid lg:grid-cols-2 md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2 lg:col-span-1">
-              <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+          <div className="grid md:grid-cols-3 py-7">
+            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
+              <div className="flex justify-between lg:space-x-10 md:space-x-2">
+                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+                </div>
+                <div className="flex mb-2 md:hidden">
+                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
+                  <Image
+                    src="/info.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                    className="h-fit"
+                  />
+                </div>
+                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
+                  <Image
+                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
+                    alt=""
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-md"
+                  />
+                </div>
               </div>
               <div className="my-5 md:my-0">
-                <div className="flex mb-2">
+                <div className="md:flex mb-2 hidden">
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
                   <Image
                     src="/info.svg"
@@ -317,8 +367,7 @@ function Home() {
                 </div>
                 <div>
                   <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater <br/>
-                    at Lakeview
+                    Empower Federal Credit Union Amphitheater at Lakeview
                   </p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
@@ -338,14 +387,35 @@ function Home() {
             width={1280}
             height={3}
           />
-          <div className="grid lg:grid-cols-2 md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2 lg:col-span-1">
-              <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+          <div className="grid md:grid-cols-3 py-7">
+            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
+              <div className="flex justify-between lg:space-x-10 md:space-x-2">
+                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+                </div>
+                <div className="flex mb-2 md:hidden">
+                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
+                  <Image
+                    src="/info.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                    className="h-fit"
+                  />
+                </div>
+                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
+                  <Image
+                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
+                    alt=""
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-md"
+                  />
+                </div>
               </div>
               <div className="my-5 md:my-0">
-                <div className="flex mb-2">
+                <div className="md:flex mb-2 hidden">
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
                   <Image
                     src="/info.svg"
@@ -356,8 +426,7 @@ function Home() {
                 </div>
                 <div>
                   <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater <br/>
-                    at Lakeview
+                    Empower Federal Credit Union Amphitheater at Lakeview
                   </p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
@@ -377,14 +446,35 @@ function Home() {
             width={1280}
             height={3}
           />
-          <div className="grid lg:grid-cols-2 md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2 lg:col-span-1">
-              <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+          <div className="grid md:grid-cols-3 py-7">
+            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
+              <div className="flex justify-between lg:space-x-10 md:space-x-2">
+                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+                </div>
+                <div className="flex mb-2 md:hidden">
+                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
+                  <Image
+                    src="/info.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                    className="h-fit"
+                  />
+                </div>
+                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
+                  <Image
+                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
+                    alt=""
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-md"
+                  />
+                </div>
               </div>
               <div className="my-5 md:my-0">
-                <div className="flex mb-2">
+                <div className="md:flex mb-2 hidden">
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
                   <Image
                     src="/info.svg"
@@ -395,8 +485,7 @@ function Home() {
                 </div>
                 <div>
                   <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater <br/>
-                    at Lakeview
+                    Empower Federal Credit Union Amphitheater at Lakeview
                   </p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
@@ -531,7 +620,7 @@ function Home() {
           <p className="text-[17px] leading-[18.5px] text-[#000000]">Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!</p>
           <Grid container className="md:flex justify-between py-3 items-center hidden">
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="a">Type of event</option>
                 <option value="Bar party">Bar party</option>
                 <option value="Club party">Club party</option>
@@ -545,7 +634,7 @@ function Home() {
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="a">Music</option>
                 <option value="Top 40">Top 40</option>
                 <option value="EDM">EDM</option>
@@ -564,7 +653,7 @@ function Home() {
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="a">Age</option>
                 <option value="aa">18+</option>
                 <option value="21+">21+</option>
@@ -573,7 +662,7 @@ function Home() {
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="a">Cover Charge</option>
                 <option value="Free">Free</option>
                 <option value="$5-$15">$5-$15</option>
@@ -584,7 +673,7 @@ function Home() {
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select value={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="a">Distance</option>
                 <option value="1">1 mile</option>
                 <option value="2-5">2-5 miles</option>
@@ -610,14 +699,35 @@ function Home() {
               />
             </div>
           </div>
-          <div className="grid lg:grid-cols-2 md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2 lg:col-span-1">
-              <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+          <div className="grid md:grid-cols-3 py-7">
+            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
+              <div className="flex justify-between lg:space-x-10 md:space-x-2">
+                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+                </div>
+                <div className="flex mb-2 md:hidden">
+                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
+                  <Image
+                    src="/info.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                    className="h-fit"
+                  />
+                </div>
+                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
+                  <Image
+                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
+                    alt=""
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-md"
+                  />
+                </div>
               </div>
               <div className="my-5 md:my-0">
-                <div className="flex mb-2">
+                <div className="md:flex mb-2 hidden">
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
                   <Image
                     src="/info.svg"
@@ -628,8 +738,7 @@ function Home() {
                 </div>
                 <div>
                   <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater <br/>
-                    at Lakeview
+                    Empower Federal Credit Union Amphitheater at Lakeview
                   </p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
@@ -649,14 +758,35 @@ function Home() {
             width={1280}
             height={3}
           />
-          <div className="grid lg:grid-cols-2 md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2 lg:col-span-1">
-              <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+          <div className="grid md:grid-cols-3 py-7">
+            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
+              <div className="flex justify-between lg:space-x-10 md:space-x-2">
+                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+                </div>
+                <div className="flex mb-2 md:hidden">
+                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
+                  <Image
+                    src="/info.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                    className="h-fit"
+                  />
+                </div>
+                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
+                  <Image
+                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
+                    alt=""
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-md"
+                  />
+                </div>
               </div>
               <div className="my-5 md:my-0">
-                <div className="flex mb-2">
+                <div className="md:flex mb-2 hidden">
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
                   <Image
                     src="/info.svg"
@@ -667,8 +797,7 @@ function Home() {
                 </div>
                 <div>
                   <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater <br/>
-                    at Lakeview
+                    Empower Federal Credit Union Amphitheater at Lakeview
                   </p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
@@ -688,14 +817,35 @@ function Home() {
             width={1280}
             height={3}
           />
-          <div className="grid lg:grid-cols-2 md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2 lg:col-span-1">
-              <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+          <div className="grid md:grid-cols-3 py-7">
+            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
+              <div className="flex justify-between lg:space-x-10 md:space-x-2">
+                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+                </div>
+                <div className="flex mb-2 md:hidden">
+                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
+                  <Image
+                    src="/info.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                    className="h-fit"
+                  />
+                </div>
+                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
+                  <Image
+                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
+                    alt=""
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-md"
+                  />
+                </div>
               </div>
               <div className="my-5 md:my-0">
-                <div className="flex mb-2">
+                <div className="md:flex mb-2 hidden">
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
                   <Image
                     src="/info.svg"
@@ -706,8 +856,7 @@ function Home() {
                 </div>
                 <div>
                   <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater <br/>
-                    at Lakeview
+                    Empower Federal Credit Union Amphitheater at Lakeview
                   </p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
@@ -727,14 +876,35 @@ function Home() {
             width={1280}
             height={3}
           />
-          <div className="grid lg:grid-cols-2 md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2 lg:col-span-1">
-              <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+          <div className="grid md:grid-cols-3 py-7">
+            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
+              <div className="flex justify-between lg:space-x-10 md:space-x-2">
+                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
+                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
+                </div>
+                <div className="flex mb-2 md:hidden">
+                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
+                  <Image
+                    src="/info.svg"
+                    alt=""
+                    width={18}
+                    height={18}
+                    className="h-fit"
+                  />
+                </div>
+                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
+                  <Image
+                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
+                    alt=""
+                    layout="fill"
+                    objectFit="cover"
+                    className="rounded-md"
+                  />
+                </div>
               </div>
               <div className="my-5 md:my-0">
-                <div className="flex mb-2">
+                <div className="md:flex mb-2 hidden">
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
                   <Image
                     src="/info.svg"
@@ -745,8 +915,7 @@ function Home() {
                 </div>
                 <div>
                   <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater <br/>
-                    at Lakeview
+                    Empower Federal Credit Union Amphitheater at Lakeview
                   </p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
                   <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
