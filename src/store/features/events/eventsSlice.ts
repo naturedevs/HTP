@@ -7,6 +7,7 @@ import { IEvent, fetchEvents } from "./eventsAPI";
 export interface AgentsSliceState {
     isSuccess : boolean;
     events  : IEvent[];
+    events_up  : IEvent[];
     selectedIndex : string;
     status    : "idle" | "loading" | "failed";
     msg       : string;
@@ -15,12 +16,13 @@ export interface AgentsSliceState {
 const initialState: AgentsSliceState = {
     isSuccess : false,
     events    : [],
+    events_up : [],
     status    : "idle",
     msg       :"",
     selectedIndex : "-1",
 };
 
-export const productsSlice = createAppSlice({
+export const eventsSlice = createAppSlice({
   name: "events",
   
   initialState,
@@ -48,6 +50,28 @@ export const productsSlice = createAppSlice({
         },
       },
     ),
+    getEventsUp: create.asyncThunk(
+      async ({filter, keyword}:{filter:boolean, keyword:string}) => {
+        const response = await fetchEvents({filter, keyword});
+        return response;
+      },
+      {
+        pending: (state) => {
+          state.status = "loading";
+        },
+        fulfilled: (state, action) => {
+          state.status = "idle";
+          if(action.payload.isSuccess) {
+              state.events_up = JSON.parse(action.payload.data);
+          }else{
+              state.msg = action.payload.data;
+          }
+        },
+        rejected: (state) => {
+          state.status = "failed";
+        },
+      },
+    ),
     setSelectedEvent: create.reducer(
       (state, action: PayloadAction<string>) => {
         state.selectedIndex = action.payload;
@@ -57,6 +81,7 @@ export const productsSlice = createAppSlice({
   
   selectors: {
     selectEvents : (events) => events.events,
+    selectEventsUp : (events) => events.events_up,
     selectMsg      : (events) => events.msg,
     selectIsSuccess: (events) => events.isSuccess,
     selectStatus   : (events) => events.status,
@@ -64,7 +89,7 @@ export const productsSlice = createAppSlice({
   },
 });
 
-export const { getEvents, setSelectedEvent } =
-  productsSlice.actions;
+export const { getEvents, setSelectedEvent, getEventsUp } =
+  eventsSlice.actions;
  
-export const { selectEvent ,selectEvents, selectMsg, selectIsSuccess, selectStatus } = productsSlice.selectors;
+export const { selectEvent ,selectEvents, selectEventsUp, selectMsg, selectIsSuccess, selectStatus } = eventsSlice.selectors;

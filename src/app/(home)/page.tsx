@@ -1,6 +1,6 @@
 'use client'
 import "./home.css";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image"
 import { Input } from "@/components/ui/input";
 import Grid from "@mui/material/Grid";
@@ -11,14 +11,39 @@ import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { toast } from 'react-hot-toast';
-import { getEvents, selectEvents } from "@/store/features/events/eventsSlice";
+import { getEvents, selectEvents, getEventsUp, selectEventsUp } from "@/store/features/events/eventsSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-const drawerWidth = 240;
+import { IEvent } from "@/store/features/events/eventsAPI";
 
 function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+  const [isDrawerOpenUp, setIsDrawerOpenUp] = React.useState(false);
   const theme = useTheme();
   const dispatch = useAppDispatch();
+  const events = useAppSelector(selectEvents);
+  const eventsUp = useAppSelector(selectEventsUp);
+  const [filter, setFilter] = React.useState({type: "", age: "", music: "", charge: "", distance: ""});
+  const [filterUp, setFilterUp] = React.useState({type: "", age: "", music: "", charge: "", distance: ""});
+
+  const onChange = (key, value) => {
+    let temp = filter;
+    temp[key] = value;
+    setFilter({
+      ...filter,
+      [key] : value
+    });
+    dispatch(getEvents({ filter: true, keyword: JSON.stringify(filter) }));
+  }
+  
+  const onChangeUp = (key, value) => {
+    let temp = filterUp;
+    temp[key] = value;
+    setFilterUp({
+      ...filterUp,
+      [key] : value
+    });
+    dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(filterUp) }));
+  }
 
   const DrawerHeader = styled('div')(({ theme }) => ({
     display: 'flex',
@@ -30,7 +55,33 @@ function Home() {
 
   useEffect(() => {
     dispatch(getEvents({ filter: false, keyword: "" }));
+    dispatch(getEventsUp({ filter: false, keyword: "" }));
   }, [])
+
+  function getWeekOfYear(dateString) {
+    const date = new Date(dateString);
+    const januaryFirst = new Date(date.getFullYear(), 0, 1);
+    const daysToNextMonday = (januaryFirst.getDay() === 1)? 0 : (7 - januaryFirst.getDay()) % 7;
+    const nextMonday = new Date(date.getFullYear(), 0, januaryFirst.getDate() + daysToNextMonday);
+    
+    let weekNumber = (date < nextMonday)? 52 : (date > nextMonday? Math.ceil((Number(date) - Number(nextMonday)) / (24 * 3600 * 1000) / 7) : 1);
+    
+    return weekNumber;
+  }
+
+  function getWeekName(weekNumber) {
+    const firstDayOfYear = new Date(weekNumber, 0, 1).getDay();
+    const offset = firstDayOfYear === 0? 6 : firstDayOfYear - 1;
+  
+    const targetDate = new Date(weekNumber, 0, 1 + (offset * 7));
+  
+    const dayOfWeek = targetDate.getDay();
+  
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const weekName = daysOfWeek[dayOfWeek];
+  
+    return weekName;
+  }
 
   return (
     <div className="w-full">
@@ -80,8 +131,8 @@ function Home() {
                   placeholder="Enter City/Zipcode"
                 />
                 <div className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] border-[1px] border-[#FFFFFF] bg-white flex content-center mt-5 px-6">
-                  <select defaultValue={'a'} className="md:text-[17px] text-[14px] leading-[18.5px] text-[#000000] outline-none w-full">
-                    <option value="a">Distance</option>
+                  <select defaultValue={''}  onChange={(e) => onChange("distance", e.target.value)}  className="md:text-[17px] text-[14px] leading-[18.5px] text-[#000000] outline-none w-full">
+                    <option value="">Distance</option>
                     <option value="1">1 mile</option>
                     <option value="2-5">2-5 miles</option>
                     <option value="5-10">5-10 miles</option>
@@ -119,8 +170,8 @@ function Home() {
             <p className="text-[25px] font-[600] text-black text-center mt-10 mb-3">Filter By:</p>
             <Grid container className="flex justify-between py-3 items-center md:hidden">
               <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                  <option value="a">Type of event</option>
+                <select defaultValue={''} onChange={(e) => onChange("type", e.target.value)} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="">Type of event</option>
                   <option value="Bar party">Bar party</option>
                   <option value="Club party">Club party</option>
                   <option value="Warehouse rave">Warehouse rave</option>
@@ -133,8 +184,8 @@ function Home() {
                 </select>
               </Grid>
               <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                  <option value="a">Music</option>
+                <select defaultValue={''}  onChange={(e) => onChange("music", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="">Music</option>
                   <option value="Top 40">Top 40</option>
                   <option value="EDM">EDM</option>
                   <option value="Pop">Pop</option>
@@ -152,28 +203,28 @@ function Home() {
                 </select>
               </Grid>
               <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                  <option value="a">Age</option>
-                  <option value="aa">18+</option>
-                  <option value="21+">21+</option>
-                  <option value="30+">30+</option>
-                  <option value="40+">40+</option>
+                <select defaultValue={''}  onChange={(e) => onChange("age", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="">Age</option>
+                  <option value="18">18+</option>
+                  <option value="21">21+</option>
+                  <option value="30">30+</option>
+                  <option value="40">40+</option>
                 </select>
               </Grid>
               <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                  <option value="a">Cover Charge</option>
-                  <option value="Free">Free</option>
-                  <option value="$5-$15">$5-$15</option>
-                  <option value="$20-$30">$20-$30</option>
-                  <option value="$30-$50">$30-$50</option>
-                  <option value="$50-$80">$50-$80</option>
-                  <option value="$80+">$80+</option>
+                <select defaultValue={''}  onChange={(e) => onChange("charge", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="">Cover Charge</option>
+                  <option value="0">Free</option>
+                  <option value="5-15">$5-$15</option>
+                  <option value="20-30">$20-$30</option>
+                  <option value="30-50">$30-$50</option>
+                  <option value="50-80">$50-$80</option>
+                  <option value="80">$80+</option>
                 </select>
               </Grid>
               <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                  <option value="a">Distance</option>
+                <select defaultValue={''}  onChange={(e) => onChange("distance", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="">Distance</option>
                   <option value="1">1 mile</option>
                   <option value="2-5">2-5 miles</option>
                   <option value="5-10">5-10 miles</option>
@@ -190,8 +241,8 @@ function Home() {
           </Drawer>
           <Grid container className="md:flex justify-between py-3 items-center hidden">
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="a">Type of event</option>
+              <select defaultValue={''} onChange={(e) => onChange("type", e.target.value)} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <option value="">Type of event</option>
                 <option value="Bar party">Bar party</option>
                 <option value="Club party">Club party</option>
                 <option value="Warehouse rave">Warehouse rave</option>
@@ -204,8 +255,8 @@ function Home() {
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="a">Music</option>
+              <select defaultValue={''}  onChange={(e) => onChange("music", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <option value="">Music</option>
                 <option value="Top 40">Top 40</option>
                 <option value="EDM">EDM</option>
                 <option value="Pop">Pop</option>
@@ -223,28 +274,28 @@ function Home() {
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="a">Age</option>
-                <option value="aa">18+</option>
-                <option value="21+">21+</option>
-                <option value="30+">30+</option>
-                <option value="40+">40+</option>
+              <select defaultValue={''}  onChange={(e) => onChange("age", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <option value="">Age</option>
+                <option value="18">18+</option>
+                <option value="21">21+</option>
+                <option value="30">30+</option>
+                <option value="40">40+</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="a">Cover Charge</option>
-                <option value="Free">Free</option>
-                <option value="$5-$15">$5-$15</option>
-                <option value="$20-$30">$20-$30</option>
-                <option value="$30-$50">$30-$50</option>
-                <option value="$50-$80">$50-$80</option>
-                <option value="$80+">$80+</option>
+              <select defaultValue={''}  onChange={(e) => onChange("charge", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <option value="">Cover Charge</option>
+                <option value="0">Free</option>
+                <option value="5-15">$5-$15</option>
+                <option value="20-30">$20-$30</option>
+                <option value="30-50">$30-$50</option>
+                <option value="50-80">$50-$80</option>
+                <option value="80">$80+</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="a">Distance</option>
+              <select defaultValue={''}  onChange={(e) => onChange("distance", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <option value="">Distance</option>
                 <option value="1">1 mile</option>
                 <option value="2-5">2-5 miles</option>
                 <option value="5-10">5-10 miles</option>
@@ -269,236 +320,83 @@ function Home() {
               />
             </div>
           </div>
-          <div className="grid md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
-              <div className="flex justify-between lg:space-x-10 md:space-x-2">
-                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
-                </div>
-                <div className="flex mb-2 md:hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
+          {
+            events.map((event) => {
+              const months = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+              ];
+              
+              const date = event["Event Date"];
+              const weekNumber = getWeekOfYear(date);
+              const weekName = getWeekName(weekNumber).substring(0, 3);
+              const month = months[Number(date.split("-")[1])-1].substring(0, 3).toUpperCase();
+              const day = date.split("-")[2];
+              return (
+                <>
+                  <div className="grid md:grid-cols-3 py-7">
+                    <div className="md:flex md:justify-between lg:space-x-10 space-x-2 md:col-span-2">
+                      <div className="flex justify-between lg:space-x-10 md:space-x-2">
+                        <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
+                          <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{month}</p>
+                          <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{day}</p>
+                        </div>
+                        <div className="flex mb-2 md:hidden">
+                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
+                          <Image
+                            src="/info.svg"
+                            alt=""
+                            width={18}
+                            height={18}
+                            className="h-fit"
+                          />
+                        </div>
+                        <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
+                          <Image
+                            src={event["Event Image Link"]}
+                            alt=""
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-md"
+                          />
+                        </div>
+                      </div>
+                      <div className="w-full my-5 md:my-0">
+                        <div className="md:flex mb-2 hidden">
+                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
+                          <Image
+                            src="/info.svg"
+                            alt=""
+                            width={18}
+                            height={18}
+                          />
+                        </div>
+                        <div>
+                          <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
+                            {event["Event Name"]}
+                          </p>
+                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Name"]}</p>
+                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Address"]}</p>
+                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">{event["Venue City"]}, {event["Venue State"]}, {event["Zip Code"]}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex md:justify-end items-center col-span-1">
+                      <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
+                        BUY TICKET
+                      </button>
+                    </div>
+                  </div>
                   <Image
-                    src="/info.svg"
+                    src="/line.svg"
                     alt=""
-                    width={18}
-                    height={18}
-                    className="h-fit"
+                    width={1280}
+                    height={3}
                   />
-                </div>
-                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
-                  <Image
-                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
-                    alt=""
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-md"
-                  />
-                </div>
-              </div>
-              <div className="my-5 md:my-0">
-                <div className="md:flex mb-2 hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
-                  <Image
-                    src="/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                  />
-                </div>
-                <div>
-                  <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater at Lakeview
-                  </p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">BankPlus Amphitheater at Snowden Grove, Southaven, MS</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex md:justify-end items-center col-span-1">
-              <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
-                BUY TICKET
-              </button>
-            </div>
-          </div>
-          <Image
-            src="/line.svg"
-            alt=""
-            width={1280}
-            height={3}
-          />
-          <div className="grid md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
-              <div className="flex justify-between lg:space-x-10 md:space-x-2">
-                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
-                </div>
-                <div className="flex mb-2 md:hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
-                  <Image
-                    src="/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                    className="h-fit"
-                  />
-                </div>
-                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
-                  <Image
-                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
-                    alt=""
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-md"
-                  />
-                </div>
-              </div>
-              <div className="my-5 md:my-0">
-                <div className="md:flex mb-2 hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
-                  <Image
-                    src="/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                  />
-                </div>
-                <div>
-                  <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater at Lakeview
-                  </p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">BankPlus Amphitheater at Snowden Grove, Southaven, MS</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex md:justify-end items-center col-span-1">
-              <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
-                BUY TICKET
-              </button>
-            </div>
-          </div>
-          <Image
-            src="/line.svg"
-            alt=""
-            width={1280}
-            height={3}
-          />
-          <div className="grid md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
-              <div className="flex justify-between lg:space-x-10 md:space-x-2">
-                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
-                </div>
-                <div className="flex mb-2 md:hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
-                  <Image
-                    src="/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                    className="h-fit"
-                  />
-                </div>
-                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
-                  <Image
-                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
-                    alt=""
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-md"
-                  />
-                </div>
-              </div>
-              <div className="my-5 md:my-0">
-                <div className="md:flex mb-2 hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
-                  <Image
-                    src="/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                  />
-                </div>
-                <div>
-                  <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater at Lakeview
-                  </p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">BankPlus Amphitheater at Snowden Grove, Southaven, MS</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex md:justify-end items-center col-span-1">
-              <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
-                BUY TICKET
-              </button>
-            </div>
-          </div>
-          <Image
-            src="/line.svg"
-            alt=""
-            width={1280}
-            height={3}
-          />
-          <div className="grid md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
-              <div className="flex justify-between lg:space-x-10 md:space-x-2">
-                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
-                </div>
-                <div className="flex mb-2 md:hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
-                  <Image
-                    src="/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                    className="h-fit"
-                  />
-                </div>
-                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
-                  <Image
-                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
-                    alt=""
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-md"
-                  />
-                </div>
-              </div>
-              <div className="my-5 md:my-0">
-                <div className="md:flex mb-2 hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
-                  <Image
-                    src="/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                  />
-                </div>
-                <div>
-                  <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater at Lakeview
-                  </p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">BankPlus Amphitheater at Snowden Grove, Southaven, MS</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex md:justify-end items-center col-span-1">
-              <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
-                BUY TICKET
-              </button>
-            </div>
-          </div>
+                </>
+              )
+            })
+          }
         </div>
       </div>
       
@@ -618,10 +516,89 @@ function Home() {
           />
           <p className="lg:text-[37px] md:text-[37px] text-[30px] lg:leading-[49px] md:leading-[49px] leading-[30px] font-bold text-[#000000] my-5">Upcoming Global Events</p>
           <p className="text-[17px] leading-[18.5px] text-[#000000]">Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!</p>
+          <Drawer open={isDrawerOpenUp} onClose={()=>{setIsDrawerOpenUp(false);}}>
+            <DrawerHeader>
+              <IconButton onClick={()=>{setIsDrawerOpenUp(false);}}>
+                {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+              </IconButton>
+            </DrawerHeader>
+            <Divider />
+            <p className="text-[25px] font-[600] text-black text-center mt-10 mb-3">Filter By:</p>
+            <Grid container className="flex justify-between py-3 items-center md:hidden">
+              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''} onChange={(e) => onChangeUp("type", e.target.value)} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="">Type of event</option>
+                  <option value="Bar party">Bar party</option>
+                  <option value="Club party">Club party</option>
+                  <option value="Warehouse rave">Warehouse rave</option>
+                  <option value="Outdoor rave">Outdoor rave</option>
+                  <option value="Megaclub party">Megaclub party</option>
+                  <option value="Pool party">Pool party</option>
+                  <option value="Block party">Block party</option>
+                  <option value="Rooftop party">Rooftop party</option>
+                  <option value="Other">Other</option>
+                </select>
+              </Grid>
+              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''}  onChange={(e) => onChangeUp("music", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="">Music</option>
+                  <option value="Top 40">Top 40</option>
+                  <option value="EDM">EDM</option>
+                  <option value="Pop">Pop</option>
+                  <option value="Rock">Rock</option>
+                  <option value="Techno/House">Techno/House</option>
+                  <option value="Hip-hop">Hip-hop</option>
+                  <option value="R&B">R&B</option>
+                  <option value="Dubstep">Dubstep</option>
+                  <option value="Latin">Latin</option>
+                  <option value="Salsa">Salsa</option>
+                  <option value="Reggaeton">Reggaeton</option>
+                  <option value="Country">Country</option>
+                  <option value="Jazz">Jazz</option>
+                  <option value="Metal">Metal</option>
+                </select>
+              </Grid>
+              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''}  onChange={(e) => onChangeUp("age", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="">Age</option>
+                  <option value="18">18+</option>
+                  <option value="21">21+</option>
+                  <option value="30">30+</option>
+                  <option value="40">40+</option>
+                </select>
+              </Grid>
+              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''}  onChange={(e) => onChangeUp("charge", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="">Cover Charge</option>
+                  <option value="0">Free</option>
+                  <option value="5-15">$5-$15</option>
+                  <option value="20-30">$20-$30</option>
+                  <option value="30-50">$30-$50</option>
+                  <option value="50-80">$50-$80</option>
+                  <option value="80">$80+</option>
+                </select>
+              </Grid>
+              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''}  onChange={(e) => onChangeUp("distance", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <option value="">Distance</option>
+                  <option value="1">1 mile</option>
+                  <option value="2-5">2-5 miles</option>
+                  <option value="5-10">5-10 miles</option>
+                  <option value="10-20">10-20 miles</option>
+                  <option value="20+">20+ miles</option>
+                </select>
+              </Grid>
+              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="flex items-center p-0">
+                <button className="w-[264px] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]">
+                  Search for keyword
+                </button>
+              </Grid>
+            </Grid>
+          </Drawer>
           <Grid container className="md:flex justify-between py-3 items-center hidden">
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="a">Type of event</option>
+              <select defaultValue={''} onChange={(e) => onChangeUp("type", e.target.value)} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <option value="">Type of event</option>
                 <option value="Bar party">Bar party</option>
                 <option value="Club party">Club party</option>
                 <option value="Warehouse rave">Warehouse rave</option>
@@ -634,8 +611,8 @@ function Home() {
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="a">Music</option>
+              <select defaultValue={''}  onChange={(e) => onChangeUp("music", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <option value="">Music</option>
                 <option value="Top 40">Top 40</option>
                 <option value="EDM">EDM</option>
                 <option value="Pop">Pop</option>
@@ -653,28 +630,28 @@ function Home() {
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="a">Age</option>
-                <option value="aa">18+</option>
-                <option value="21+">21+</option>
-                <option value="30+">30+</option>
-                <option value="40+">40+</option>
+              <select defaultValue={''}  onChange={(e) => onChangeUp("age", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <option value="">Age</option>
+                <option value="18">18+</option>
+                <option value="21">21+</option>
+                <option value="30">30+</option>
+                <option value="40">40+</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="a">Cover Charge</option>
-                <option value="Free">Free</option>
-                <option value="$5-$15">$5-$15</option>
-                <option value="$20-$30">$20-$30</option>
-                <option value="$30-$50">$30-$50</option>
-                <option value="$50-$80">$50-$80</option>
-                <option value="$80+">$80+</option>
+              <select defaultValue={''}  onChange={(e) => onChangeUp("charge", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <option value="">Cover Charge</option>
+                <option value="0">Free</option>
+                <option value="5-15">$5-$15</option>
+                <option value="20-30">$20-$30</option>
+                <option value="30-50">$30-$50</option>
+                <option value="50-80">$50-$80</option>
+                <option value="80">$80+</option>
               </select>
             </Grid>
             <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={'a'} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
-                <option value="a">Distance</option>
+              <select defaultValue={''}  onChange={(e) => onChangeUp("distance", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+                <option value="">Distance</option>
                 <option value="1">1 mile</option>
                 <option value="2-5">2-5 miles</option>
                 <option value="5-10">5-10 miles</option>
@@ -690,7 +667,7 @@ function Home() {
           </Grid>
           <div className="md:hidden flex bg-white rounded-[3px] p-2 justify-between items-center mt-6">
             <p className="text-black text-[17px] leading-[18.5px] font-[400] ml-3">Filter by:</p>
-            <div className="flex content-center bg-primaryColor w-[36px] h-[36px] justify-center rounded-[3px]" onClick={()=> {setIsDrawerOpen(true);}}>
+            <div className="flex content-center bg-primaryColor w-[36px] h-[36px] justify-center rounded-[3px]" onClick={()=> {setIsDrawerOpenUp(true);}}>
               <Image
                 src="/filter.svg"
                 alt=""
@@ -699,236 +676,83 @@ function Home() {
               />
             </div>
           </div>
-          <div className="grid md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
-              <div className="flex justify-between lg:space-x-10 md:space-x-2">
-                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
-                </div>
-                <div className="flex mb-2 md:hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
+          {
+            eventsUp.map((event) => {
+              const months = [
+                "January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+              ];
+              
+              const date = event["Event Date"];
+              const weekNumber = getWeekOfYear(date);
+              const weekName = getWeekName(weekNumber).substring(0, 3);
+              const month = months[Number(date.split("-")[1])-1].substring(0, 3).toUpperCase();
+              const day = date.split("-")[2];
+              return (
+                <>
+                  <div className="grid md:grid-cols-3 py-7">
+                    <div className="md:flex md:justify-between lg:space-x-10 space-x-2 md:col-span-2">
+                      <div className="flex justify-between lg:space-x-10 md:space-x-2">
+                        <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
+                          <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{month}</p>
+                          <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{day}</p>
+                        </div>
+                        <div className="flex mb-2 md:hidden">
+                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
+                          <Image
+                            src="/info.svg"
+                            alt=""
+                            width={18}
+                            height={18}
+                            className="h-fit"
+                          />
+                        </div>
+                        <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
+                          <Image
+                            src={event["Event Image Link"]}
+                            alt=""
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-md"
+                          />
+                        </div>
+                      </div>
+                      <div className="w-full my-5 md:my-0">
+                        <div className="md:flex mb-2 hidden">
+                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
+                          <Image
+                            src="/info.svg"
+                            alt=""
+                            width={18}
+                            height={18}
+                          />
+                        </div>
+                        <div>
+                          <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
+                            {event["Event Name"]}
+                          </p>
+                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Name"]}</p>
+                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Address"]}</p>
+                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">{event["Venue City"]}, {event["Venue State"]}, {event["Zip Code"]}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="flex md:justify-end items-center col-span-1">
+                      <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
+                        BUY TICKET
+                      </button>
+                    </div>
+                  </div>
                   <Image
-                    src="/info.svg"
+                    src="/line.svg"
                     alt=""
-                    width={18}
-                    height={18}
-                    className="h-fit"
+                    width={1280}
+                    height={3}
                   />
-                </div>
-                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
-                  <Image
-                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
-                    alt=""
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-md"
-                  />
-                </div>
-              </div>
-              <div className="my-5 md:my-0">
-                <div className="md:flex mb-2 hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
-                  <Image
-                    src="/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                  />
-                </div>
-                <div>
-                  <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater at Lakeview
-                  </p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">BankPlus Amphitheater at Snowden Grove, Southaven, MS</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex md:justify-end items-center col-span-1">
-              <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
-                BUY TICKET
-              </button>
-            </div>
-          </div>
-          <Image
-            src="/line.svg"
-            alt=""
-            width={1280}
-            height={3}
-          />
-          <div className="grid md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
-              <div className="flex justify-between lg:space-x-10 md:space-x-2">
-                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
-                </div>
-                <div className="flex mb-2 md:hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
-                  <Image
-                    src="/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                    className="h-fit"
-                  />
-                </div>
-                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
-                  <Image
-                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
-                    alt=""
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-md"
-                  />
-                </div>
-              </div>
-              <div className="my-5 md:my-0">
-                <div className="md:flex mb-2 hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
-                  <Image
-                    src="/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                  />
-                </div>
-                <div>
-                  <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater at Lakeview
-                  </p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">BankPlus Amphitheater at Snowden Grove, Southaven, MS</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex md:justify-end items-center col-span-1">
-              <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
-                BUY TICKET
-              </button>
-            </div>
-          </div>
-          <Image
-            src="/line.svg"
-            alt=""
-            width={1280}
-            height={3}
-          />
-          <div className="grid md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
-              <div className="flex justify-between lg:space-x-10 md:space-x-2">
-                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
-                </div>
-                <div className="flex mb-2 md:hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
-                  <Image
-                    src="/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                    className="h-fit"
-                  />
-                </div>
-                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
-                  <Image
-                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
-                    alt=""
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-md"
-                  />
-                </div>
-              </div>
-              <div className="my-5 md:my-0">
-                <div className="md:flex mb-2 hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
-                  <Image
-                    src="/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                  />
-                </div>
-                <div>
-                  <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater at Lakeview
-                  </p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">BankPlus Amphitheater at Snowden Grove, Southaven, MS</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex md:justify-end items-center col-span-1">
-              <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
-                BUY TICKET
-              </button>
-            </div>
-          </div>
-          <Image
-            src="/line.svg"
-            alt=""
-            width={1280}
-            height={3}
-          />
-          <div className="grid md:grid-cols-3 py-7">
-            <div className="md:flex md:justify-between md:space-x-3 md:col-span-2">
-              <div className="flex justify-between lg:space-x-10 md:space-x-2">
-                <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">JUN</p>
-                  <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">07</p>
-                </div>
-                <div className="flex mb-2 md:hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
-                  <Image
-                    src="/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                    className="h-fit"
-                  />
-                </div>
-                <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
-                  <Image
-                    src="https://psdfreebies.com/wp-content/uploads/2023/06/Grand-House-Party-Flyer-PSD-Template-Preview-734x1024.jpg"
-                    alt=""
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-md"
-                  />
-                </div>
-              </div>
-              <div className="my-5 md:my-0">
-                <div className="md:flex mb-2 hidden">
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">Wed - 7:00 PM</p>
-                  <Image
-                    src="/info.svg"
-                    alt=""
-                    width={18}
-                    height={18}
-                  />
-                </div>
-                <div>
-                  <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                    Empower Federal Credit Union Amphitheater at Lakeview
-                  </p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Lainey Wilson: Country's Cool Again Tour</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">Syracuse, NY</p>
-                  <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">BankPlus Amphitheater at Snowden Grove, Southaven, MS</p>
-                </div>
-              </div>
-            </div>
-            <div className="flex md:justify-end items-center col-span-1">
-              <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
-                BUY TICKET
-              </button>
-            </div>
-          </div>
+                </>
+              )
+            })
+          }
         </div>
       </div>
       

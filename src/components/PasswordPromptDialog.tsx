@@ -50,7 +50,6 @@ const PasswordPromptDialog = () => {
 
       if (response.status !== 200){
         toast.error(res)
-        console.error(res)
       } else {
         const user = res;
         dispatch(setUser({
