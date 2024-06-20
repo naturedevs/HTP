@@ -9,7 +9,7 @@ export async function POST(request: Request, params: { action: string }) {
       const { data, error } = await supabase
         .from('events')
         .select()
-        .order('Created_Time',{ ascending: true });
+        .order('Event Date',{ ascending: false });
 
       if(error){
         return NextResponse.json(error.message, { status: 401 });
@@ -27,7 +27,7 @@ export async function POST(request: Request, params: { action: string }) {
           .ilike('Event Type', `%${tempFilter.type}%`)
           .gte('age', Number(tempFilter.age))
           .ilike('Music Type', `%${tempFilter.music}%`)
-          .order('Created_Time',{ ascending: true });
+          .order('Event Date',{ ascending: false });
       }else{
         if (!tempFilter.charge.includes("-")) {
           if (tempFilter.charge === "0") {
@@ -38,7 +38,7 @@ export async function POST(request: Request, params: { action: string }) {
               .gte('age', Number(tempFilter.age))
               .ilike('Music Type', `%${tempFilter.music}%`)
               .lte('Ticket Price', 0)
-              .order('Created_Time',{ ascending: true });          
+              .order('Event Date',{ ascending: false });          
           }else{
             res = await supabase
               .from('events')
@@ -47,7 +47,7 @@ export async function POST(request: Request, params: { action: string }) {
               .gte('age', Number(tempFilter.age))
               .ilike('Music Type', `%${tempFilter.music}%`)
               .gte('Ticket Price', Number(tempFilter.charge))
-              .order('Created_Time',{ ascending: true });
+              .order('Event Date',{ ascending: false });
           }
         }else{
           res = await supabase
@@ -58,7 +58,7 @@ export async function POST(request: Request, params: { action: string }) {
             .ilike('Music Type', `%${tempFilter.music}%`)
             .gte('Ticket Price', Number(tempFilter.charge.split("-")[0]))
             .lte('Ticket Price', Number(tempFilter.charge.split("-")[1]))
-            .order('Created_Time',{ ascending: true });
+            .order('Event Date',{ ascending: false });
         }
       }
         

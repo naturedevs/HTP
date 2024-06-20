@@ -14,10 +14,17 @@ import { toast } from 'react-hot-toast';
 import { getEvents, selectEvents, getEventsUp, selectEventsUp } from "@/store/features/events/eventsSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { IEvent } from "@/store/features/events/eventsAPI";
+import Pagination from '@mui/material/Pagination';
+import PaginationItem from '@mui/material/PaginationItem';
+import Stack from '@mui/material/Stack';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 
 function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [isDrawerOpenUp, setIsDrawerOpenUp] = React.useState(false);
+  const [pageNumber, setPageNumber] = React.useState(1);
+  const [pageNumberUp, setPageNumberUp] = React.useState(1);
   const theme = useTheme();
   const dispatch = useAppDispatch();
   const events = useAppSelector(selectEvents);
@@ -57,6 +64,14 @@ function Home() {
     dispatch(getEvents({ filter: false, keyword: "" }));
     dispatch(getEventsUp({ filter: false, keyword: "" }));
   }, [])
+
+  const handlePage = (e, number) => {
+    setPageNumber(number);
+  }
+
+  const handlePageUp = (e, number) => {
+    setPageNumberUp(number);
+  }
 
   function getWeekOfYear(dateString) {
     const date = new Date(dateString);
@@ -321,83 +336,99 @@ function Home() {
             </div>
           </div>
           {
-            events.map((event) => {
-              const months = [
-                "January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-              ];
-              
-              const date = event["Event Date"];
-              const weekNumber = getWeekOfYear(date);
-              const weekName = getWeekName(weekNumber).substring(0, 3);
-              const month = months[Number(date.split("-")[1])-1].substring(0, 3).toUpperCase();
-              const day = date.split("-")[2];
-              return (
-                <>
-                  <div className="grid md:grid-cols-3 py-7">
-                    <div className="md:flex md:justify-between lg:space-x-10 space-x-2 md:col-span-2">
-                      <div className="flex justify-between lg:space-x-10 md:space-x-2">
-                        <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                          <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{month}</p>
-                          <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{day}</p>
+            events.map((event, index) => {
+              if (index >= (pageNumber-1)*10 && index <= ((pageNumber)*10)-1) {
+                const months = [
+                  "January", "February", "March", "April", "May", "June",
+                  "July", "August", "September", "October", "November", "December"
+                ];
+                
+                const date = event["Event Date"];
+                const weekNumber = getWeekOfYear(date);
+                const weekName = getWeekName(weekNumber).substring(0, 3);
+                const month = months[Number(date.split("-")[1])-1].substring(0, 3).toUpperCase();
+                const day = date.split("-")[2];
+                return (
+                  <>
+                    <div className="grid md:grid-cols-3 py-7">
+                      <div className="md:flex md:justify-between lg:space-x-10 space-x-2 md:col-span-2">
+                        <div className="flex justify-between lg:space-x-10 md:space-x-2">
+                          <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
+                            <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{month}</p>
+                            <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{day}</p>
+                          </div>
+                          <div className="flex mb-2 md:hidden">
+                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
+                            <Image
+                              src="/info.svg"
+                              alt=""
+                              width={18}
+                              height={18}
+                              className="h-fit"
+                            />
+                          </div>
+                          <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
+                            <Image
+                              src={event["Event Image Link"]}
+                              alt=""
+                              layout="fill"
+                              objectFit="cover"
+                              className="rounded-md"
+                            />
+                          </div>
                         </div>
-                        <div className="flex mb-2 md:hidden">
-                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
-                          <Image
-                            src="/info.svg"
-                            alt=""
-                            width={18}
-                            height={18}
-                            className="h-fit"
-                          />
-                        </div>
-                        <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
-                          <Image
-                            src={event["Event Image Link"]}
-                            alt=""
-                            layout="fill"
-                            objectFit="cover"
-                            className="rounded-md"
-                          />
+                        <div className="w-full my-5 md:my-0">
+                          <div className="md:flex mb-2 hidden">
+                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
+                            <Image
+                              src="/info.svg"
+                              alt=""
+                              width={18}
+                              height={18}
+                            />
+                          </div>
+                          <div>
+                            <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
+                              {event["Event Name"]}
+                            </p>
+                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Name"]}</p>
+                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Address"]}</p>
+                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">{event["Venue City"]}, {event["Venue State"]}, {event["Zip Code"]}</p>
+                          </div>
                         </div>
                       </div>
-                      <div className="w-full my-5 md:my-0">
-                        <div className="md:flex mb-2 hidden">
-                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
-                          <Image
-                            src="/info.svg"
-                            alt=""
-                            width={18}
-                            height={18}
-                          />
-                        </div>
-                        <div>
-                          <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                            {event["Event Name"]}
-                          </p>
-                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Name"]}</p>
-                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Address"]}</p>
-                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">{event["Venue City"]}, {event["Venue State"]}, {event["Zip Code"]}</p>
-                        </div>
+                      <div className="flex md:justify-end items-center col-span-1">
+                        <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
+                          BUY TICKET
+                        </button>
                       </div>
                     </div>
-                    <div className="flex md:justify-end items-center col-span-1">
-                      <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
-                        BUY TICKET
-                      </button>
-                    </div>
-                  </div>
-                  <Image
-                    src="/line.svg"
-                    alt=""
-                    width={1280}
-                    height={3}
-                  />
-                </>
-              )
+                    <Image
+                      src="/line.svg"
+                      alt=""
+                      width={1280}
+                      height={3}
+                    />
+                  </>
+                )
+              }
             })
           }
-        </div>
+          <div className="flex justify-center">
+            <Stack spacing={2}>
+              <Pagination
+                count={(events.length/10 + 1)}
+                onChange={handlePage}
+                renderItem={(item) => (
+                  <PaginationItem
+                    slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+                    {...item}
+                  />
+                )}
+              />
+            </Stack>
+          </div>
+          </div>
       </div>
       
       {/* Section 3 */}
@@ -677,82 +708,98 @@ function Home() {
             </div>
           </div>
           {
-            eventsUp.map((event) => {
-              const months = [
-                "January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-              ];
-              
-              const date = event["Event Date"];
-              const weekNumber = getWeekOfYear(date);
-              const weekName = getWeekName(weekNumber).substring(0, 3);
-              const month = months[Number(date.split("-")[1])-1].substring(0, 3).toUpperCase();
-              const day = date.split("-")[2];
-              return (
-                <>
-                  <div className="grid md:grid-cols-3 py-7">
-                    <div className="md:flex md:justify-between lg:space-x-10 space-x-2 md:col-span-2">
-                      <div className="flex justify-between lg:space-x-10 md:space-x-2">
-                        <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                          <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{month}</p>
-                          <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{day}</p>
+            eventsUp.map((event, index) => {
+              if (index >= (pageNumberUp-1)*10 && index <= ((pageNumberUp)*10)-1) {
+                const months = [
+                  "January", "February", "March", "April", "May", "June",
+                  "July", "August", "September", "October", "November", "December"
+                ];
+                
+                const date = event["Event Date"];
+                const weekNumber = getWeekOfYear(date);
+                const weekName = getWeekName(weekNumber).substring(0, 3);
+                const month = months[Number(date.split("-")[1])-1].substring(0, 3).toUpperCase();
+                const day = date.split("-")[2];
+                return (
+                  <>
+                    <div className="grid md:grid-cols-3 py-7">
+                      <div className="md:flex md:justify-between lg:space-x-10 space-x-2 md:col-span-2">
+                        <div className="flex justify-between lg:space-x-10 md:space-x-2">
+                          <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
+                            <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{month}</p>
+                            <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{day}</p>
+                          </div>
+                          <div className="flex mb-2 md:hidden">
+                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
+                            <Image
+                              src="/info.svg"
+                              alt=""
+                              width={18}
+                              height={18}
+                              className="h-fit"
+                            />
+                          </div>
+                          <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
+                            <Image
+                              src={event["Event Image Link"]}
+                              alt=""
+                              layout="fill"
+                              objectFit="cover"
+                              className="rounded-md"
+                            />
+                          </div>
                         </div>
-                        <div className="flex mb-2 md:hidden">
-                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
-                          <Image
-                            src="/info.svg"
-                            alt=""
-                            width={18}
-                            height={18}
-                            className="h-fit"
-                          />
-                        </div>
-                        <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
-                          <Image
-                            src={event["Event Image Link"]}
-                            alt=""
-                            layout="fill"
-                            objectFit="cover"
-                            className="rounded-md"
-                          />
+                        <div className="w-full my-5 md:my-0">
+                          <div className="md:flex mb-2 hidden">
+                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
+                            <Image
+                              src="/info.svg"
+                              alt=""
+                              width={18}
+                              height={18}
+                            />
+                          </div>
+                          <div>
+                            <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
+                              {event["Event Name"]}
+                            </p>
+                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Name"]}</p>
+                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Address"]}</p>
+                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">{event["Venue City"]}, {event["Venue State"]}, {event["Zip Code"]}</p>
+                          </div>
                         </div>
                       </div>
-                      <div className="w-full my-5 md:my-0">
-                        <div className="md:flex mb-2 hidden">
-                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
-                          <Image
-                            src="/info.svg"
-                            alt=""
-                            width={18}
-                            height={18}
-                          />
-                        </div>
-                        <div>
-                          <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                            {event["Event Name"]}
-                          </p>
-                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Name"]}</p>
-                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Address"]}</p>
-                          <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">{event["Venue City"]}, {event["Venue State"]}, {event["Zip Code"]}</p>
-                        </div>
+                      <div className="flex md:justify-end items-center col-span-1">
+                        <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
+                          BUY TICKET
+                        </button>
                       </div>
                     </div>
-                    <div className="flex md:justify-end items-center col-span-1">
-                      <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
-                        BUY TICKET
-                      </button>
-                    </div>
-                  </div>
-                  <Image
-                    src="/line.svg"
-                    alt=""
-                    width={1280}
-                    height={3}
-                  />
-                </>
-              )
+                    <Image
+                      src="/line.svg"
+                      alt=""
+                      width={1280}
+                      height={3}
+                    />
+                  </>
+                )
+              }
             })
           }
+          <div className="flex justify-center">
+            <Stack spacing={2}>
+              <Pagination
+                count={(events.length/10 + 1)}
+                onChange={handlePageUp}
+                renderItem={(item) => (
+                  <PaginationItem
+                    slots={{ previous: ArrowBackIcon, next: ArrowForwardIcon }}
+                    {...item}
+                  />
+                )}
+              />
+            </Stack>
+          </div>
         </div>
       </div>
       
