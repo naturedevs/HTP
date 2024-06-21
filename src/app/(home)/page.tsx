@@ -19,6 +19,60 @@ import PaginationItem from '@mui/material/PaginationItem';
 import Stack from '@mui/material/Stack';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import Tooltip from '@mui/material/Tooltip';
+import { DatePicker 
+    
+} from '@mui/x-date-pickers';
+  import {AdapterDateFns} from 
+'@mui/x-date-pickers/AdapterDateFns';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+
+
+const ProSpan = styled('span')({
+  display: 'inline-block',
+  height: '1em',
+  width: '1em',
+  verticalAlign: 'middle',
+  marginLeft: '0.3em',
+  marginBottom: '0.08em',
+  backgroundSize: 'contain',
+  backgroundRepeat: 'no-repeat',
+  backgroundImage: 'url(https://mui.com/static/x/pro.svg)',
+});
+
+function Label({
+  componentName,
+  valueType,
+  isProOnly,
+}: {
+  componentName: string;
+  valueType: string;
+  isProOnly?: boolean;
+}) {
+  const content = (
+    <span>
+      <strong>{componentName}</strong> for {valueType} editing
+    </span>
+  );
+
+  if (isProOnly) {
+    return (
+      <Stack direction="row" spacing={0.5} component="span">
+        <Tooltip title="Included on Pro package">
+          <a
+            href="https://mui.com/x/introduction/licensing/#pro-plan"
+            aria-label="Included on Pro package"
+          >
+            <ProSpan />
+          </a>
+        </Tooltip>
+        {content}
+      </Stack>
+    );
+  }
+
+  return content;
+}
 
 function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -29,9 +83,88 @@ function Home() {
   const dispatch = useAppDispatch();
   const events = useAppSelector(selectEvents);
   const eventsUp = useAppSelector(selectEventsUp);
-  const [filter, setFilter] = React.useState({type: "", age: "", music: "", charge: "", distance: ""});
-  const [filterUp, setFilterUp] = React.useState({type: "", age: "", music: "", charge: "", distance: ""});
+  const [filter, setFilter] = React.useState({type: "", age: "", music: "", charge: "", distance: "", keyword: "", selectedDate: null});
+  const [filterUp, setFilterUp] = React.useState({type: "", age: "", music: "", charge: "", distance: "", keyword: "", selectedDate: null});
+  
+  const now = new Date();
+  const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000);
+  const nowTime = new Date(now.getTime());
+  // Extract components
+  const year = sixHoursAgo.getFullYear();
+  const month = String(sixHoursAgo.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const day = String(sixHoursAgo.getDate()).padStart(2, '0');
+  const hours = String(sixHoursAgo.getHours()).padStart(2, '0');
+  const minutes = String(sixHoursAgo.getMinutes()).padStart(2, '0');
 
+  const year1 = nowTime.getFullYear();
+  const month1 = String(nowTime.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const day1 = String(nowTime.getDate()).padStart(2, '0');
+  const hours1 = String(nowTime.getHours()).padStart(2, '0');
+  const minutes1 = String(nowTime.getMinutes()).padStart(2, '0');
+
+  // Format the date
+  const agoTime = `${year}-${month}-${day} ${hours}:${minutes}`;
+  const currentTime = `${year1}-${month1}-${day1} ${hours1}:${minutes1}`;
+
+  const eventsFilter = React.useMemo(()=>{
+    if (filter["selectedDate"] === null || filter["selectedDate"] === "" || filter["selectedDate"]=="Invalid Date") {
+      let temp = [];
+      for (let i = 0; i < events.length; i++) {
+        if (new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() && new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()) {
+          temp.push(events[i]);          
+        }
+      }
+      return temp;
+    }else{
+      let temp = [];
+      const dateString = filter["selectedDate"];
+
+      const dateObject = new Date(dateString);
+
+      const year = dateObject.getFullYear();
+      const month = ("0" + (dateObject.getMonth() + 1)).slice(-2); 
+      const day = ("0" + dateObject.getDate()).slice(-2); 
+
+      const formattedDate = `${year}-${month}-${day}`;
+
+      for (let i = 0; i < events.length; i++) {
+        if (new Date((events[i]["Event Date"])).getTime() === new Date(formattedDate).getTime()) {
+          temp.push(events[i]);          
+        }
+      }
+      return temp;
+    }
+  }, [events]);
+
+  const eventsUpFilter = React.useMemo(()=>{
+    if (filterUp["selectedDate"] === null || filterUp["selectedDate"] === "" || filterUp["selectedDate"]=="Invalid Date") {
+      let temp = [];
+      for (let i = 0; i < events.length; i++) {
+        if (new Date((eventsUp[i]?.["Event Date"] + " " + eventsUp[i]?.["Time Start"])).getTime() >= new Date(agoTime).getTime() && new Date((eventsUp[i]?.["Event Date"] + " " + eventsUp[i]?.["Time Start"])).getTime() <= new Date(currentTime).getTime()) {
+          temp.push(eventsUp[i]);          
+        }
+      }
+      return temp;
+    }else{
+      let temp = [];
+      const dateString = filterUp["selectedDate"];
+      const dateObject = new Date(dateString);
+
+      const year = dateObject.getFullYear();
+      const month = ("0" + (dateObject.getMonth() + 1)).slice(-2); 
+      const day = ("0" + dateObject.getDate()).slice(-2); 
+
+      const formattedDate = `${year}-${month}-${day}`;
+
+      for (let i = 0; i < eventsUp.length; i++) {
+        if (new Date((eventsUp[i]?.["Event Date"])).getTime() === new Date(formattedDate).getTime()) {
+          temp.push(eventsUp[i]);          
+        }
+      }
+      return temp;
+    }
+  }, [eventsUp]);
+  
   const onChange = (key, value) => {
     let temp = filter;
     temp[key] = value;
@@ -39,7 +172,7 @@ function Home() {
       ...filter,
       [key] : value
     });
-    dispatch(getEvents({ filter: true, keyword: JSON.stringify(filter) }));
+    // dispatch(getEvents({ filter: true, keyword: JSON.stringify(filter) }));
   }
   
   const onChangeUp = (key, value) => {
@@ -49,7 +182,7 @@ function Home() {
       ...filterUp,
       [key] : value
     });
-    dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(filterUp) }));
+    // dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(filterUp) }));
   }
 
   const DrawerHeader = styled('div')(({ theme }) => ({
@@ -146,7 +279,7 @@ function Home() {
                   placeholder="Enter City/Zipcode"
                 />
                 <div className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] border-[1px] border-[#FFFFFF] bg-white flex content-center mt-5 px-6">
-                  <select defaultValue={''}  onChange={(e) => onChange("distance", e.target.value)}  className="md:text-[17px] text-[14px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <select defaultValue={''}  onChange={(e) => onChange("distance", e.target.value)} value={filter["distance"]} className="md:text-[17px] text-[14px] leading-[18.5px] text-[#000000] outline-none w-full">
                     <option value="">Distance</option>
                     <option value="1">1 mile</option>
                     <option value="2-5">2-5 miles</option>
@@ -183,9 +316,9 @@ function Home() {
             </DrawerHeader>
             <Divider />
             <p className="text-[25px] font-[600] text-black text-center mt-10 mb-3">Filter By:</p>
-            <Grid container className="flex justify-between py-3 items-center md:hidden">
-              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={''} onChange={(e) => onChange("type", e.target.value)} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+            <Grid container className="flex py-3 justify-start items-center md:hidden px-5">
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''} onChange={(e) => onChange("type", e.target.value)} value={filter["type"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="">Type of event</option>
                   <option value="Bar party">Bar party</option>
                   <option value="Club party">Club party</option>
@@ -198,8 +331,8 @@ function Home() {
                   <option value="Other">Other</option>
                 </select>
               </Grid>
-              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={''}  onChange={(e) => onChange("music", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''}  onChange={(e) => onChange("music", e.target.value)} value={filter["music"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="">Music</option>
                   <option value="Top 40">Top 40</option>
                   <option value="EDM">EDM</option>
@@ -217,8 +350,8 @@ function Home() {
                   <option value="Metal">Metal</option>
                 </select>
               </Grid>
-              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={''}  onChange={(e) => onChange("age", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''}  onChange={(e) => onChange("age", e.target.value)} value={filter["age"]}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="">Age</option>
                   <option value="18">18+</option>
                   <option value="21">21+</option>
@@ -226,8 +359,8 @@ function Home() {
                   <option value="40">40+</option>
                 </select>
               </Grid>
-              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={''}  onChange={(e) => onChange("charge", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''}  onChange={(e) => onChange("charge", e.target.value)} value={filter["charge"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="">Cover Charge</option>
                   <option value="0">Free</option>
                   <option value="5-15">$5-$15</option>
@@ -237,8 +370,8 @@ function Home() {
                   <option value="80">$80+</option>
                 </select>
               </Grid>
-              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={''}  onChange={(e) => onChange("distance", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''}  onChange={(e) => onChange("distance", e.target.value)} value={filter["distance"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="">Distance</option>
                   <option value="1">1 mile</option>
                   <option value="2-5">2-5 miles</option>
@@ -247,16 +380,40 @@ function Home() {
                   <option value="20+">20+ miles</option>
                 </select>
               </Grid>
-              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="flex items-center p-0">
-                <button className="w-[264px] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]">
-                  Search for keyword
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="h-[47.92px] content-center my-5">
+                <Input 
+                  className="h-[47.92px] rounded-[24px] bg-white px-7 md:text-[17px] text-[14px]"
+                  placeholder="Search by keyword"
+                  value={filter["keyword"]}
+                  onChange={(e)=>onChange("keyword", e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="h-[47.92px] content-center my-5">
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker 
+                      className="flex justify-around rounded-[24px] border-[1px] border-[#B5B6B7] bg-white px-5 pt-0"
+                      onChange={(newValue) => {
+                        onChange("selectedDate", newValue);
+                      }}
+                      value={filter["selectedDate"]}
+                      disablePast
+                    />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="flex items-center p-0">
+                <button className="w-[264px] hover:bg-[#009688] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]" 
+                  onClick={() => {
+                      dispatch(getEvents({ filter: true, keyword: JSON.stringify(filter) }));
+                      setIsDrawerOpen(false);
+                    }}>
+                  Filter Now
                 </button>
               </Grid>
             </Grid>
           </Drawer>
           <Grid container className="md:flex justify-between py-3 items-center hidden">
-            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={''} onChange={(e) => onChange("type", e.target.value)} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+              <select defaultValue={''} onChange={(e) => onChange("type", e.target.value)} value={filter["type"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Type of event</option>
                 <option value="Bar party">Bar party</option>
                 <option value="Club party">Club party</option>
@@ -269,8 +426,8 @@ function Home() {
                 <option value="Other">Other</option>
               </select>
             </Grid>
-            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={''}  onChange={(e) => onChange("music", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+              <select defaultValue={''}  onChange={(e) => onChange("music", e.target.value)} value={filter["music"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Music</option>
                 <option value="Top 40">Top 40</option>
                 <option value="EDM">EDM</option>
@@ -288,8 +445,8 @@ function Home() {
                 <option value="Metal">Metal</option>
               </select>
             </Grid>
-            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={''}  onChange={(e) => onChange("age", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+              <select defaultValue={''}  onChange={(e) => onChange("age", e.target.value)} value={filter["age"]}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Age</option>
                 <option value="18">18+</option>
                 <option value="21">21+</option>
@@ -297,8 +454,8 @@ function Home() {
                 <option value="40">40+</option>
               </select>
             </Grid>
-            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={''}  onChange={(e) => onChange("charge", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+              <select defaultValue={''}  onChange={(e) => onChange("charge", e.target.value)} value={filter["charge"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Cover Charge</option>
                 <option value="0">Free</option>
                 <option value="5-15">$5-$15</option>
@@ -308,8 +465,8 @@ function Home() {
                 <option value="80">$80+</option>
               </select>
             </Grid>
-            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={''}  onChange={(e) => onChange("distance", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+              <select defaultValue={''}  onChange={(e) => onChange("distance", e.target.value)} value={filter["distance"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Distance</option>
                 <option value="1">1 mile</option>
                 <option value="2-5">2-5 miles</option>
@@ -318,9 +475,29 @@ function Home() {
                 <option value="20+">20+ miles</option>
               </select>
             </Grid>
-            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="flex items-center p-0">
-              <button className="w-[264px] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]">
-                Search for keyword
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="h-[47.92px] content-center my-5">
+              <Input 
+                className="h-[47.92px] rounded-[24px] bg-white px-7 md:text-[17px] text-[14px]"
+                placeholder="Search by keyword"
+                value={filter["keyword"]}
+                onChange={(e)=>onChange("keyword", e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="h-[47.92px] content-center my-5">
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker 
+                    className="flex justify-around rounded-[24px] border-[1px] border-[#B5B6B7] bg-white px-5 pt-0"
+                    onChange={(newValue) => {
+                        onChange("selectedDate", newValue);
+                      }}
+                      value={filter["selectedDate"]}
+                      disablePast
+                  />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="flex items-center p-0">
+              <button className="w-[264px] hover:bg-[#009688] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]" onClick={() => dispatch(getEvents({ filter: true, keyword: JSON.stringify(filter) }))}>
+                Filter Now
               </button>
             </Grid>
           </Grid>
@@ -336,88 +513,90 @@ function Home() {
             </div>
           </div>
           {
-            events.map((event, index) => {
-              if (index >= (pageNumber-1)*10 && index <= ((pageNumber)*10)-1) {
-                const months = [
-                  "January", "February", "March", "April", "May", "June",
-                  "July", "August", "September", "October", "November", "December"
-                ];
-                
-                const date = event["Event Date"];
-                const weekNumber = getWeekOfYear(date);
-                const weekName = getWeekName(weekNumber).substring(0, 3);
-                const month = months[Number(date.split("-")[1])-1].substring(0, 3).toUpperCase();
-                const day = date.split("-")[2];
-                return (
-                  <>
-                    <div className="grid md:grid-cols-3 py-7">
-                      <div className="md:flex md:justify-between lg:space-x-10 space-x-2 md:col-span-2">
-                        <div className="flex justify-between lg:space-x-10 md:space-x-2">
-                          <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
-                            <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{month}</p>
-                            <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{day}</p>
+            eventsFilter.map((event, index) => {
+                // if (event["Event Name"].includes(filter.keyword) || event["Music Type"].includes(filter.keyword) || event["DJ Name"].includes(filter.keyword) || event["Venue Type"].includes(filter.keyword)) {
+                  if (index >= (pageNumber-1)*10 && index <= ((pageNumber)*10)-1) {
+                    const months = [
+                      "January", "February", "March", "April", "May", "June",
+                      "July", "August", "September", "October", "November", "December"
+                    ];
+                    
+                    const date = event["Event Date"];
+                    const weekNumber = getWeekOfYear(date);
+                    const weekName = getWeekName(weekNumber).substring(0, 3);
+                    const month = months[Number(date.split("-")[1])-1].substring(0, 3).toUpperCase();
+                    const day = date.split("-")[2];
+                    return (
+                      <>
+                        <div className="grid md:grid-cols-3 py-7">
+                          <div className="md:flex md:justify-between lg:space-x-10 space-x-2 md:col-span-2">
+                            <div className="flex justify-between lg:space-x-10 md:space-x-2">
+                              <div className="bg-primaryColor mmd:w-[90px] mmd:h-[76.88px] w-[50px] h-[50px] content-center rounded-[4px]">
+                                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{month}</p>
+                                <p className="mmd:text-[25px] text-[15px] mmd:leading-[27px] leading-[17px] text-[#FFFFFF] text-center">{day}</p>
+                              </div>
+                              <div className="flex mb-2 md:hidden">
+                                <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
+                                <Image
+                                  src="/info.svg"
+                                  alt=""
+                                  width={18}
+                                  height={18}
+                                  className="h-fit"
+                                />
+                              </div>
+                              <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
+                                <Image
+                                  src={event["Event Image Link"]}
+                                  alt=""
+                                  layout="fill"
+                                  objectFit="cover"
+                                  className="rounded-md"
+                                />
+                              </div>
+                            </div>
+                            <div className="w-full my-5 md:my-0">
+                              <div className="md:flex mb-2 hidden">
+                                <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
+                                <Image
+                                  src="/info.svg"
+                                  alt=""
+                                  width={18}
+                                  height={18}
+                                />
+                              </div>
+                              <div>
+                                <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
+                                  {event["Event Name"]}
+                                </p>
+                                <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Name"]}</p>
+                                <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Address"]}</p>
+                                <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">{event["Venue City"]}, {event["Venue State"]}, {event["Zip Code"]}</p>
+                              </div>
+                            </div>
                           </div>
-                          <div className="flex mb-2 md:hidden">
-                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
-                            <Image
-                              src="/info.svg"
-                              alt=""
-                              width={18}
-                              height={18}
-                              className="h-fit"
-                            />
-                          </div>
-                          <div className="md:h-full h-[100px] w-[100px] md:w-[150px] relative">
-                            <Image
-                              src={event["Event Image Link"]}
-                              alt=""
-                              layout="fill"
-                              objectFit="cover"
-                              className="rounded-md"
-                            />
+                          <div className="flex md:justify-end items-center col-span-1">
+                            <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
+                              BUY TICKET
+                            </button>
                           </div>
                         </div>
-                        <div className="w-full my-5 md:my-0">
-                          <div className="md:flex mb-2 hidden">
-                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mr-2">{weekName} - {event["Time Start"]}</p>
-                            <Image
-                              src="/info.svg"
-                              alt=""
-                              width={18}
-                              height={18}
-                            />
-                          </div>
-                          <div>
-                            <p className="mmd:text-[23px] text-[16px] text-[#000000] mmd:leading-[25px] leading-[18px] my-2">
-                              {event["Event Name"]}
-                            </p>
-                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Name"]}</p>
-                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] my-2">{event["Venue Address"]}</p>
-                            <p className="mmd:text-[17px] text-[13px] mmd:leading-[18.5px] leading-[15px] text-[#7D7D7D] mt-2">{event["Venue City"]}, {event["Venue State"]}, {event["Zip Code"]}</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="flex md:justify-end items-center col-span-1">
-                        <button className="mmd:w-[245px] w-[145px] mmd:h-[51px] h-[39px] rounded-[25px] bg-primaryColor mmd:text-[17px] text-[14px] text-[#FFFFFF] mmd:leading-[18px] leading-[15px]">
-                          BUY TICKET
-                        </button>
-                      </div>
-                    </div>
-                    <Image
-                      src="/line.svg"
-                      alt=""
-                      width={1280}
-                      height={3}
-                    />
-                  </>
-                )
-              }
+                        <Image
+                          src="/line.svg"
+                          alt=""
+                          width={1280}
+                          height={3}
+                        />
+                      </>
+                    )
+                }
+              // }
             })
           }
           <div className="flex justify-center">
             <Stack spacing={2}>
               <Pagination
-                count={(events.length/10 + 1)}
+                count={eventsFilter.length === 0? 1: Math.ceil(eventsFilter.length/10)}
                 onChange={handlePage}
                 renderItem={(item) => (
                   <PaginationItem
@@ -555,9 +734,9 @@ function Home() {
             </DrawerHeader>
             <Divider />
             <p className="text-[25px] font-[600] text-black text-center mt-10 mb-3">Filter By:</p>
-            <Grid container className="flex justify-between py-3 items-center md:hidden">
-              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={''} onChange={(e) => onChangeUp("type", e.target.value)} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+            <Grid container className="flex justify-between py-3 items-center md:hidden px-5">
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''} onChange={(e) => onChangeUp("type", e.target.value)} value={filterUp["type"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="">Type of event</option>
                   <option value="Bar party">Bar party</option>
                   <option value="Club party">Club party</option>
@@ -570,8 +749,8 @@ function Home() {
                   <option value="Other">Other</option>
                 </select>
               </Grid>
-              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={''}  onChange={(e) => onChangeUp("music", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''}  onChange={(e) => onChangeUp("music", e.target.value)} value={filterUp["music"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="">Music</option>
                   <option value="Top 40">Top 40</option>
                   <option value="EDM">EDM</option>
@@ -589,8 +768,8 @@ function Home() {
                   <option value="Metal">Metal</option>
                 </select>
               </Grid>
-              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={''}  onChange={(e) => onChangeUp("age", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''}  onChange={(e) => onChangeUp("age", e.target.value)} value={filterUp["age"]}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="">Age</option>
                   <option value="18">18+</option>
                   <option value="21">21+</option>
@@ -598,8 +777,8 @@ function Home() {
                   <option value="40">40+</option>
                 </select>
               </Grid>
-              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={''}  onChange={(e) => onChangeUp("charge", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''}  onChange={(e) => onChangeUp("charge", e.target.value)} value={filterUp["charge"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="">Cover Charge</option>
                   <option value="0">Free</option>
                   <option value="5-15">$5-$15</option>
@@ -609,8 +788,8 @@ function Home() {
                   <option value="80">$80+</option>
                 </select>
               </Grid>
-              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-                <select defaultValue={''}  onChange={(e) => onChangeUp("distance", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+                <select defaultValue={''}  onChange={(e) => onChangeUp("distance", e.target.value)} value={filterUp["distance"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                   <option value="">Distance</option>
                   <option value="1">1 mile</option>
                   <option value="2-5">2-5 miles</option>
@@ -619,16 +798,41 @@ function Home() {
                   <option value="20+">20+ miles</option>
                 </select>
               </Grid>
-              <Grid item xs={12} md={4} xl={2} sx={{ display: "flex" }} className="flex items-center p-0">
-                <button className="w-[264px] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]">
-                  Search for keyword
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="h-[47.92px] content-center my-5">
+                <Input 
+                  className="h-[47.92px] rounded-[24px] bg-white px-7 md:text-[17px] text-[14px]"
+                  placeholder="Search by keyword"
+                  value={filterUp["keyword"]}
+                  onChange={(e)=>onChangeUp("keyword", e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="h-[47.92px] content-center my-5">
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker 
+                      className="flex justify-around rounded-[24px] border-[1px] border-[#B5B6B7] bg-white px-5 pt-0"
+                      onChange={(newValue) => {
+                        onChangeUp("selectedDate", newValue);
+                      }}
+                      value={filterUp["selectedDate"]}
+                      disablePast
+                    />
+                </LocalizationProvider>
+              </Grid>
+              <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="flex items-center p-0">
+                <button className="w-[264px] hover:bg-[#009688] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]" 
+                  onClick={() => {
+                    dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(filterUp) }));
+                    setIsDrawerOpenUp(false)
+                  }}
+                >
+                  Filter Now
                 </button>
               </Grid>
             </Grid>
           </Drawer>
           <Grid container className="md:flex justify-between py-3 items-center hidden">
-            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={''} onChange={(e) => onChangeUp("type", e.target.value)} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+              <select defaultValue={''} onChange={(e) => onChangeUp("type", e.target.value)} value={filterUp["type"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Type of event</option>
                 <option value="Bar party">Bar party</option>
                 <option value="Club party">Club party</option>
@@ -641,8 +845,8 @@ function Home() {
                 <option value="Other">Other</option>
               </select>
             </Grid>
-            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={''}  onChange={(e) => onChangeUp("music", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+              <select defaultValue={''}  onChange={(e) => onChangeUp("music", e.target.value)} value={filterUp["music"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Music</option>
                 <option value="Top 40">Top 40</option>
                 <option value="EDM">EDM</option>
@@ -660,8 +864,8 @@ function Home() {
                 <option value="Metal">Metal</option>
               </select>
             </Grid>
-            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={''}  onChange={(e) => onChangeUp("age", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+              <select defaultValue={''}  onChange={(e) => onChangeUp("age", e.target.value)} value={filterUp["age"]}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Age</option>
                 <option value="18">18+</option>
                 <option value="21">21+</option>
@@ -669,8 +873,8 @@ function Home() {
                 <option value="40">40+</option>
               </select>
             </Grid>
-            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={''}  onChange={(e) => onChangeUp("charge", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[115px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+              <select defaultValue={''}  onChange={(e) => onChangeUp("charge", e.target.value)} value={filterUp["charge"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Cover Charge</option>
                 <option value="0">Free</option>
                 <option value="5-15">$5-$15</option>
@@ -680,8 +884,8 @@ function Home() {
                 <option value="80">$80+</option>
               </select>
             </Grid>
-            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
-              <select defaultValue={''}  onChange={(e) => onChangeUp("distance", e.target.value)}  className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="w-[204px] h-[47.92px] rounded-[24px] border-[1px] border-[#B5B6B7] bg-white flex content-center my-5 px-5 pt-0">
+              <select defaultValue={''}  onChange={(e) => onChangeUp("distance", e.target.value)} value={filterUp["distance"]} className="text-[17px] leading-[18.5px] text-[#000000] outline-none w-full">
                 <option value="">Distance</option>
                 <option value="1">1 mile</option>
                 <option value="2-5">2-5 miles</option>
@@ -690,9 +894,29 @@ function Home() {
                 <option value="20+">20+ miles</option>
               </select>
             </Grid>
-            <Grid item xs={4} md={4} xl={2} sx={{ display: "flex" }} className="flex items-center p-0">
-              <button className="w-[264px] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]">
-                Search for keyword
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="h-[47.92px] content-center my-5">
+              <Input 
+                className="h-[47.92px] rounded-[24px] bg-white px-7 md:text-[17px] text-[14px]"
+                placeholder="Search by keyword"
+                value={filterUp["keyword"]}
+                onChange={(e)=>onChangeUp("keyword", e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="h-[47.92px] content-center my-5">
+              <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker 
+                    className="flex justify-around rounded-[24px] border-[1px] border-[#B5B6B7] bg-white px-5 pt-0"
+                    onChange={(newValue) => {
+                      onChangeUp("selectedDate", newValue);
+                    }}
+                    value={filterUp["selectedDate"]}
+                    disablePast
+                  />
+              </LocalizationProvider>
+            </Grid>
+            <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="flex items-center p-0">
+              <button className="w-[264px] hover:bg-[#009688] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]" onClick={() => dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(filterUp) }))}>
+                Filter Now
               </button>
             </Grid>
           </Grid>
@@ -708,7 +932,7 @@ function Home() {
             </div>
           </div>
           {
-            eventsUp.map((event, index) => {
+            eventsUpFilter.map((event, index) => {
               if (index >= (pageNumberUp-1)*10 && index <= ((pageNumberUp)*10)-1) {
                 const months = [
                   "January", "February", "March", "April", "May", "June",
@@ -789,7 +1013,7 @@ function Home() {
           <div className="flex justify-center">
             <Stack spacing={2}>
               <Pagination
-                count={(events.length/10 + 1)}
+                count={(eventsUpFilter.length/10 + 1)}
                 onChange={handlePageUp}
                 renderItem={(item) => (
                   <PaginationItem
