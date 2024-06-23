@@ -97,7 +97,7 @@ function Home() {
   const minutes = String(sixHoursAgo.getMinutes()).padStart(2, '0');
 
   const year1 = nowTime.getFullYear();
-  const month1 = String(nowTime.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const month1 = String(nowTime.getMonth() + 3).padStart(2, '0'); // Months are zero-based
   const day1 = String(nowTime.getDate()).padStart(2, '0');
   const hours1 = String(nowTime.getHours()).padStart(2, '0');
   const minutes1 = String(nowTime.getMinutes()).padStart(2, '0');
@@ -1013,7 +1013,7 @@ function Home() {
           <div className="flex justify-center">
             <Stack spacing={2}>
               <Pagination
-                count={(eventsUpFilter.length/10 + 1)}
+                count={eventsUpFilter.length === 0? 1: Math.ceil(eventsUpFilter.length/10)}
                 onChange={handlePageUp}
                 renderItem={(item) => (
                   <PaginationItem
