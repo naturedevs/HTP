@@ -20,11 +20,9 @@ import Stack from '@mui/material/Stack';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Tooltip from '@mui/material/Tooltip';
-import { DatePicker 
-    
-} from '@mui/x-date-pickers';
-  import {AdapterDateFns} from 
-'@mui/x-date-pickers/AdapterDateFns';
+import axios from 'axios'; 
+import { DatePicker } from '@mui/x-date-pickers';
+import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 
 
@@ -83,8 +81,8 @@ function Home() {
   const dispatch = useAppDispatch();
   const events = useAppSelector(selectEvents);
   const eventsUp = useAppSelector(selectEventsUp);
-  const [filter, setFilter] = React.useState({type: "", age: "", music: "", charge: "", distance: "", keyword: "", selectedDate: null});
-  const [filterUp, setFilterUp] = React.useState({type: "", age: "", music: "", charge: "", distance: "", keyword: "", selectedDate: null});
+  const [filter, setFilter] = React.useState({type: "", age: "", music: "", charge: "", distance: "", keyword: "", selectedDate: null, lng: "", lati: ""});
+  const [filterUp, setFilterUp] = React.useState({type: "", age: "", music: "", charge: "", distance: "", keyword: "", selectedDate: null, lng: "", lati: ""});
   
   const now = new Date();
   const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000);
@@ -106,17 +104,49 @@ function Home() {
   const agoTime = `${year}-${month}-${day} ${hours}:${minutes}`;
   const currentTime = `${year1}-${month1}-${day1} ${hours1}:${minutes1}`;
 
+  
+  const [city, setCity] = useState('');
+  const [zip, setZip] = useState('');
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(async function(position) {
+      const lat = position.coords.latitude;
+      const long = position.coords.longitude;
+      dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
+      dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
+      setFilter({
+        ...filter,
+        lng: String(long),
+        lati: String(lat),
+      })
+
+      try {
+        const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyB3O4bL6G9YKssLv3eu6I2L3FKHO-5DRj4`);
+        const addressComponents = response.data.results[0].address_components;
+        const cityResult = addressComponents.find(component => component.types.includes('locality'));
+        const postalCodeResult = addressComponents.find(component => component.types.includes('postal_code'));
+
+        if (cityResult && postalCodeResult) {
+          setCity(cityResult.long_name);
+          setZip(postalCodeResult.long_name);
+        }
+      } catch (error) {
+        console.error('Error fetching location details:', error);
+      }
+    });
+  }, []);
+
+  console.log(events);
+
   const eventsFilter = React.useMemo(()=>{
+    let temp = [];
     if (filter["selectedDate"] === null || filter["selectedDate"] === "" || filter["selectedDate"]=="Invalid Date") {
-      let temp = [];
       for (let i = 0; i < events.length; i++) {
         if (new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() && new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()) {
           temp.push(events[i]);          
         }
       }
-      return temp;
     }else{
-      let temp = [];
       const dateString = filter["selectedDate"];
 
       const dateObject = new Date(dateString);
@@ -132,21 +162,19 @@ function Home() {
           temp.push(events[i]);          
         }
       }
-      return temp;
     }
+    return temp;
   }, [events]);
 
   const eventsUpFilter = React.useMemo(()=>{
+    let temp = [];
     if (filterUp["selectedDate"] === null || filterUp["selectedDate"] === "" || filterUp["selectedDate"]=="Invalid Date") {
-      let temp = [];
       for (let i = 0; i < events.length; i++) {
         if (new Date((eventsUp[i]?.["Event Date"] + " " + eventsUp[i]?.["Time Start"])).getTime() >= new Date(agoTime).getTime() && new Date((eventsUp[i]?.["Event Date"] + " " + eventsUp[i]?.["Time Start"])).getTime() <= new Date(currentTime).getTime()) {
           temp.push(eventsUp[i]);          
         }
       }
-      return temp;
     }else{
-      let temp = [];
       const dateString = filterUp["selectedDate"];
       const dateObject = new Date(dateString);
 
@@ -161,8 +189,8 @@ function Home() {
           temp.push(eventsUp[i]);          
         }
       }
-      return temp;
     }
+    return temp;
   }, [eventsUp]);
   
   const onChange = (key, value) => {
@@ -192,11 +220,6 @@ function Home() {
     ...theme.mixins.toolbar,
     justifyContent: 'flex-end',
   }));
-
-  useEffect(() => {
-    dispatch(getEvents({ filter: false, keyword: "" }));
-    dispatch(getEventsUp({ filter: false, keyword: "" }));
-  }, [])
 
   const handlePage = (e, number) => {
     setPageNumber(number);
@@ -277,6 +300,7 @@ function Home() {
                 <Input 
                   className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] bg-white px-7 md:text-[17px] text-[14px]"
                   placeholder="Enter City/Zipcode"
+                  value={city + "/" + zip}
                 />
                 <div className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] border-[1px] border-[#FFFFFF] bg-white flex content-center mt-5 px-6">
                   <select defaultValue={''}  onChange={(e) => onChange("distance", e.target.value)} value={filter["distance"]} className="md:text-[17px] text-[14px] leading-[18.5px] text-[#000000] outline-none w-full">
@@ -285,7 +309,7 @@ function Home() {
                     <option value="2-5">2-5 miles</option>
                     <option value="5-10">5-10 miles</option>
                     <option value="10-20">10-20 miles</option>
-                    <option value="20+">20+ miles</option>
+                    <option value="20">20+ miles</option>
                   </select>
                 </div>
                 <button className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] bg-primaryColor text-[17px] text-[#FFFFFF] mt-5">
@@ -377,7 +401,7 @@ function Home() {
                   <option value="2-5">2-5 miles</option>
                   <option value="5-10">5-10 miles</option>
                   <option value="10-20">10-20 miles</option>
-                  <option value="20+">20+ miles</option>
+                  <option value="20">20+ miles</option>
                 </select>
               </Grid>
               <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="h-[47.92px] content-center my-5">
@@ -472,7 +496,7 @@ function Home() {
                 <option value="2-5">2-5 miles</option>
                 <option value="5-10">5-10 miles</option>
                 <option value="10-20">10-20 miles</option>
-                <option value="20+">20+ miles</option>
+                <option value="20">20+ miles</option>
               </select>
             </Grid>
             <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="h-[47.92px] content-center my-5">
@@ -795,7 +819,7 @@ function Home() {
                   <option value="2-5">2-5 miles</option>
                   <option value="5-10">5-10 miles</option>
                   <option value="10-20">10-20 miles</option>
-                  <option value="20+">20+ miles</option>
+                  <option value="20">20+ miles</option>
                 </select>
               </Grid>
               <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="h-[47.92px] content-center my-5">
@@ -891,7 +915,7 @@ function Home() {
                 <option value="2-5">2-5 miles</option>
                 <option value="5-10">5-10 miles</option>
                 <option value="10-20">10-20 miles</option>
-                <option value="20+">20+ miles</option>
+                <option value="20">20+ miles</option>
               </select>
             </Grid>
             <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="h-[47.92px] content-center my-5">
@@ -1230,8 +1254,11 @@ function Home() {
             </div>
           </div>
         </div>
+      <div>
+        <p className="text-lg">Long: {filter["lng"]}</p>
+        <p className="text-lg">Lati: {filter["lati"]}</p>
       </div>
-
+      </div>
     </div>
   );
 }

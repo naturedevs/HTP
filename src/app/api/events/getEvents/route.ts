@@ -5,6 +5,7 @@ export async function POST(request: Request, params: { action: string }) {
   const req: { filter:boolean, keyword:string } = await request.json();
   const filter = req.filter;
 
+  let tempFilter = JSON.parse(req.keyword);
   try{
     let res = null;
     if(!filter){
@@ -21,13 +22,13 @@ export async function POST(request: Request, params: { action: string }) {
       if (tempFilter.charge === "") {
         console.log(11);
         res = await supabase
-          .from('events')
-          .select()
-          .ilike('Event Type', `%${tempFilter.type}%`)
-          .gte('age', Number(tempFilter.age))
-          .ilike('Music Type', `%${tempFilter.music}%`)
-          .order('Event Date',{ ascending: false })
-          .order('Time Start', {ascending: false});
+        .from('events')
+        .select()
+        .ilike('Event Type', `%${tempFilter.type}%`)
+        .gte('age', Number(tempFilter.age))
+        .ilike('Music Type', `%${tempFilter.music}%`)
+        .order('Event Date', { ascending: false })
+        .order('Time Start', { ascending: false });
       }else{
         console.log(1);
         if (!tempFilter.charge.includes("-")) {
@@ -69,14 +70,17 @@ export async function POST(request: Request, params: { action: string }) {
       }
         
       const { data, error } = res;
-      console.log(data);
       let temp = [];
       for (let i = 0; i < data.length; i++) {
         if (data[i]["Event Name"].includes(tempFilter.keyword) || data[i]["Music Type"].includes(tempFilter.keyword) || data[i]["DJ Name"].includes(tempFilter.keyword) || data[i]["Venue Type"].includes(tempFilter.keyword)) {
           temp.push(data[i]);
         }
       }
-      console.log(temp);
+      temp.forEach(event => {
+        const distance = calculateDistance(event.latitude, event.longitude, Number(tempFilter.lati), Number(tempFilter.lng));
+        event.distance = distance/1609.34; // Add the distance to each event object
+      });
+    
 
       if(error){
         return NextResponse.json(error.message, { status: 401 });
@@ -89,3 +93,21 @@ export async function POST(request: Request, params: { action: string }) {
     return NextResponse.json('Error fetching users', { status: 401 });
   }
 }
+
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  
+  const R = 6371e3; // Radius of the earth in meters
+  const φ1 = lat1 * (Math.PI / 180); // φ, λ in radians
+  const φ2 = lat2 * (Math.PI / 180);
+  const Δφ = (lat2 - lat1) * (Math.PI / 180);
+  const Δλ = (lon2 - lon1) * (Math.PI / 180);
+
+  const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+            Math.cos(φ1) * Math.cos(φ2) *
+            Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const d = R * c; // in meters
+  return d;
+}
+
