@@ -27,8 +27,8 @@ export async function POST(request: Request, params: { action: string }) {
         .ilike('Event Type', `%${tempFilter.type}%`)
         .gte('age', Number(tempFilter.age))
         .ilike('Music Type', `%${tempFilter.music}%`)
-        .order('Event Date', { ascending: false })
-        .order('Time Start', { ascending: false });
+        .order('Event Date', { ascending: true })
+        .order('Time Start', { ascending: true });
       }else{
         console.log(1);
         if (!tempFilter.charge.includes("-")) {
@@ -41,8 +41,8 @@ export async function POST(request: Request, params: { action: string }) {
               .gte('age', Number(tempFilter.age))
               .ilike('Music Type', `%${tempFilter.music}%`)
               .lte('Ticket Price', 0)
-              .order('Event Date',{ ascending: false })
-              .order('Time Start', {ascending: false});         
+              .order('Event Date',{ ascending: true })
+              .order('Time Start', {ascending: true});         
           }else{
         console.log(3);
         res = await supabase
@@ -52,8 +52,8 @@ export async function POST(request: Request, params: { action: string }) {
               .gte('age', Number(tempFilter.age))
               .ilike('Music Type', `%${tempFilter.music}%`)
               .gte('Ticket Price', Number(tempFilter.charge))
-              .order('Event Date',{ ascending: false })
-              .order('Time Start', {ascending: false});
+              .order('Event Date',{ ascending: true })
+              .order('Time Start', {ascending: true});
           }
         }else{
           res = await supabase
@@ -64,15 +64,19 @@ export async function POST(request: Request, params: { action: string }) {
             .ilike('Music Type', `%${tempFilter.music}%`)
             .gte('Ticket Price', Number(tempFilter.charge.split("-")[0]))
             .lte('Ticket Price', Number(tempFilter.charge.split("-")[1]))
-            .order('Event Date',{ ascending: false })
-            .order('Time Start', {ascending: false});
+            .order('Event Date',{ ascending: true })
+            .order('Time Start', {ascending: true});
         }
       }
         
       const { data, error } = res;
       let temp = [];
+        console.log(tempFilter.keyword);
       for (let i = 0; i < data.length; i++) {
-        if (data[i]["Event Name"].includes(tempFilter.keyword) || data[i]["Music Type"].includes(tempFilter.keyword) || data[i]["DJ Name"].includes(tempFilter.keyword) || data[i]["Venue Type"].includes(tempFilter.keyword)) {
+        if (data[i]["Event Name"].toLowerCase().includes(tempFilter.keyword.toLowerCase()) || 
+            data[i]["Music Type"].toLowerCase().includes(tempFilter.keyword.toLowerCase()) || 
+            data[i]["DJ Name"].toLowerCase().includes(tempFilter.keyword.toLowerCase()) || 
+            data[i]["Venue Type"].toLowerCase().includes(tempFilter.keyword.toLowerCase())) {
           temp.push(data[i]);
         }
       }
