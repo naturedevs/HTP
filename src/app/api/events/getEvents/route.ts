@@ -76,6 +76,7 @@ export async function POST(request: Request, params: { action: string }) {
         if (data[i]["Event Name"].toLowerCase().includes(tempFilter.keyword.toLowerCase()) || 
             data[i]["Music Type"].toLowerCase().includes(tempFilter.keyword.toLowerCase()) || 
             data[i]["DJ Name"].toLowerCase().includes(tempFilter.keyword.toLowerCase()) || 
+            data[i]["Venue Name"].toLowerCase().includes(tempFilter.keyword.toLowerCase()) || 
             data[i]["Venue Type"].toLowerCase().includes(tempFilter.keyword.toLowerCase())) {
           temp.push(data[i]);
         }
