@@ -50,6 +50,7 @@ function Home() {
   const [filter, setFilter] = React.useState({type: "", age: "", music: "", charge: "", distance: "", keyword: "", selectedDate: null, lng: "", lati: ""});
   const [filterUp, setFilterUp] = React.useState({type: "", age: "", music: "", charge: "", distance: "", keyword: "", selectedDate: null, lng: "", lati: ""});
   const [ip, setIp] = useState('');
+  const [geo, setGeo] = useState({ lat:0, lng:0 })
 
   const now = new Date();
   const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000);
@@ -89,6 +90,11 @@ function Home() {
 
         const lat = data.results[0].geometry.location.lat;
         const lng = data.results[0].geometry.location.lng;
+        setGeo({
+          ...geo,
+          lat,
+          lng
+        });
         console.log(lat, lng);
       } catch (error) {
         console.error('Failed to fetch IP:', error);
@@ -100,8 +106,18 @@ function Home() {
     navigator.geolocation.getCurrentPosition(async function(position) {
       const lat = position.coords.latitude;
       const long = position.coords.longitude;
-      dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
-      dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
+
+      navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
+        console.log(permissionStatus.state); // "granted", "denied", or "prompt"
+        if (permissionStatus.state === "denied") {
+          dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(geo["lng"]), lati: String(geo["lat"])}) }));
+          dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(geo["lng"]), lati: String(geo["lat"])}) }));
+        }else{
+          dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
+          dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
+        }
+      });
+      
       setFilter({
         ...filter,
         lng: String(long),
@@ -123,6 +139,35 @@ function Home() {
       }
     });
   }, []);
+
+  const handleFilter = () => {
+    navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
+      console.log(permissionStatus.state); // "granted", "denied", or "prompt"
+      if (permissionStatus.state === "denied") {
+        let temp = filter;
+        temp.lati = String(geo["lat"]);
+        temp.lng = String(geo["lng"]);
+        dispatch(getEvents({ filter: true, keyword: JSON.stringify(temp) }));
+      }else{
+        dispatch(getEvents({ filter: true, keyword: JSON.stringify(filter) }));
+      }
+    });
+  }
+
+  
+  const handleFilterUp = () => {
+    navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
+      console.log(permissionStatus.state); // "granted", "denied", or "prompt"
+      if (permissionStatus.state === "denied") {
+        let temp = filterUp;
+        temp.lati = String(geo["lat"]);
+        temp.lng = String(geo["lng"]);
+        dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(temp) }));
+      }else{
+        dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(filterUp) }));
+      }
+    });
+  }
 
   const eventsFilter = React.useMemo(()=>{
     let temp = [];
@@ -291,7 +336,7 @@ function Home() {
                 <Input 
                   className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] bg-white px-7 md:text-[17px] text-[14px]"
                   placeholder="Enter City/Zipcode"
-                  value={city + "/" + zip}
+                  // value={city + "/" + zip}
                 />
                 <div className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] border-[1px] border-[#FFFFFF] bg-white flex content-center mt-5 px-6">
                   <select defaultValue={''}  onChange={(e) => onChange("distance", e.target.value)} value={filter["distance"]} className="md:text-[17px] text-[14px] leading-[18.5px] text-[#000000] outline-none w-full">
@@ -418,7 +463,7 @@ function Home() {
               <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="flex items-center p-0">
                 <button className="w-[264px] hover:bg-[#009688] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]" 
                   onClick={() => {
-                      dispatch(getEvents({ filter: true, keyword: JSON.stringify(filter) }));
+                      handleFilter();
                       setIsDrawerOpen(false);
                     }}>
                   Filter Now
@@ -511,7 +556,10 @@ function Home() {
               </LocalizationProvider>
             </Grid>
             <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="flex items-center p-0">
-              <button className="w-[264px] hover:bg-[#009688] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]" onClick={() => dispatch(getEvents({ filter: true, keyword: JSON.stringify(filter) }))}>
+              <button className="w-[264px] hover:bg-[#009688] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]" 
+              onClick={() => {
+                  handleFilter();
+                }}>
                 Filter Now
               </button>
             </Grid>
@@ -836,7 +884,7 @@ function Home() {
               <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="flex items-center p-0">
                 <button className="w-[264px] hover:bg-[#009688] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]" 
                   onClick={() => {
-                    dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(filterUp) }));
+                    handleFilterUp();
                     setIsDrawerOpenUp(false)
                   }}
                 >
@@ -930,7 +978,7 @@ function Home() {
               </LocalizationProvider>
             </Grid>
             <Grid item xs={12} md={3} xl={3} sx={{ display: "flex" }} className="flex items-center p-0">
-              <button className="w-[264px] hover:bg-[#009688] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]" onClick={() => dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(filterUp) }))}>
+              <button className="w-[264px] hover:bg-[#009688] h-[47.92px] rounded-[24px] bg-primaryColor text-[17px] text-[#FFFFFF]" onClick={handleFilterUp}>
                 Filter Now
               </button>
             </Grid>
