@@ -1294,7 +1294,9 @@ function Home() {
           </div>
         </div>
       <div>
-        <p>{ip}</p>
+        <p>IP: {ip}</p>
+        <p className="text-lg">Long1: {geo["lng"]}</p>
+        <p className="text-lg">Lati1: {geo["lat"]}</p>
         <p className="text-lg">Long: {filter["lng"]}</p>
         <p className="text-lg">Lati: {filter["lati"]}</p>
       </div>
