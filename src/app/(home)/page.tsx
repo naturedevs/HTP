@@ -24,7 +24,7 @@ import axios from 'axios';
 import { DatePicker } from '@mui/x-date-pickers';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
-
+import {publicIpv4} from 'public-ip';
 
 const ProSpan = styled('span')({
   display: 'inline-block',
@@ -38,40 +38,6 @@ const ProSpan = styled('span')({
   backgroundImage: 'url(https://mui.com/static/x/pro.svg)',
 });
 
-function Label({
-  componentName,
-  valueType,
-  isProOnly,
-}: {
-  componentName: string;
-  valueType: string;
-  isProOnly?: boolean;
-}) {
-  const content = (
-    <span>
-      <strong>{componentName}</strong> for {valueType} editing
-    </span>
-  );
-
-  if (isProOnly) {
-    return (
-      <Stack direction="row" spacing={0.5} component="span">
-        <Tooltip title="Included on Pro package">
-          <a
-            href="https://mui.com/x/introduction/licensing/#pro-plan"
-            aria-label="Included on Pro package"
-          >
-            <ProSpan />
-          </a>
-        </Tooltip>
-        {content}
-      </Stack>
-    );
-  }
-
-  return content;
-}
-
 function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [isDrawerOpenUp, setIsDrawerOpenUp] = React.useState(false);
@@ -83,7 +49,8 @@ function Home() {
   const eventsUp = useAppSelector(selectEventsUp);
   const [filter, setFilter] = React.useState({type: "", age: "", music: "", charge: "", distance: "", keyword: "", selectedDate: null, lng: "", lati: ""});
   const [filterUp, setFilterUp] = React.useState({type: "", age: "", music: "", charge: "", distance: "", keyword: "", selectedDate: null, lng: "", lati: ""});
-  
+  const [ip, setIp] = useState('');
+
   const now = new Date();
   const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000);
   const nowTime = new Date(now.getTime());
@@ -109,6 +76,27 @@ function Home() {
   const [zip, setZip] = useState('');
 
   useEffect(() => {
+    const fetchIp = async () => {
+      try {
+        const ip = await publicIpv4();
+        setIp(ip);
+        const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(ip)}&key=AIzaSyB3O4bL6G9YKssLv3eu6I2L3FKHO-5DRj4`);
+        const data = await response.json();
+
+        if (!data.results ||!data.results.length) {
+          return { props: { error: "Unable to find location." } };
+        }
+
+        const lat = data.results[0].geometry.location.lat;
+        const lng = data.results[0].geometry.location.lng;
+        console.log(lat, lng);
+      } catch (error) {
+        console.error('Failed to fetch IP:', error);
+      }
+    };
+
+    fetchIp();
+    
     navigator.geolocation.getCurrentPosition(async function(position) {
       const lat = position.coords.latitude;
       const long = position.coords.longitude;
@@ -121,7 +109,7 @@ function Home() {
       })
 
       try {
-        const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${long}&key=AIzaSyB3O4bL6G9YKssLv3eu6I2L3FKHO-5DRj4`);
+        const response = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${String(lat)},${String(long)}&key=AIzaSyB3O4bL6G9YKssLv3eu6I2L3FKHO-5DRj4`);
         const addressComponents = response.data.results[0].address_components;
         const cityResult = addressComponents.find(component => component.types.includes('locality'));
         const postalCodeResult = addressComponents.find(component => component.types.includes('postal_code'));
@@ -136,13 +124,13 @@ function Home() {
     });
   }, []);
 
-  console.log(events);
-
   const eventsFilter = React.useMemo(()=>{
     let temp = [];
     if (filter["selectedDate"] === null || filter["selectedDate"] === "" || filter["selectedDate"]=="Invalid Date") {
       for (let i = 0; i < events.length; i++) {
-        if (new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() && new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()) {
+        if (new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() &&
+            new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()  &&
+            Number(events[i]?.["distance"]) <= 10) {
           temp.push(events[i]);          
         }
       }
@@ -158,7 +146,7 @@ function Home() {
       const formattedDate = `${year}-${month}-${day}`;
 
       for (let i = 0; i < events.length; i++) {
-        if (new Date((events[i]["Event Date"])).getTime() === new Date(formattedDate).getTime()) {
+        if (new Date((events[i]["Event Date"])).getTime() === new Date(formattedDate).getTime() && Number(events[i]?.["distance"]) <= 10) {
           temp.push(events[i]);          
         }
       }
@@ -170,7 +158,10 @@ function Home() {
     let temp = [];
     if (filterUp["selectedDate"] === null || filterUp["selectedDate"] === "" || filterUp["selectedDate"]=="Invalid Date") {
       for (let i = 0; i < events.length; i++) {
-        if (new Date((eventsUp[i]?.["Event Date"] + " " + eventsUp[i]?.["Time Start"])).getTime() >= new Date(agoTime).getTime() && new Date((eventsUp[i]?.["Event Date"] + " " + eventsUp[i]?.["Time Start"])).getTime() <= new Date(currentTime).getTime()) {
+        if (new Date((eventsUp[i]?.["Event Date"] + " " + eventsUp[i]?.["Time Start"])).getTime() >= new Date(agoTime).getTime() && 
+            new Date((eventsUp[i]?.["Event Date"] + " " + eventsUp[i]?.["Time Start"])).getTime() <= new Date(currentTime).getTime() &&
+            Number(eventsUp[i]?.["distance"]) <= 10
+          ) {
           temp.push(eventsUp[i]);          
         }
       }
@@ -185,7 +176,7 @@ function Home() {
       const formattedDate = `${year}-${month}-${day}`;
 
       for (let i = 0; i < eventsUp.length; i++) {
-        if (new Date((eventsUp[i]?.["Event Date"])).getTime() === new Date(formattedDate).getTime()) {
+        if (new Date((eventsUp[i]?.["Event Date"])).getTime() === new Date(formattedDate).getTime() && Number(eventsUp[i]?.["distance"]) <= 10) {
           temp.push(eventsUp[i]);          
         }
       }
@@ -1255,6 +1246,7 @@ function Home() {
           </div>
         </div>
       <div>
+        <p>{ip}</p>
         <p className="text-lg">Long: {filter["lng"]}</p>
         <p className="text-lg">Lati: {filter["lati"]}</p>
       </div>
@@ -1262,4 +1254,5 @@ function Home() {
     </div>
   );
 }
+
 export default Home;

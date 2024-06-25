@@ -5,7 +5,6 @@ export async function POST(request: Request, params: { action: string }) {
   const req: { filter:boolean, keyword:string } = await request.json();
   const filter = req.filter;
 
-  let tempFilter = JSON.parse(req.keyword);
   try{
     let res = null;
     if(!filter){
