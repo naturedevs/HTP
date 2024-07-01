@@ -587,8 +587,8 @@ function Home() {
                     const date = event["Event Date"];
                     const weekNumber = getWeekOfYear(date);
                     const weekName = getWeekName(weekNumber).substring(0, 3);
-                    const month = months[Number(date.split("-")[1])-1].substring(0, 3).toUpperCase();
-                    const day = date.split("-")[2];
+                    const month = months[Number(date.split("/")[0])-1].substring(0, 3).toUpperCase();
+                    const day = date.split("-")[1];
                     return (
                       <>
                         <div className="grid md:grid-cols-3 py-7">
@@ -1005,8 +1005,8 @@ function Home() {
                 const date = event["Event Date"];
                 const weekNumber = getWeekOfYear(date);
                 const weekName = getWeekName(weekNumber).substring(0, 3);
-                const month = months[Number(date.split("-")[1])-1].substring(0, 3).toUpperCase();
-                const day = date.split("-")[2];
+                const month = months[Number(date.split("/")[0])-1].substring(0, 3).toUpperCase();
+                const day = date.split("-")[1];
                 return (
                   <>
                     <div className="grid md:grid-cols-3 py-7">
