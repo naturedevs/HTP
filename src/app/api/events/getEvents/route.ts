@@ -10,7 +10,7 @@ export async function POST(request: Request, params: { action: string }) {
     if(!filter){
       console.log(4);
       res = await supabase
-        .from('events')
+        .from('event_list')
         .select()
         .order('Event Date',{ ascending: true})
         .order('Time Start', {ascending: true});
@@ -21,7 +21,7 @@ export async function POST(request: Request, params: { action: string }) {
       if (tempFilter.charge === "") {
         console.log(11);
         res = await supabase
-        .from('events')
+        .from('event_list')
         .select()
         .ilike('Event Type', `%${tempFilter.type}%`)
         .gte('age', Number(tempFilter.age))
@@ -34,7 +34,7 @@ export async function POST(request: Request, params: { action: string }) {
           if (tempFilter.charge === "0") {
         console.log(2);
         res = await supabase
-              .from('events')
+              .from('event_list')
               .select()
               .ilike('Event Type', `%${tempFilter.type}%`)
               .gte('age', Number(tempFilter.age))
@@ -45,7 +45,7 @@ export async function POST(request: Request, params: { action: string }) {
           }else{
         console.log(3);
         res = await supabase
-              .from('events')
+              .from('event_list')
               .select()
               .ilike('Event Type', `%${tempFilter.type}%`)
               .gte('age', Number(tempFilter.age))
@@ -56,7 +56,7 @@ export async function POST(request: Request, params: { action: string }) {
           }
         }else{
           res = await supabase
-            .from('events')
+            .from('event_list')
             .select()
             .ilike('Event Type', `%${tempFilter.type}%`)
             .gte('age', Number(tempFilter.age))
