@@ -12,7 +12,7 @@ export async function POST(request: Request, params: { action: string }) {
       res = await supabase
         .from('event_list')
         .select()
-        .order('Event Date',{ ascending: true})
+        .order('Event Date', {ascending: true})
         .order('Time Start', {ascending: true});
     }else{      
       let tempFilter = JSON.parse(req.keyword);
