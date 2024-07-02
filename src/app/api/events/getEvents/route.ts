@@ -10,6 +10,7 @@ export async function POST(request: Request, params: { action: string }) {
     if(!filter){
       console.log(1);
       let tempFilter = JSON.parse(req.keyword);
+      console.log(tempFilter);
       res = await supabase
         .from('event_list')
         .select()
@@ -22,7 +23,6 @@ export async function POST(request: Request, params: { action: string }) {
       temp.forEach(event => {
         const distance = calculateDistance(event.latitude, event.longitude, Number(tempFilter.lati), Number(tempFilter.lng));
         event.distance = distance/1609.34; // Add the distance to each event object
-        console.log(distance/1609.34);
       });
 
       if(error){
@@ -99,7 +99,6 @@ export async function POST(request: Request, params: { action: string }) {
       temp.forEach(event => {
         const distance = calculateDistance(event.latitude, event.longitude, Number(tempFilter.lati), Number(tempFilter.lng));
         event.distance = distance/1609.34; // Add the distance to each event object
-        console.log(distance/1609.34);
       });
 
       if(error){

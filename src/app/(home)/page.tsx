@@ -23,6 +23,19 @@ import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {publicIpv4} from 'public-ip';
 
+const getLocationByIP = async (accessToken) => {
+  try {
+    const response = await axios.get('https://ipinfo.io/json', {
+      params: { token: accessToken },
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching location data:', error);
+    throw error;
+  }
+};
+
+
 function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [isDrawerOpenUp, setIsDrawerOpenUp] = React.useState(false);
@@ -35,7 +48,7 @@ function Home() {
   const [filter, setFilter] = React.useState({type: "", age: "", music: "", charge: "", distance: "", keyword: "", selectedDate: null, lng: "", lati: ""});
   const [filterUp, setFilterUp] = React.useState({type: "", age: "", music: "", charge: "", distance: "", keyword: "", selectedDate: null, lng: "", lati: ""});
   const [ip, setIp] = useState('');
-  const [geo, setGeo] = useState({ lat:0, lng:0 })
+  const [locationData, setLocationData] = useState(null);
 
   const now = new Date();
   const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000);
@@ -62,33 +75,24 @@ function Home() {
   const [zip, setZip] = useState('');
 
   useEffect(() => {
-    const fetchIp = async () => {
-      try {
-        const ip = await publicIpv4();
-        setIp(ip);
-        const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(ip)}&key=AIzaSyB3O4bL6G9YKssLv3eu6I2L3FKHO-5DRj4`);
-        const data = await response.json();
-
-        if (!data.results ||!data.results.length) {
-          return { props: { error: "Unable to find location." } };
+    const fetchData = async () => {
+      const accessToken = '3dd62a6dbb4282'; // Replace with your actual access token
+      const data = await getLocationByIP(accessToken);
+      setLocationData(data);
+      navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
+        console.log(permissionStatus.state); // "granted", "denied", or "prompt"
+        if (permissionStatus.state === "denied") {
+          console.log(data, data?.loc.split(',')[1]);
+          dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(data?.loc.split(',')[1]), lati: String(data?.loc.split(',')[0])}) }));
+          dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(data?.loc.split(',')[1]), lati: String(data?.loc.split(',')[0])}) }));
         }
-
-        const lat = data.results[0].geometry.location.lat;
-        const lng = data.results[0].geometry.location.lng;
-        setGeo({
-          ...geo,
-          lat,
-          lng
-        });
-      } catch (error) {
-        console.error('Failed to fetch IP:', error);
-      }
+      });
     };
 
-    fetchIp();
+    fetchData();
+
     let lat, long;
     navigator.geolocation.getCurrentPosition(async function(position) {
-      console.log("OKOKOK");
       lat = position.coords.latitude;
       long = position.coords.longitude;
       
@@ -115,10 +119,7 @@ function Home() {
     
     navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
       console.log(permissionStatus.state); // "granted", "denied", or "prompt"
-      if (permissionStatus.state === "denied") {
-        dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(geo["lng"]), lati: String(geo["lat"])}) }));
-        dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(geo["lng"]), lati: String(geo["lat"])}) }));
-      }else{
+      if (permissionStatus.state !== "denied") {
         dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
         dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
       }
@@ -131,8 +132,8 @@ function Home() {
       console.log(permissionStatus.state); // "granted", "denied", or "prompt"
       if (permissionStatus.state === "denied") {
         let temp = filter;
-        temp.lati = String(geo["lat"]);
-        temp.lng = String(geo["lng"]);
+        temp.lati = String(locationData?.loc.split(',')[0]);
+        temp.lng = String(locationData?.loc.split(',')[1]);
         dispatch(getEvents({ filter: true, keyword: JSON.stringify(temp) }));
       }else{
         dispatch(getEvents({ filter: true, keyword: JSON.stringify(filter) }));
@@ -145,8 +146,8 @@ function Home() {
     navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
       if (permissionStatus.state === "denied") {
         let temp = filterUp;
-        temp.lati = String(geo["lat"]);
-        temp.lng = String(geo["lng"]);
+        temp.lati = String(locationData?.loc.split(',')[0]);
+        temp.lng = String(locationData?.loc.split(',')[1]);
         dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(temp) }));
       }else{
         dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(filterUp) }));
@@ -1280,11 +1281,9 @@ function Home() {
           </div>
         </div>
       <div>
-        <p>IP: {ip}</p>
-        <p className="text-lg">Long1: {geo["lng"]}</p>
-        <p className="text-lg">Lati1: {geo["lat"]}</p>
-        <p className="text-lg">Long: {filter["lng"]}</p>
-        <p className="text-lg">Lati: {filter["lati"]}</p>
+        <p>IP Address: {locationData?.ip}</p>
+        <p>City: {locationData?.city}, Country: {locationData?.country}</p>
+        <p>Latitude: {locationData?.loc.split(',')[0]}, Longitude: {locationData?.loc.split(',')[1]}</p>
       </div>
       </div>
     </div>
