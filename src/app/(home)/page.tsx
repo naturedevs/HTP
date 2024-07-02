@@ -10,33 +10,18 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import { toast } from 'react-hot-toast';
 import { getEvents, selectEvents, getEventsUp, selectEventsUp } from "@/store/features/events/eventsSlice";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { IEvent } from "@/store/features/events/eventsAPI";
 import Pagination from '@mui/material/Pagination';
 import PaginationItem from '@mui/material/PaginationItem';
 import Stack from '@mui/material/Stack';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import Tooltip from '@mui/material/Tooltip';
 import axios from 'axios'; 
 import { DatePicker } from '@mui/x-date-pickers';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {publicIpv4} from 'public-ip';
-
-const ProSpan = styled('span')({
-  display: 'inline-block',
-  height: '1em',
-  width: '1em',
-  verticalAlign: 'middle',
-  marginLeft: '0.3em',
-  marginBottom: '0.08em',
-  backgroundSize: 'contain',
-  backgroundRepeat: 'no-repeat',
-  backgroundImage: 'url(https://mui.com/static/x/pro.svg)',
-});
 
 function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -95,28 +80,17 @@ function Home() {
           lat,
           lng
         });
-        console.log(lat, lng);
       } catch (error) {
         console.error('Failed to fetch IP:', error);
       }
     };
 
     fetchIp();
-    
+    let lat, long;
     navigator.geolocation.getCurrentPosition(async function(position) {
-      const lat = position.coords.latitude;
-      const long = position.coords.longitude;
-
-      navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
-        console.log(permissionStatus.state); // "granted", "denied", or "prompt"
-        if (permissionStatus.state === "denied") {
-          dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(geo["lng"]), lati: String(geo["lat"])}) }));
-          dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(geo["lng"]), lati: String(geo["lat"])}) }));
-        }else{
-          dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
-          dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
-        }
-      });
+      console.log("OKOKOK");
+      lat = position.coords.latitude;
+      long = position.coords.longitude;
       
       setFilter({
         ...filter,
@@ -138,6 +112,18 @@ function Home() {
         console.error('Error fetching location details:', error);
       }
     });
+    
+    navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
+      console.log(permissionStatus.state); // "granted", "denied", or "prompt"
+      if (permissionStatus.state === "denied") {
+        dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(geo["lng"]), lati: String(geo["lat"])}) }));
+        dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(geo["lng"]), lati: String(geo["lat"])}) }));
+      }else{
+        dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
+        dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
+      }
+    });
+    
   }, []);
 
   const handleFilter = () => {
@@ -157,7 +143,6 @@ function Home() {
   
   const handleFilterUp = () => {
     navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
-      console.log(permissionStatus.state); // "granted", "denied", or "prompt"
       if (permissionStatus.state === "denied") {
         let temp = filterUp;
         temp.lati = String(geo["lat"]);
@@ -173,7 +158,7 @@ function Home() {
     let temp = [];
     if (filter["selectedDate"] === null || filter["selectedDate"] === "" || filter["selectedDate"]=="Invalid Date") {
       for (let i = 0; i < events.length; i++) {
-        console.log(events[i]?.["distance"]);
+        // console.log(events[i]?.["distance"]);
         if (new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() &&
             new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()  &&
             Number(events[i]?.["distance"]) <= 30) {
