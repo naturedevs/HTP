@@ -8,15 +8,32 @@ export async function POST(request: Request, params: { action: string }) {
   try{
     let res = null;
     if(!filter){
-      console.log(4);
+      console.log(1);
+      let tempFilter = JSON.parse(req.keyword);
       res = await supabase
         .from('event_list')
         .select()
         .order('Event Date', {ascending: true})
         .order('Time Start', {ascending: true});
+        
+      const { data, error } = res;
+      let temp = data;
+      
+      temp.forEach(event => {
+        const distance = calculateDistance(event.latitude, event.longitude, Number(tempFilter.lati), Number(tempFilter.lng));
+        event.distance = distance/1609.34; // Add the distance to each event object
+        console.log(distance/1609.34);
+      });
+
+      if(error){
+        return NextResponse.json(error.message, { status: 401 });
+      }else {
+        return NextResponse.json(JSON.stringify(temp), { status: 200 });
+      }
     }else{      
       let tempFilter = JSON.parse(req.keyword);
       console.log(111);
+      console.log(tempFilter);
 
       if (tempFilter.charge === "") {
         console.log(11);
@@ -70,7 +87,6 @@ export async function POST(request: Request, params: { action: string }) {
         
       const { data, error } = res;
       let temp = [];
-        console.log(tempFilter.keyword);
       for (let i = 0; i < data.length; i++) {
         if (data[i]["Event Name"].toLowerCase().includes(tempFilter.keyword.toLowerCase()) || 
             data[i]["Music Type"].toLowerCase().includes(tempFilter.keyword.toLowerCase()) || 
@@ -83,8 +99,8 @@ export async function POST(request: Request, params: { action: string }) {
       temp.forEach(event => {
         const distance = calculateDistance(event.latitude, event.longitude, Number(tempFilter.lati), Number(tempFilter.lng));
         event.distance = distance/1609.34; // Add the distance to each event object
+        console.log(distance/1609.34);
       });
-    
 
       if(error){
         return NextResponse.json(error.message, { status: 401 });

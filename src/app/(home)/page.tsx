@@ -176,7 +176,7 @@ function Home() {
         console.log(events[i]?.["distance"]);
         if (new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() &&
             new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()  &&
-            Number(events[i]?.["distance"]) <= 100) {
+            Number(events[i]?.["distance"]) <= 30) {
           temp.push(events[i]);          
         }
       }
@@ -192,7 +192,7 @@ function Home() {
       const formattedDate = `${year}-${month}-${day}`;
 
       for (let i = 0; i < events.length; i++) {
-        if (new Date((events[i]["Event Date"])).getTime() === new Date(formattedDate).getTime() && Number(events[i]?.["distance"]) <= 100) {
+        if (new Date((events[i]["Event Date"])).getTime() === new Date(formattedDate).getTime() && Number(events[i]?.["distance"]) <= 30) {
           temp.push(events[i]);          
         }
       }
@@ -206,7 +206,7 @@ function Home() {
       for (let i = 0; i < events.length; i++) {
         if (new Date((eventsUp[i]?.["Event Date"] + " " + eventsUp[i]?.["Time Start"])).getTime() >= new Date(agoTime).getTime() && 
             new Date((eventsUp[i]?.["Event Date"] + " " + eventsUp[i]?.["Time Start"])).getTime() <= new Date(currentTime).getTime() &&
-            Number(eventsUp[i]?.["distance"]) <= 100
+            Number(eventsUp[i]?.["distance"]) <= 30
           ) {
           temp.push(eventsUp[i]);          
         }
@@ -222,7 +222,7 @@ function Home() {
       const formattedDate = `${year}-${month}-${day}`;
 
       for (let i = 0; i < eventsUp.length; i++) {
-        if (new Date((eventsUp[i]?.["Event Date"])).getTime() === new Date(formattedDate).getTime() && Number(eventsUp[i]?.["distance"]) <= 100) {
+        if (new Date((eventsUp[i]?.["Event Date"])).getTime() === new Date(formattedDate).getTime() && Number(eventsUp[i]?.["distance"]) <= 30) {
           temp.push(eventsUp[i]);          
         }
       }
