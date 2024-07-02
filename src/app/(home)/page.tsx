@@ -158,7 +158,7 @@ function Home() {
     let temp = [];
     if (filter["selectedDate"] === null || filter["selectedDate"] === "" || filter["selectedDate"]=="Invalid Date") {
       for (let i = 0; i < events.length; i++) {
-        // console.log(events[i]?.["distance"]);
+        console.log(events[i]?.["distance"]);
         if (new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() &&
             new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()  &&
             Number(events[i]?.["distance"]) <= 30) {
