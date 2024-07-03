@@ -82,7 +82,7 @@ function Home() {
       navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
         console.log(permissionStatus.state); // "granted", "denied", or "prompt"
         if (permissionStatus.state === "denied") {
-          console.log(data, data?.loc.split(',')[1]);
+          console.log(data, data?.loc.split(',')[1], "---->>>>");
           dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(data?.loc.split(',')[1]), lati: String(data?.loc.split(',')[0])}) }));
           dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(data?.loc.split(',')[1]), lati: String(data?.loc.split(',')[0])}) }));
         }
@@ -119,7 +119,8 @@ function Home() {
     
     navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
       console.log(permissionStatus.state); // "granted", "denied", or "prompt"
-      if (permissionStatus.state !== "denied") {
+      if (permissionStatus.state === "granted" && long !== undefined) {
+        console.log(long, lat, "--->>>111");
         dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
         dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
       }

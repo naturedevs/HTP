@@ -22,7 +22,6 @@ import {
   setIsAgency,
   setCart
 } from "@/store/features/auth/authSlice";
-import { setSelectedProduct } from '@/store/features/products/productsSlice';
 import { useRouter } from 'next/navigation';
 
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -61,7 +60,6 @@ const PasswordPromptDialog = () => {
           description: "",
           menuList: user.menuList
         }));
-        dispatch(setSelectedProduct("-1"));
         toast.success("Welcome");
         if (password === user.password) {
           dispatch(login());

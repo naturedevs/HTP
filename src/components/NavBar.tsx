@@ -2,44 +2,13 @@
 import { NavMenu } from "@/components/NavMenu";
 import Link from "next/link";
 import Image from "next/image";
-import { ExitIcon } from "@radix-ui/react-icons";
 import MobileNavBar from "@/components/MobileNavBar";
-import { useRouter } from "next/navigation";
-import {
-  logout,
-} from "@/store/features/auth/authSlice";
-import { useEffect, useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { selectUser, selectIsAdmin, selectIsAgency, selectIsCart } from "@/store/features/auth/authSlice";
-import { selectProducts, getProducts } from '@/store/features/products/productsSlice';
-import { IProduct } from "@/store/features/products/productsAPI";
+import {  useAppSelector } from "@/store/hooks";
+import { selectUser } from "@/store/features/auth/authSlice";
 export function NavBar({backend}) {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const isAdministrator = useAppSelector(selectIsAdmin);
-  const isAgency = useAppSelector(selectIsAgency);
-  const isCart = useAppSelector(selectIsCart);
-  const [items, setItems] = useState([]);
-  const handleLogout = () => {
-    router.push("/");
-    dispatch(logout());
-  }
   
   const user = useAppSelector(selectUser);
-  useEffect(()=>{
-    dispatch(getProducts({ type: "all", user: user.id }));
-    const handleStorageChange = () => {
-      const cartItems = JSON.parse(localStorage.getItem("cartItems"));
-      if (cartItems) {
-        setItems(cartItems);
-      }
-    };
-    window.addEventListener("storage", handleStorageChange);
-    return () => { window.removeEventListener("storage", handleStorageChange);};
-  },[])
-  useEffect(() => {
-    setItems(JSON.parse(localStorage.getItem('cartItems')));
-  }, []);
+
   return (
     <>
       <div className="top-0 sticky z-50 flex bg-white">
