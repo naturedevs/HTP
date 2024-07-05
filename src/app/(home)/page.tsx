@@ -37,8 +37,6 @@ const getLocationByIP = async (accessToken) => {
   }
 };
 
-const libraries: Libraries = ['places'];
-
 function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
   const [isDrawerOpenUp, setIsDrawerOpenUp] = React.useState(false);
@@ -52,32 +50,6 @@ function Home() {
   const [filterUp, setFilterUp] = React.useState({type: "", age: "", music: "", charge: "", distance: "", keyword: "", selectedDate: null, lng: "", lati: ""});
   const [ip, setIp] = useState('');
   const [locationData, setLocationData] = useState(null);
-  const [input, setInput] = useState({});
-  const inputRef = useRef(null);
-
-  const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
-    libraries,
-  });
-
-  useEffect(() => {
-    if (!isLoaded || loadError) return;
-
-    const options = {
-      componentRestrictions: { country: 'us' },
-      fields: ['address_components', 'geometry'],
-    };
-
-    const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, options);
-    autocomplete.addListener('place_changed', () => handlePlaceChanged(autocomplete));
-  }, [isLoaded, loadError]);
-
-  function handlePlaceChanged(autocomplete) {
-    const place = autocomplete.getPlace();
-    const city = place.address_components.find(component => component.types.includes('locality')).long_name;
-    const state = place.address_components.find(component => component.types.includes('administrative_area_level_1')).short_name;
-    console.log(`City: ${city}, State: ${state}`);
-  }
   
   const getCoordinates = async() => {
     const apiKey = 'AIzaSyB3O4bL6G9YKssLv3eu6I2L3FKHO-5DRj4'; 
@@ -85,6 +57,7 @@ function Home() {
   
     try {
       const response = await axios.get(url);
+      console.log(address, response.data.results[0]);
       const location = response.data.results[0].geometry.location;
       console.log({ lat: location.lat, lng: location.lng }, "-->>");
       setFilter({
@@ -104,6 +77,38 @@ function Home() {
       throw error; 
     }
   }
+
+  
+  const inputRef = useRef(null);
+  const autoCompleteService = useRef(null);
+
+  useEffect(() => {
+    if (!inputRef.current) return;
+
+    // Load the Google Maps JavaScript API
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyB3O4bL6G9YKssLv3eu6I2L3FKHO-5DRj4&libraries=places`;
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+
+    script.onload = () => {
+      autoCompleteService.current = new window.google.maps.places.Autocomplete(inputRef.current, {
+        types: ['(cities)'],
+      });
+
+      autoCompleteService.current.addListener('place_changed', () => {
+        const place = autoCompleteService.current.getPlace();
+        console.log(`Selected Place: ${place.name}`);
+        console.log(`Address: ${place.formatted_address}`);
+        setAddress(place.formatted_address);
+      });
+    };
+
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, []);
 
   const now = new Date();
   const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000);
@@ -489,9 +494,9 @@ function Home() {
                 <Input 
                   className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] bg-white px-7 md:text-[17px] text-[14px]"
                   placeholder="Enter City/Zipcode"
-                  value={address}
+                  // value={address}
                   ref={inputRef}
-                  onChange={(e)=> setAddress(e.target.value)}
+                  // onChange={(e)=> setAddress(e.target.value)}
                   // value={city + "/" + zip}
                 />
                 <div className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] border-[1px] border-[#FFFFFF] bg-white flex content-center mt-5 px-6">
