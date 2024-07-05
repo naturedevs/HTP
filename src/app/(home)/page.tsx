@@ -1,6 +1,7 @@
 'use client'
 import "./home.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useLoadScript } from '@react-google-maps/api';
 import Image from "next/image"
 import { Input } from "@/components/ui/input";
 import Grid from "@mui/material/Grid";
@@ -21,6 +22,7 @@ import axios from 'axios';
 import { DatePicker } from '@mui/x-date-pickers';
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import { Libraries } from '@react-google-maps/api';
 import {publicIpv4} from 'public-ip';
 
 const getLocationByIP = async (accessToken) => {
@@ -35,6 +37,7 @@ const getLocationByIP = async (accessToken) => {
   }
 };
 
+const libraries: Libraries = ['places'];
 
 function Home() {
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
@@ -49,6 +52,58 @@ function Home() {
   const [filterUp, setFilterUp] = React.useState({type: "", age: "", music: "", charge: "", distance: "", keyword: "", selectedDate: null, lng: "", lati: ""});
   const [ip, setIp] = useState('');
   const [locationData, setLocationData] = useState(null);
+  const [input, setInput] = useState({});
+  const inputRef = useRef(null);
+
+  const { isLoaded, loadError } = useLoadScript({
+    googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_API_KEY,
+    libraries,
+  });
+
+  useEffect(() => {
+    if (!isLoaded || loadError) return;
+
+    const options = {
+      componentRestrictions: { country: 'us' },
+      fields: ['address_components', 'geometry'],
+    };
+
+    const autocomplete = new window.google.maps.places.Autocomplete(inputRef.current, options);
+    autocomplete.addListener('place_changed', () => handlePlaceChanged(autocomplete));
+  }, [isLoaded, loadError]);
+
+  function handlePlaceChanged(autocomplete) {
+    const place = autocomplete.getPlace();
+    const city = place.address_components.find(component => component.types.includes('locality')).long_name;
+    const state = place.address_components.find(component => component.types.includes('administrative_area_level_1')).short_name;
+    console.log(`City: ${city}, State: ${state}`);
+  }
+  
+  const getCoordinates = async() => {
+    const apiKey = 'AIzaSyB3O4bL6G9YKssLv3eu6I2L3FKHO-5DRj4'; 
+    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`;
+  
+    try {
+      const response = await axios.get(url);
+      const location = response.data.results[0].geometry.location;
+      console.log({ lat: location.lat, lng: location.lng }, "-->>");
+      setFilter({
+        ...filter,
+        lng: location.lng,
+        lati: location.lat
+      });
+      setFilterUp({
+        ...filterUp,
+        lng: location.lng,
+        lati: location.lat
+      });
+      dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(location.lng), lati: String(location.lat)}) }));
+      dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(location.lng), lati: String(location.lat)}) }));
+    } catch (error) {
+      console.error('Error fetching coordinates:', error);
+      throw error; 
+    }
+  }
 
   const now = new Date();
   const sixHoursAgo = new Date(now.getTime() - 6 * 60 * 60 * 1000);
@@ -70,6 +125,7 @@ function Home() {
   const agoTime = `${year}-${month}-${day} ${hours}:${minutes}`;
   const currentTime = `${year1}-${month1}-${day1} ${hours1}:${minutes1}`;
 
+  const [address, setAddress] = useState(null);
   
   const [city, setCity] = useState('');
   const [zip, setZip] = useState('');
@@ -82,7 +138,6 @@ function Home() {
       navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
         console.log(permissionStatus.state); // "granted", "denied", or "prompt"
         if (permissionStatus.state === "denied") {
-          console.log(data, data?.loc.split(',')[1], "---->>>>");
           dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(data?.loc.split(',')[1]), lati: String(data?.loc.split(',')[0])}) }));
           dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(data?.loc.split(',')[1]), lati: String(data?.loc.split(',')[0])}) }));
         }
@@ -120,7 +175,6 @@ function Home() {
     navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
       console.log(permissionStatus.state); // "granted", "denied", or "prompt"
       if (permissionStatus.state === "granted" && long !== undefined) {
-        console.log(long, lat, "--->>>111");
         dispatch(getEvents({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
         dispatch(getEventsUp({ filter: false, keyword: JSON.stringify({lng: String(long), lati: String(lat)}) }));
       }
@@ -131,11 +185,15 @@ function Home() {
   const handleFilter = () => {
     navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
       console.log(permissionStatus.state); // "granted", "denied", or "prompt"
-      if (permissionStatus.state === "denied") {
-        let temp = filter;
-        temp.lati = String(locationData?.loc.split(',')[0]);
-        temp.lng = String(locationData?.loc.split(',')[1]);
-        dispatch(getEvents({ filter: true, keyword: JSON.stringify(temp) }));
+      if (address !== null) {
+        if (permissionStatus.state === "denied") {
+          let temp = filter;
+          temp.lati = String(locationData?.loc.split(',')[0]);
+          temp.lng = String(locationData?.loc.split(',')[1]);
+          dispatch(getEvents({ filter: true, keyword: JSON.stringify(temp) }));
+        }else{
+          dispatch(getEvents({ filter: true, keyword: JSON.stringify(filter) }));
+        }
       }else{
         dispatch(getEvents({ filter: true, keyword: JSON.stringify(filter) }));
       }
@@ -145,11 +203,15 @@ function Home() {
   
   const handleFilterUp = () => {
     navigator.permissions.query({ name: "geolocation" }).then((permissionStatus) => {
-      if (permissionStatus.state === "denied") {
-        let temp = filterUp;
-        temp.lati = String(locationData?.loc.split(',')[0]);
-        temp.lng = String(locationData?.loc.split(',')[1]);
-        dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(temp) }));
+      if (address !== null) {
+        if (permissionStatus.state === "denied") {
+          let temp = filterUp;
+          temp.lati = String(locationData?.loc.split(',')[0]);
+          temp.lng = String(locationData?.loc.split(',')[1]);
+          dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(temp) }));
+        }else{
+          dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(filterUp) }));
+        }
       }else{
         dispatch(getEventsUp({ filter: true, keyword: JSON.stringify(filterUp) }));
       }
@@ -158,13 +220,41 @@ function Home() {
 
   const eventsFilter = React.useMemo(()=>{
     let temp = [];
+    let tempDis = filter["distance"];
     if (filter["selectedDate"] === null || filter["selectedDate"] === "" || filter["selectedDate"]=="Invalid Date") {
       for (let i = 0; i < events.length; i++) {
-        console.log(events[i]?.["distance"]);
-        if (new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() &&
-            new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()  &&
-            Number(events[i]?.["distance"]) <= 30) {
-          temp.push(events[i]);          
+        // console.log(events[i]?.["distance"]);
+        if (filter["distance"] === "") {
+          console.log("1---->>>>");
+          if (new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() &&
+              new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()  &&
+              Number(events[i]?.["distance"]) <= 300) {
+            temp.push(events[i]);          
+          }
+        }
+        else if(tempDis.includes("-")) {
+          console.log("2---->>>>");
+          if (new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() &&
+              new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()  &&
+              (Number(events[i]?.["distance"]) <= Number(tempDis.split("-")[1]) && Number(events[i]?.["distance"]) >= Number(tempDis.split("-")[0]))) {
+            temp.push(events[i]);          
+          }
+        }else{
+          if (filter["distance"] === "1") {
+            console.log("3---->>>>");
+            if (new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() &&
+                new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()  &&
+                Number(events[i]?.["distance"]) <= 1) {
+              temp.push(events[i]);          
+            }
+          }else{
+            console.log("4---->>>>");
+            if (new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() &&
+                new Date((events[i]["Event Date"] + " " + events[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()  &&
+                Number(events[i]?.["distance"]) >= Number(tempDis)) {
+              temp.push(events[i]);          
+            }
+          }
         }
       }
     }else{
@@ -179,8 +269,32 @@ function Home() {
       const formattedDate = `${year}-${month}-${day}`;
 
       for (let i = 0; i < events.length; i++) {
-        if (new Date((events[i]["Event Date"])).getTime() === new Date(formattedDate).getTime() && Number(events[i]?.["distance"]) <= 30) {
-          temp.push(events[i]);          
+        if (filter["distance"] === "") {
+          console.log("1---->>>>");
+          if (new Date((events[i]["Event Date"])).getTime() === new Date(formattedDate).getTime() && Number(events[i]?.["distance"]) <= 300) {
+            temp.push(events[i]);          
+          }
+        }
+        else if(tempDis.includes("-")) {
+          console.log("2---->>>>");
+          if (new Date((events[i]["Event Date"])).getTime() === new Date(formattedDate).getTime()  &&
+              (Number(events[i]?.["distance"]) <= Number(tempDis.split("-")[1]) && Number(events[i]?.["distance"]) >= Number(tempDis.split("-")[0]))) {
+            temp.push(events[i]);          
+          }
+        }else{
+          if (filter["distance"] === "1") {
+            console.log("3---->>>>");
+            if (new Date((events[i]["Event Date"])).getTime() === new Date(formattedDate).getTime()  &&
+                Number(events[i]?.["distance"]) <= 1) {
+              temp.push(events[i]);          
+            }
+          }else{
+            console.log("4---->>>>");
+            if (new Date((events[i]["Event Date"])).getTime() === new Date(formattedDate).getTime()  &&
+                Number(events[i]?.["distance"]) >= Number(tempDis)) {
+              temp.push(events[i]);          
+            }
+          }
         }
       }
     }
@@ -189,13 +303,40 @@ function Home() {
 
   const eventsUpFilter = React.useMemo(()=>{
     let temp = [];
+    let tempDis = filterUp["distance"];
     if (filterUp["selectedDate"] === null || filterUp["selectedDate"] === "" || filterUp["selectedDate"]=="Invalid Date") {
-      for (let i = 0; i < events.length; i++) {
-        if (new Date((eventsUp[i]?.["Event Date"] + " " + eventsUp[i]?.["Time Start"])).getTime() >= new Date(agoTime).getTime() && 
-            new Date((eventsUp[i]?.["Event Date"] + " " + eventsUp[i]?.["Time Start"])).getTime() <= new Date(currentTime).getTime() &&
-            Number(eventsUp[i]?.["distance"]) <= 30
-          ) {
-          temp.push(eventsUp[i]);          
+      for (let i = 0; i < eventsUp.length; i++) {
+        if (filterUp["distance"] === "") {
+          console.log("1---->>>>");
+          if (new Date((eventsUp[i]["Event Date"] + " " + eventsUp[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() &&
+              new Date((eventsUp[i]["Event Date"] + " " + eventsUp[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()  &&
+              Number(eventsUp[i]?.["distance"]) <= 300) {
+            temp.push(eventsUp[i]);          
+          }
+        }
+        else if(tempDis.includes("-")) {
+          console.log("2---->>>>");
+          if (new Date((eventsUp[i]["Event Date"] + " " + eventsUp[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() &&
+              new Date((eventsUp[i]["Event Date"] + " " + eventsUp[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()  &&
+              (Number(eventsUp[i]?.["distance"]) <= Number(tempDis.split("-")[1]) && Number(eventsUp[i]?.["distance"]) >= Number(tempDis.split("-")[0]))) {
+            temp.push(eventsUp[i]);          
+          }
+        }else{
+          if (filterUp["distance"] === "1") {
+            console.log("3---->>>>");
+            if (new Date((eventsUp[i]["Event Date"] + " " + eventsUp[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() &&
+                new Date((eventsUp[i]["Event Date"] + " " + eventsUp[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()  &&
+                Number(eventsUp[i]?.["distance"]) <= 1) {
+              temp.push(eventsUp[i]);          
+            }
+          }else{
+            console.log("4---->>>>");
+            if (new Date((eventsUp[i]["Event Date"] + " " + eventsUp[i]["Time Start"])).getTime() >= new Date(agoTime).getTime() &&
+                new Date((eventsUp[i]["Event Date"] + " " + eventsUp[i]["Time Start"])).getTime() <= new Date(currentTime).getTime()  &&
+                Number(eventsUp[i]?.["distance"]) >= Number(tempDis)) {
+              temp.push(eventsUp[i]);          
+            }
+          }
         }
       }
     }else{
@@ -209,8 +350,32 @@ function Home() {
       const formattedDate = `${year}-${month}-${day}`;
 
       for (let i = 0; i < eventsUp.length; i++) {
-        if (new Date((eventsUp[i]?.["Event Date"])).getTime() === new Date(formattedDate).getTime() && Number(eventsUp[i]?.["distance"]) <= 30) {
-          temp.push(eventsUp[i]);          
+        if (filter["distance"] === "") {
+          console.log("1---->>>>");
+          if (new Date((eventsUp[i]["Event Date"])).getTime() === new Date(formattedDate).getTime() && Number(eventsUp[i]?.["distance"]) <= 300) {
+            temp.push(eventsUp[i]);          
+          }
+        }
+        else if(tempDis.includes("-")) {
+          console.log("2---->>>>");
+          if (new Date((eventsUp[i]["Event Date"])).getTime() === new Date(formattedDate).getTime()  &&
+              (Number(eventsUp[i]?.["distance"]) <= Number(tempDis.split("-")[1]) && Number(eventsUp[i]?.["distance"]) >= Number(tempDis.split("-")[0]))) {
+            temp.push(eventsUp[i]);          
+          }
+        }else{
+          if (filter["distance"] === "1") {
+            console.log("3---->>>>");
+            if (new Date((eventsUp[i]["Event Date"])).getTime() === new Date(formattedDate).getTime()  &&
+                Number(eventsUp[i]?.["distance"]) <= 1) {
+              temp.push(eventsUp[i]);          
+            }
+          }else{
+            console.log("4---->>>>");
+            if (new Date((eventsUp[i]["Event Date"])).getTime() === new Date(formattedDate).getTime()  &&
+                Number(eventsUp[i]?.["distance"]) >= Number(tempDis)) {
+              temp.push(eventsUp[i]);          
+            }
+          }
         }
       }
     }
@@ -307,7 +472,7 @@ function Home() {
             </div>
           </div>
           <div className="relative lg:col-span-2 col-span-5 flex lg:justify-end justify-center pb-5">
-            <form className="relative col-span-2 lg:w-[410px] w-full py-4 lg:py-12 px-8 rounded-[30px] lg:ml-8">
+            <div className="relative col-span-2 lg:w-[410px] w-full py-4 lg:py-12 px-8 rounded-[30px] lg:ml-8">
               <div className="absolute left-0 right-0 top-0 bottom-0 bg-black opacity-50 rounded-[30px]">
               </div>
               <div className="relative">
@@ -324,10 +489,13 @@ function Home() {
                 <Input 
                   className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] bg-white px-7 md:text-[17px] text-[14px]"
                   placeholder="Enter City/Zipcode"
+                  value={address}
+                  ref={inputRef}
+                  onChange={(e)=> setAddress(e.target.value)}
                   // value={city + "/" + zip}
                 />
                 <div className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] border-[1px] border-[#FFFFFF] bg-white flex content-center mt-5 px-6">
-                  <select defaultValue={''}  onChange={(e) => onChange("distance", e.target.value)} value={filter["distance"]} className="md:text-[17px] text-[14px] leading-[18.5px] text-[#000000] outline-none w-full">
+                  <select defaultValue={''}  onChange={(e) => {onChange("distance", e.target.value); onChangeUp("distance", e.target.value);}} value={filter["distance"]} className="md:text-[17px] text-[14px] leading-[18.5px] text-[#000000] outline-none w-full">
                     <option value="">Distance</option>
                     <option value="1">1 mile</option>
                     <option value="2-5">2-5 miles</option>
@@ -336,11 +504,14 @@ function Home() {
                     <option value="20">20+ miles</option>
                   </select>
                 </div>
-                <button className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] bg-primaryColor text-[17px] text-[#FFFFFF] mt-5">
-                  LETS GO!
+                <button 
+                  className="lg:w-[346px] w-full h-[45px] lg:h-[63px] rounded-[31.5px] bg-primaryColor text-[17px] text-[#FFFFFF] mt-5"
+                  onClick={() => getCoordinates()}
+                >
+                  LET'S GO!
                 </button>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
