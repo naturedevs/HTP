@@ -6,6 +6,7 @@ import { Input } from "../../../components/ui/input";
 import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import PopupEvent from "@/components/PopupEvent";
 import {
     Form,
     FormControl,
@@ -39,6 +40,7 @@ function Home() {
     const [isLoading, setIsLoading] = useState(false);
     const [imgFileName, setImgFileName] = useState("");
     const [imgFile, setImgFile] = useState<File | null>(null);
+    const [open, setOpen] = useState<boolean | null>(false);
 
     const form = useForm<z.infer<typeof newEventSchema>>({
         resolver: zodResolver(newEventSchema),
@@ -99,6 +101,7 @@ function Home() {
 
     return (
         <div>
+            {open && <PopupEvent />}
             <div className="relative bg-gradient-to-r from-primaryColor via-50% via-[#77C574] to-primaryColor md:h-[409px] h-[274px]">
                 <div className="banner opacity-30 absolute top-0 left-0 right-0 bottom-0 md:h-[409px] h-[274px]"></div>
                 <div className="absolute top-0 left-0 right-0 bottom-0 flex max-w-[1280px] m-auto justify-between px-4">
@@ -485,6 +488,7 @@ function Home() {
                                     <input
                                         type="checkbox"
                                         className="mmd:w-[26px] w-[20px] mmd:h-[26px] h-[20px] mt-2"
+                                        onChange={()=> {setOpen(!open)}}
                                     />
                                     <p className="mmd:text-[17px] text-[14px] text-[#3D3D3D] font-[400] mt-2">Do you want to sell Tickets?</p>
                                 </div>
@@ -529,7 +533,7 @@ function Home() {
                                                         </div>
                                                         <FormMessage className="absolute" />
                                                     </div>
-                                            </FormControl>
+                                                </FormControl>
                                             </FormItem>
                                         )}
                                     />
