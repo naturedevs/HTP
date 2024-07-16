@@ -17,7 +17,7 @@ export function NavBar({backend}) {
             <Link href="/" className="items-center content-center">
               <Image
                 src="/logo.svg"
-                alt="Kiwi Farms - Premium Cannabis"
+                alt="House The Party"
                 width={325}
                 height={30}
                 className="md:max-lg:hidden"
