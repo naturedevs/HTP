@@ -8,20 +8,18 @@ export default function HomeLayout({
 }: {
   children: React.ReactNode;
 }) {
-    return (    
-      <div>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <NavBar backend={false}/>
-
-          {children}
-
-          <Footer />
-        </ThemeProvider>
-      </div>
-    );
+	return (    
+		<div>
+			<ThemeProvider
+				attribute="class"
+				defaultTheme="light"
+				enableSystem
+				disableTransitionOnChange
+			>
+				<NavBar backend={false}/>
+				{children}
+				<Footer />
+			</ThemeProvider>
+		</div>
+	);
 }

@@ -11,30 +11,31 @@ interface Props {
 }
 
 export const StoreProvider = ({ children }: Props) => {
-  const storeRef = useRef<AppStore | null>(null);
+	const storeRef = useRef<AppStore | null>(null);
 
-  if (!storeRef.current) {
-    const persistedState = loadState();
-    storeRef.current = makeStore(persistedState);
-  }
+	if (!storeRef.current) {
+		const persistedState = loadState();
+		storeRef.current = makeStore(persistedState);
+	}
 
-  useEffect(() => {
-    if (storeRef.current != null) {
-      const unsubscribe = setupListeners(storeRef.current.dispatch);
-      
-      const saveStateToLocalStorage = () => {
-        saveState(storeRef.current?.getState());
-      };
-      storeRef.current.subscribe(saveStateToLocalStorage);
+	useEffect(() => {
+		if (storeRef.current != null) {
+			
+			const unsubscribe = setupListeners(storeRef.current.dispatch);
+			
+			const saveStateToLocalStorage = () => {
+				saveState(storeRef.current?.getState());
+			};
+			storeRef.current.subscribe(saveStateToLocalStorage);
 
-      return () => {
-        unsubscribe();
-        storeRef.current?.subscribe(saveStateToLocalStorage);
-      };
-    }
-  }, []);
+			return () => {
+				unsubscribe();
+				storeRef.current?.subscribe(saveStateToLocalStorage);
+			};
+		}
+	}, []);
 
-  return <Provider store={storeRef.current}>{children}</Provider>;
+	return <Provider store={storeRef.current}>{children}</Provider>;
 };
 
 const loadState = (): any => {

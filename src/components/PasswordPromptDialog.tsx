@@ -27,98 +27,99 @@ import { useRouter } from 'next/navigation';
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 const PasswordPromptDialog = () => {
-  const dispatch = useAppDispatch();
-  const { push } = useRouter();
 
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
+	const dispatch = useAppDispatch();
+	const { push } = useRouter();
 
-  const [isAdmin, setAdmin] = useState(false);
+	const [password, setPassword] = useState('');
+	const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async e => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const response = await fetch(`/api/auth/login`, {
-        body: JSON.stringify({ password, isAdmin }),
-        headers: { 'Content-Type': 'application/json' },
-        method: 'post',
-      });
+	const [isAdmin, setAdmin] = useState(false);
 
-      const res = await response.json()
+	const handleSubmit = async e => {
+		e.preventDefault();
+		setLoading(true);
+		try {
+		const response = await fetch(`/api/auth/login`, {
+			body: JSON.stringify({ password, isAdmin }),
+			headers: { 'Content-Type': 'application/json' },
+			method: 'post',
+		});
 
-      if (response.status !== 200){
-        toast.error(res)
-      } else {
-        const user = res;
-        dispatch(setUser({
-          id: user.id,
-          title: "",
-          password: "",
-          password1: "",
-          slug: "",
-          description: "",
-          menuList: user.menuList
-        }));
-        toast.success("Welcome");
-        if (password === user.password) {
-          dispatch(login());
-          dispatch(setIsAgency(password === user.password));
-          dispatch(setIsAdmin(user.content.isAdmin));
-          push('/');
-        }
-        if (password === user.password1) {
-          dispatch(setUser({
-            id: "12",
-            title: "",
-            password: "",
-            password1: "",
-            slug: "",
-            description: "",
-            menuList: user.menuList,
-          }));
-          dispatch(setIsVisitor(password === user.password1));
-          dispatch(setCart(true));
-          push('/menulist');
-        }
-      };
-    } catch (error) {
-      console.error(error);
-    }
-    setLoading(false)
-  };
+		const res = await response.json()
 
-  return (
-    <div className='password-prompt-dialog flex justify-center pt-20'>
-      <Card className='shadow-none p-4'>
-        <CardHeader className='space-y-1'>
-          <CardTitle className='text-2xl'>User Login</CardTitle>
-          <CardDescription>
-            Enter your password & user type below for access
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className='grid gap-4'>
-            <Label htmlFor='password'>Password:</Label>
-            <Input
-              type='password'
-              id='password'
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              className='w-full h-[40px]'
-            />
-          </CardContent>
-          <CardFooter>
-            <Button
-              type='submit'
-              className='hover:bg-[#009688] bg-primaryColor w-32 h-10 rounded-[30px]' disabled={loading}>
-              Enter
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
-    </div>
-  );
+		if (response.status !== 200){
+			toast.error(res)
+		} else {
+			const user = res;
+			dispatch(setUser({
+				id: user.id,
+				title: "",
+				password: "",
+				password1: "",
+				slug: "",
+				description: "",
+				menuList: user.menuList
+			}));
+			toast.success("Welcome");
+			if (password === user.password) {
+				dispatch(login());
+				dispatch(setIsAgency(password === user.password));
+				dispatch(setIsAdmin(user.content.isAdmin));
+				push('/');
+			}
+			if (password === user.password1) {
+				dispatch(setUser({
+				id: "12",
+				title: "",
+				password: "",
+				password1: "",
+				slug: "",
+				description: "",
+				menuList: user.menuList,
+				}));
+				dispatch(setIsVisitor(password === user.password1));
+				dispatch(setCart(true));
+				push('/menulist');
+			}
+		};
+		} catch (error) {
+			console.error(error);
+		}
+		setLoading(false)
+	};
+
+	return (
+		<div className='password-prompt-dialog flex justify-center pt-20'>
+			<Card className='shadow-none p-4'>
+				<CardHeader className='space-y-1'>
+					<CardTitle className='text-2xl'>User Login</CardTitle>
+					<CardDescription>
+						Enter your password & user type below for access
+					</CardDescription>
+				</CardHeader>
+				<form onSubmit={handleSubmit}>
+					<CardContent className='grid gap-4'>
+						<Label htmlFor='password'>Password:</Label>
+						<Input
+							type='password'
+							id='password'
+							value={password}
+							onChange={e => setPassword(e.target.value)}
+							className='w-full h-[40px]'
+						/>
+					</CardContent>
+					<CardFooter>
+						<Button
+							type='submit'
+							className='hover:bg-[#009688] bg-primaryColor w-32 h-10 rounded-[30px]' disabled={loading}>
+							Enter
+						</Button>
+					</CardFooter>
+				</form>
+			</Card>
+		</div>
+	);
 };
 
 {

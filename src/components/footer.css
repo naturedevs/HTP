@@ -1,34 +1,34 @@
 /* styles/BackgroundLayer.css */
 .bg1 {
-    position: relative;
-    width: 100%;
-    background-image: url('../../public/footer_bg2.png'); /* Path to your image */
-    background-size: cover;
-    background-position: center;
-  }
-  
+	position: relative;
+	width: 100%;
+	background-image: url('../../public/footer_bg2.png'); /* Path to your image */
+	background-size: cover;
+	background-position: center;
+}
+
 .bg1_1 {
-  position: relative;
-  width: 100%;
-  height: 809px; /* Adjust as needed */
-  background-image: url('../../public/footer_bg1.svg'); /* Path to your image */
-  background-size: cover;
-  background-position: center;
+	position: relative;
+	width: 100%;
+	height: 809px; /* Adjust as needed */
+	background-image: url('../../public/footer_bg1.svg'); /* Path to your image */
+	background-size: cover;
+	background-position: center;
 }
 
 .bg2 {
-  position: relative;
-  width: 100%;
-  background-image: url('../../public/footer_bg3.png'); /* Path to your image */
-  background-size: cover;
-  background-position: center;
+	position: relative;
+	width: 100%;
+	background-image: url('../../public/footer_bg3.png'); /* Path to your image */
+	background-size: cover;
+	background-position: center;
 }
 
 .bg3 {
-  position: relative;
-  width: 44px;
-  height: 44px;
-  background-image: url('../../public/circle.svg'); /* Path to your image */
-  background-size: cover;
-  background-position: center;
+	position: relative;
+	width: 44px;
+	height: 44px;
+	background-image: url('../../public/circle.svg'); /* Path to your image */
+	background-size: cover;
+	background-position: center;
 }
