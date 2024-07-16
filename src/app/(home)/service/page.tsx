@@ -1,5 +1,9 @@
+import Image from "next/image";
+
 export default function ServicePage() {
 	return (
-		<p>This is service page.</p>
+		<div>
+			
+		</div>
 	);
 }
