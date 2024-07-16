@@ -131,3 +131,5 @@ dist
 
 #extra
 .public/uploads
+
+push.bat
