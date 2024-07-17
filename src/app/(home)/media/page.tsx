@@ -6,13 +6,12 @@ export default function MediaPage() {
 	return (
 		<>
 			<div className="md:w-full md:h-[410px] w-full h-[274px] bg-gradient-to-r from-[#34A853] via-50% via-[#77C574] to-[#34A853] flex">
-				{/* <div className="banner opacity-30 absolute top-0 left-0 right-0 bottom-0 md:h-[410px] h-full"></div> */}
 				<div className="max-w-[1280px] flex w-full mx-auto justify-between relative px-[15px]">
 					<div className="flex-1 items-center flex">
 						<div className="space-y-5">
-							<p className="font-[800] lg:text-[80px] lg:leading-[80px] text-white">MEDIA</p>
-							<div className="flex">
-								<p className="font-[400] lg:text-[18px] lg:leading-[18px] text-white">Home</p>
+							<p className="md:font-[800] md:text-[80px] md:leading-[80px] font-[700] text-[36px] leading-[80px] text-white">MEDIA</p>
+							<div className="md:flex hidden">
+								<p className="font-[400] md:text-[18px] md:leading-[18px] text-white">Home</p>
 								<Image
 									className="mx-1"
 									src="/arrow.svg"
@@ -20,7 +19,7 @@ export default function MediaPage() {
 									width={10}
 									height={10}
 								/>
-								<p className="font-[400] lg:text-[18px] lg:leading-[18px] text-white">Media</p>
+								<p className="font-[400] md:text-[18px] md:leading-[18px] text-white">Media</p>
 							</div>
 						</div>
 					</div>
