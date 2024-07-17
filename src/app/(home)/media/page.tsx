@@ -1,23 +1,27 @@
 
 import Image from "next/image";
+import "./page.css"
 
 export default function MediaPage() {
 	return (
-		<div>
-			<div className="relative bg-gradient-to-r from-primaryColor via-50% via-[#77C574] to-primaryColor md:h-[409px] h-[274px]">
-				<div className="banner opacity-30 absolute top-0 left-0 right-0 bottom-0 md:h-[409px] h-[274px]"></div>
-				<div className="absolute top-0 left-0 right-0 bottom-0 flex max-w-[1280px] m-auto justify-between px-4">
-					<div className="content-center space-y-5">
-						<p className="font-[800] lg:text-[80px] lg:leading-[80px] md:text-[60px] md:leading-[60px] mmd:text-[45px] mmd:leading-[45px] text-[36px] leading-[36px] text-white">MEDIA</p>
-						<div className="font-[400] text-[18px] leading-[18px] text-white ml-1 md:flex hidden">
-								<p>HOME&nbsp;</p>
+		<>
+			<div className="w-full h-[410px] bg-gradient-to-r from-[#34A853] via-50% via-[#77C574] to-[#34A853] flex">
+				{/* <div className="banner opacity-30 absolute top-0 left-0 right-0 bottom-0 md:h-[410px] h-full"></div> */}
+				<div className="max-w-[1280px] flex w-full mx-auto justify-between">
+					<div className="flex-1 items-center flex">
+						<div className="space-y-5">
+							<p className="font-[800] lg:text-[80px] lg:leading-[80px] text-white">MEDIA</p>
+							<div className="flex">
+								<p className="font-[400] lg:text-[18px] lg:leading-[18px] text-white">Home</p>
 								<Image
+									className="mx-1"
 									src="/arrow.svg"
 									alt=""
 									width={10}
 									height={10}
 								/>
-								<p>&nbsp;MEDIA</p>
+								<p className="font-[400] lg:text-[18px] lg:leading-[18px] text-white">Media</p>
+							</div>
 						</div>
 					</div>
 					<Image
@@ -25,13 +29,12 @@ export default function MediaPage() {
 						alt=""
 						width={450}
 						height={409}
-						className="md:w-[450px] md:h-[409px] w-[219px] h-[274px]"
 					/>
 				</div>
 			</div>
 			<div>
-				aaa
+				This is content part.
 			</div>
-		</div>
+		</>
 	);
 }
