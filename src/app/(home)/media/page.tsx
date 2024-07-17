@@ -5,9 +5,9 @@ import "./page.css"
 export default function MediaPage() {
 	return (
 		<>
-			<div className="w-full h-[410px] bg-gradient-to-r from-[#34A853] via-50% via-[#77C574] to-[#34A853] flex">
+			<div className="md:w-full md:h-[410px] w-full h-[274px] bg-gradient-to-r from-[#34A853] via-50% via-[#77C574] to-[#34A853] flex">
 				{/* <div className="banner opacity-30 absolute top-0 left-0 right-0 bottom-0 md:h-[410px] h-full"></div> */}
-				<div className="max-w-[1280px] flex w-full mx-auto justify-between">
+				<div className="max-w-[1280px] flex w-full mx-auto justify-between relative px-[15px]">
 					<div className="flex-1 items-center flex">
 						<div className="space-y-5">
 							<p className="font-[800] lg:text-[80px] lg:leading-[80px] text-white">MEDIA</p>
@@ -29,6 +29,7 @@ export default function MediaPage() {
 						alt=""
 						width={450}
 						height={409}
+						className="md:w-[450px] md:h-[409px] w-[258px] h-[235px] absolute bottom-0 right-[15px]"
 					/>
 				</div>
 			</div>
