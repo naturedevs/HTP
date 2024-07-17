@@ -32,6 +32,14 @@ export default function MediaPage() {
 					/>
 				</div>
 			</div>
+			{/* <div className="bg-[#F5F5F5] px-15">
+				<Image
+					src="/house_party.svg"
+					alt=""
+					width={308}
+					height={12}
+				/>
+			</div> */}
 			<div>
 				This is content part.
 			</div>
