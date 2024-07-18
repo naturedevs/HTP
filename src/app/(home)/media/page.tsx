@@ -70,7 +70,7 @@ export default function MediaPage() {
 							<p className="md:font-[500] md:text-[21px] md:leading-[21px] font-[500] text-[17px] leading-[17px] text-black">Search</p>
 							
 							<div className="w-full">
-								<input type="text" className="w-full md:h-[58px] border-2"/>
+								<input type="text" className="w-full md:h-[58px] border-2 border-gray-300 rounded-[25.5px] p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
 							</div>
 
 						</div>
