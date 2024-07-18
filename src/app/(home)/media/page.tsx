@@ -9,7 +9,7 @@ export default function MediaPage() {
 			{/* banner start */}
 			<div className="md:w-full md:h-[410px] w-full h-[274px] bg-gradient-to-r from-primaryColor via-50% via-[#77C574] to-primaryColor flex">
 				<div className="max-w-[1280px] flex w-full mx-auto justify-between relative px-[15px]">
-					<div className="flex-1 items-center flex">
+					<div className="flex-1 items-center flex z-10">
 						<div className="space-y-5">
 							<p className="md:font-[800] md:text-[80px] md:leading-[80px] font-[700] text-[36px] leading-[80px] text-white">MEDIA</p>
 							<div className="md:flex hidden">
@@ -30,7 +30,7 @@ export default function MediaPage() {
 						alt=""
 						width={450}
 						height={409}
-						className="md:w-[450px] md:h-[409px] w-[258px] h-[235px] absolute bottom-0 right-[15px]"
+						className="md:w-[450px] md:h-[409px] w-[258px] h-[235px] absolute bottom-0 right-[15px] z-0"
 					/>
 				</div>
 			</div>
@@ -51,23 +51,19 @@ export default function MediaPage() {
 						</div>
 					</div>
 
-					<div>aaa</div>
+					<div className="w-full flex">
+						<div className="flex-1 bg-[#ff0000]">aaa</div>
+						<div className="w-[307px] bg-[#00fff0]">bbb</div>
+					</div>
 
-					<div>bbb</div>
+					
 
 				</div>
+
 			</div>
 
 			
 
-			{/* <div className="bg-[#F5F5F5] px-15">
-				<Image
-					src="/house_party.svg"
-					alt=""
-					width={308}
-					height={12}
-				/>
-			</div> */}
 			
 		</>
 	);
