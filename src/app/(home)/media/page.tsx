@@ -1,11 +1,12 @@
 
 import Image from "next/image";
 import "./page.css"
+import MediaItem from "@/components/home/mediaItem";
+import { MenuItem } from "@material-tailwind/react";
 
 export default function MediaPage() {
 	return (
 		<>
-			
 			{/* banner start */}
 			<div className="md:w-full md:h-[410px] w-full h-[274px] bg-gradient-to-r from-primaryColor via-50% via-[#77C574] to-primaryColor flex">
 				<div className="max-w-[1280px] flex w-full mx-auto justify-between relative px-[15px]">
@@ -51,9 +52,33 @@ export default function MediaPage() {
 						</div>
 					</div>
 
-					<div className="w-full flex">
-						<div className="flex-1 bg-[#ff0000]">aaa</div>
+					<div className="w-full flex space-x-3 mt-5 mb-5">
+						
+						<div className="flex-1">
+							<div className="grid grid-cols-3 gap-3">
+								<div className="bg-blue-500 text-white">
+									<MediaItem></MediaItem>
+								</div>
+								<div className="bg-red-500 text-white">
+									<MediaItem></MediaItem>
+								</div>
+								<div className="bg-green-500 text-white">
+									<MediaItem></MediaItem>
+								</div>
+								<div className="bg-yellow-500 text-white">
+									<MediaItem></MediaItem>
+								</div>
+								<div className="bg-pink-500 text-white">
+									<MediaItem></MediaItem>
+								</div>
+								<div className="bg-purple-500 text-white">
+									<MediaItem></MediaItem>
+								</div>
+							</div>
+						</div>
+
 						<div className="w-[307px] bg-[#00fff0]">bbb</div>
+
 					</div>
 
 					
