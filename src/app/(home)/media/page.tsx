@@ -65,7 +65,9 @@ export default function MediaPage() {
 							</div>
 						</div>
 
-						<div className="md:w-[307px] w-full md:mt-0 mt-3 bg-[#00fff0]">bbb</div>
+						<div className="md:w-[307px] w-full md:mt-0 mt-3">
+							<p className="md:font-[500] md:text-[21px] md:leading-[21px] font-[500] text-[17px] leading-[17px] text-black">Search</p>
+						</div>
 
 					</div>
 
