@@ -52,10 +52,10 @@ export default function MediaPage() {
 						</div>
 					</div>
 
-					<div className="w-full flex space-x-4 mt-5 mb-5">
+					<div className="w-full md:flex md:space-x-4 mt-5 mb-5">
 						
 						<div className="flex-1">
-							<div className="grid grid-cols-3 gap-4">
+							<div className="grid md:grid-cols-3 md:gap-4 grid-cols-2 gap-3">
 								<MediaItem></MediaItem>
 								<MediaItem></MediaItem>
 								<MediaItem></MediaItem>
@@ -65,7 +65,7 @@ export default function MediaPage() {
 							</div>
 						</div>
 
-						<div className="w-[307px] bg-[#00fff0]">bbb</div>
+						<div className="md:w-[307px] w-full md:mt-0 mt-3 bg-[#00fff0]">bbb</div>
 
 					</div>
 
