@@ -66,7 +66,13 @@ export default function MediaPage() {
 						</div>
 
 						<div className="md:w-[307px] w-full md:mt-0 mt-3">
+
 							<p className="md:font-[500] md:text-[21px] md:leading-[21px] font-[500] text-[17px] leading-[17px] text-black">Search</p>
+							
+							<div className="w-full">
+								<input type="text" className="w-full md:h-[58px] border-2"/>
+							</div>
+
 						</div>
 
 					</div>

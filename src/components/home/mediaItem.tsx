@@ -20,7 +20,7 @@ export default function MediaItem() {
 
          <p className="md:font-[500] md:text-[21px] md:leading-[27px] font-[700] text-[22px] leading-[27px] text-black mt-1">Grad your spot fast before all the seats fill up.</p>
 
-         <p className="md:font-[400] md:text-[16px] md:leading-[22px] font-[700] text-[22px] leading-[27px] text-[#010101] mt-1">Grad your spot fast before all the seats fill up, don’t miss it.....</p>
+         <p className="md:font-[400] md:text-[16px] md:leading-[22px] font-[400] text-[14px] leading-[18px] text-[#010101] mt-1 line-clamp-2">Grad your spot fast before all the seats fill up, don’t miss it.....</p>
 
          <div className="flex justify-start mt-3">
             <button className="md:w-[167px] md:h-[51px] w-[116px] h-[39px] rounded-[25.5px] bg-primaryColor md:font-[600] md:text-[17px] md:leading-[18.5px] text-[#FFFFFF]">
