@@ -5,7 +5,9 @@ import "./page.css"
 export default function MediaPage() {
 	return (
 		<>
-			<div className="md:w-full md:h-[410px] w-full h-[274px] bg-gradient-to-r from-[#34A853] via-50% via-[#77C574] to-[#34A853] flex">
+			
+			{/* banner start */}
+			<div className="md:w-full md:h-[410px] w-full h-[274px] bg-gradient-to-r from-primaryColor via-50% via-[#77C574] to-primaryColor flex">
 				<div className="max-w-[1280px] flex w-full mx-auto justify-between relative px-[15px]">
 					<div className="flex-1 items-center flex">
 						<div className="space-y-5">
@@ -32,6 +34,32 @@ export default function MediaPage() {
 					/>
 				</div>
 			</div>
+			{/* banner end */}
+
+			<div className="w-full">
+				<div className="max-w-[1280px] w-full flex flex-col mx-auto px-[15px] md:mt-12 mt-6">
+					
+					<div className="w-full flex flex-col items-center md:items-start">	
+						<div className="h-full flex space-x-2">
+							<div className="flex items-center">
+								<hr className="md:w-[139px] w-[84px] border-t-1 border-primaryColor"/>
+							</div>
+							<p className="md:font-[600] md:text-[18px] md:leading-[18px] font-[600] text-[14px] leading-[18px] text-primaryColor">HOUSETHEPARTY</p>
+						</div>
+						<div className="mt-2 md:mt-3">
+							<p className="md:font-[700] md:text-[37px] md:leading-[49px] font-[700] text-[22px] leading-[27px] text-black">In the Media</p>
+						</div>
+					</div>
+
+					<div>aaa</div>
+
+					<div>bbb</div>
+
+				</div>
+			</div>
+
+			
+
 			{/* <div className="bg-[#F5F5F5] px-15">
 				<Image
 					src="/house_party.svg"
@@ -40,9 +68,7 @@ export default function MediaPage() {
 					height={12}
 				/>
 			</div> */}
-			<div>
-				This is content part.
-			</div>
+			
 		</>
 	);
 }
