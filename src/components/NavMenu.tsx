@@ -51,6 +51,14 @@ export function NavMenu() {
 					</NavigationMenuItem>
 
 					<NavigationMenuItem>
+						<Link href="/test" legacyBehavior passHref>
+							<NavigationMenuLink>
+								TEST
+							</NavigationMenuLink>
+						</Link>
+					</NavigationMenuItem>
+
+					<NavigationMenuItem>
 						<Link href="/media" legacyBehavior passHref>
 							<NavigationMenuLink>
 								MEDIA
