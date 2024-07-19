@@ -6,7 +6,8 @@ export default function TestPage() {
 	return (
 		<>
 			<div className="w-full bg-[#F5F5F5] flex">
-				<div className="max-w-[1280px] flex w-full mx-auto">
+
+				<div className="max-w-[1280px] w-full mx-auto md:flex">
 
 					<div className="flex-1">
 
@@ -53,7 +54,7 @@ export default function TestPage() {
 							<div className="flex space-x-2">
 								<input type="text" 
 									className="w-full md:h-[50px] h-[45px] pl-3 border-[2px] border-gray-300"
-									placeholder = "CVV"
+									placeholder = "CVC"
 								/>
 								<input type="text" 
 									className="w-full md:h-[50px] h-[45px] pl-3 border-[2px] border-gray-300"
