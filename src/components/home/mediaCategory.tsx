@@ -1,7 +1,9 @@
 import Image from "next/image";
 import PropTypes from 'prop-types';
 
-export default function MediaCategory({title}) {
+export default function MediaCategory(props) {
+
+   const {title} = props;
 
    return(
       <div className="w-full flex">

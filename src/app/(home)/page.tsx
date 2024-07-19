@@ -1,11 +1,15 @@
 'use client'
 import EventItem from "@/components/home/EventItem";
+import MySelect from "@/components/MySelect";
 import "@/styles/home.css"
 import Image from "next/image";
 
 export default function Home() {
 
 	const banner_backImageUrl = '/homeBg1.png';
+	const e_type_array = ['Bar', 'Club', 'Warehouse rave', 'Outdoor rave', 'Megaclub', 'Pool', 'Block', 'Rooftop', 'Other'];
+	const e_music_array = ['Top 40', 'EDM', 'Pop', 'Rock', 'Techno/House', 'Hip-hop', 'R&B', 'Dubstep', 'Latin', 'Salsa', 'Reggaeton', 'Country', 'Jazz', 'Metal'];
+	const e_age_array = ['18+', '21+', '30+', '40+'];
 
 	return (
 		<>
@@ -69,6 +73,12 @@ export default function Home() {
 							<p className="md:font-[400] md:text-[17.5px] md:leading-[18px] font-[400] text-[17.5px] leading-[18px] text-black line-clamp-1">
 								Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!
 							</p>
+						</div>
+
+						<div className="mt-2 md:mt-3">
+							<MySelect data={e_type_array} placeholder="Type" className="ml-1 mr-1"/>
+							<MySelect data={e_music_array} placeholder="Music" className="ml-1 mr-1"/>
+							<MySelect data={e_age_array} placeholder="Age" className="ml-1 mr-1"/>
 						</div>
 
 						<div className="w-full mt-5">

@@ -1,7 +1,9 @@
 import Image from "next/image";
 import PropTypes from 'prop-types';
 
-export default function EventItem({e_day, e_time, title, description, position, subject}) {
+export default function EventItem(props) {
+
+   const {e_day, e_time, title, description, position, subject} = props;
 
    return(
       <div className="w-full flex border-b-2 border-[#DEDDDD] pt-5 pb-5">

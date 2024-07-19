@@ -2,7 +2,9 @@ import { url } from "inspector";
 import Image from "next/image";
 import PropTypes from 'prop-types';
 
-export default function MediaItem({thumbnail, creator, creator_avatar, created_at, title, description}) {
+export default function MediaItem(props) {
+
+   const {thumbnail, creator, creator_avatar, created_at, title, description} = props;
 
    return(
       <div className="w-full">
