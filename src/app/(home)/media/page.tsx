@@ -3,6 +3,7 @@ import Image from "next/image";
 import "./page.css"
 import MediaItem from "@/components/home/mediaItem";
 import { MenuItem } from "@material-tailwind/react";
+import MediaCategory from "@/components/home/mediaCategory";
 
 export default function MediaPage() {
 	return (
@@ -67,10 +68,37 @@ export default function MediaPage() {
 
 						<div className="md:w-[307px] w-full md:mt-0 mt-3">
 
-							<p className="md:font-[500] md:text-[21px] md:leading-[21px] font-[500] text-[17px] leading-[17px] text-black">Search</p>
+							<p className="md:font-[500] md:text-[21px] md:leading-[21px] font-[500] text-[17px] leading-[49px] text-black">Search</p>
 							
 							<div className="w-full">
-								<input type="text" className="w-full md:h-[58px] border-2 border-gray-300 rounded-[25.5px] p-2 focus:outline-none focus:ring-2 focus:ring-blue-400"/>
+
+								<input type="text" 
+									className="w-full md:h-[58px] h-[45px] border-2 border-gray-300 rounded-[25.5px] p-2 focus:outline-none focus:ring-2 focus:ring-blue-400 mt-3 mb-3"
+									placeholder = "Enter Key Word"
+								/>
+
+								<div className="bg-white border-gray-300 border-2 rounded-[13px]">
+									<div className="p-5">
+										<p className="md:font-[500] md:text-[21px] md:leading-[21px] font-[500] text-[17px] leading-[17px] text-black">Category</p>
+									</div>
+									<hr className="w-full border-t-2 border-gray-300"/>
+									<div className="w-full space-y-3 p-5">
+										<MediaCategory></MediaCategory>
+										<MediaCategory></MediaCategory>
+										<MediaCategory></MediaCategory>
+										<MediaCategory></MediaCategory>
+										<MediaCategory></MediaCategory>
+										<MediaCategory></MediaCategory>
+									</div>	
+								</div>
+
+								<div className="bg-white border-gray-300 border-2 rounded-[13px] mt-3">
+									<div className="p-5">
+										<p className="md:font-[500] md:text-[21px] md:leading-[21px] font-[500] text-[17px] leading-[17px] text-black">Keywords</p>
+									</div>
+									{/* <hr className="w-full border-t-2 border-gray-300"/>	 */}
+								</div>
+
 							</div>
 
 						</div>
