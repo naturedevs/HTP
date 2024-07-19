@@ -1,11 +1,43 @@
-
-import Image from "next/image";
-import { url } from "inspector";
+'use client';
+// import Image from "next/image";
+// import { url } from "inspector";
+// import { useState } from 'react';
+import { Stripe, loadStripe } from '@stripe/stripe-js';
 
 export default function TestPage() {
+
+	
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		console.log("payment submitted");
+
+		const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+
+
+		// const { clientSecret } = await fetch('/api/test', {
+		// 	 method: 'POST',
+		// 	 headers: { 'Content-Type': 'application/json' },
+		// 	 body: JSON.stringify({ amount: 1000, currency: 'usd' }),
+		// }).then((res) => res.json());
+
+		// const result = await stripe.confirmCardPayment(clientSecret, {
+		// 	payment_method: {
+		// 		card: elements.getElement(CardElement),
+		// 	},
+		// });
+
+		// if (result.error) {
+		// 	console.log(`Payment failed: ${result.error.message}`);
+		// } else if (result.paymentIntent.status === 'succeeded') {
+		// 	console.log('Payment succeeded!');
+		// }
+
+  	};
+
 	return (
 		<>
-			<form>
+			<form onSubmit={handleSubmit}>
 
 				<div className="w-full bg-[#F5F5F5] flex">
 
@@ -80,7 +112,7 @@ export default function TestPage() {
 							</div>
 
 							<div className="pr-5 pl-5">
-								<button className="w-full md:h-[54px] h-[45px] bg-primaryColor text-[17px] text-[#FFFFFF]">
+								<button type="submit" className="w-full md:h-[54px] h-[45px] bg-primaryColor text-[17px] text-[#FFFFFF]">
 									COMPLETE ORDER
 								</button>
 							</div>
