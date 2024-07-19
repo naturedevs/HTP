@@ -57,7 +57,7 @@ export default function MediaPage() {
 						
 						<div className="flex-1">
 							<div className="grid md:grid-cols-3 md:gap-4 grid-cols-2 gap-3">
-								<MediaItem></MediaItem>
+								<MediaItem creator="John"></MediaItem>
 								{/* <MediaItem></MediaItem>
 								<MediaItem></MediaItem>
 								<MediaItem></MediaItem>
