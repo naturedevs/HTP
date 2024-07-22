@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import Image from "next/image";
+import PropTypes from 'prop-types';
 
-export default function MySelect(props) {
+export default function MySelect({data=[], placeholder="aaa"}) {
 
-   const {
-      data,
-      placeholder,
-      className
-   } = props;
+   // const {
+   //    data,
+   //    placeholder
+   // } = props;
 
    const [isOpen, setIsOpen] = useState(false);
    const [selectedOption, setSelectedOption] = useState(`${placeholder}`);
@@ -39,8 +39,6 @@ export default function MySelect(props) {
             />
          </span>
 
-
-
          {/* <span className="absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
             <svg
                className="fill-current h-4 w-4"
@@ -69,6 +67,12 @@ export default function MySelect(props) {
 
 }
 
-MySelect.defaultProps = {
-   placeholder: "Select option",
+MySelect.propTypes = {
+   data: PropTypes.array,
+   placeholder: PropTypes.string,
 };
+
+// MySelect.defaultProps = {
+//    data: [],
+//    placeholder: "Select option",
+// };

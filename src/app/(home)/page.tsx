@@ -76,9 +76,9 @@ export default function Home() {
 						</div>
 
 						<div className="mt-2 md:mt-3">
-							<MySelect data={e_type_array} placeholder="Type" className="ml-1 mr-1"/>
-							<MySelect data={e_music_array} placeholder="Music" className="ml-1 mr-1"/>
-							<MySelect data={e_age_array} placeholder="Age" className="ml-1 mr-1"/>
+							<MySelect data={e_type_array} placeholder="Type"/>
+							<MySelect data={e_music_array} placeholder="Music"/>
+							<MySelect data={e_age_array} placeholder="Age"/>
 						</div>
 
 						<div className="w-full mt-5">

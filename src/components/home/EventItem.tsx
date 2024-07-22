@@ -1,9 +1,14 @@
 import Image from "next/image";
 import PropTypes from 'prop-types';
 
-export default function EventItem(props) {
-
-   const {e_day, e_time, title, description, position, subject} = props;
+export default function EventItem({
+      e_day = "Wed", 
+      e_time = "7:00", 
+      title = "Empower Federal Credit Union Amphitheater at Lakeview",
+      description = "Lainey Wilson: Country's Cool Again Tour", 
+      position = "Syracuse, NY", 
+      subject = "BankPlus Amphitheater at Snowden Grove, Southaven, MS"
+   }) {
 
    return(
       <div className="w-full flex border-b-2 border-[#DEDDDD] pt-5 pb-5">
@@ -39,13 +44,4 @@ EventItem.propTypes = {
    description: PropTypes.string,
    position: PropTypes.string,
    subject: PropTypes.string,
-};
- 
-EventItem.defaultProps = {
-   e_day: "Wed",
-   e_time: "7:00",
-   title: "Empower Federal Credit Union Amphitheater at Lakeview",
-   description: "Lainey Wilson: Country's Cool Again Tour",
-   position: "Syracuse, NY",
-   subject: "BankPlus Amphitheater at Snowden Grove, Southaven, MS",
 };

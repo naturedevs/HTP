@@ -12,7 +12,7 @@ export default function TestPage() {
 
 		console.log("payment submitted");
 
-		const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
+		// const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 
 		// const { clientSecret } = await fetch('/api/test', {
