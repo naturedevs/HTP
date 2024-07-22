@@ -1,9 +1,9 @@
 
 import Image from "next/image";
 import "./page.css"
-import MediaItem from "@/components/home/mediaItem";
+import MediaItem from "@/components/home/MediaItem";
 import { MenuItem } from "@material-tailwind/react";
-import MediaCategory from "@/components/home/mediaCategory";
+import MediaCategory from "@/components/home/MediaCategory";
 
 export default function MediaPage() {
 	return (
