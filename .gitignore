@@ -133,5 +133,3 @@ dist
 .public/uploads
 
 push.bat
-
-.env.local
