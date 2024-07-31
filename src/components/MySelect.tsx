@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Image from "next/image";
 import PropTypes from 'prop-types';
 
-export default function MySelect({data=[], placeholder="aaa", className, onChange}) {
+export default function MySelect({data=[], placeholder="aaa"}) {
 
    // const {
    //    data,
@@ -19,11 +19,10 @@ export default function MySelect({data=[], placeholder="aaa", className, onChang
    const handleOptionClick = (option: string) => {
       setSelectedOption(option);
       setIsOpen(false);
-      onChange(option)
    };
 
    return (
-      <div className={className?className:"relative inline-block w-64"}>
+      <div className={"relative inline-block w-64"}>
          <button
             onClick={toggleDropdown}
             className="block w-full p-2.5 bg-white border border-gray-300 text-gray-700 py-2 px-4 rounded-[25px] leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
