@@ -54,15 +54,13 @@ function EventPage() {
 				eventEnd: eventEnd
 			};
 			formData.append('main_info', JSON.stringify(_data));
-			// if(open) formData.append('tiketList', JSON.stringify(sellTickets));
-			// if(imgFile) formData.append('imgURL', imgFileName);
+			if(open) formData.append('ticketList', JSON.stringify(sellTickets));
+			if(imgFile) formData.append('imgFile', imgFile);
 			setIsLoading(true);
 			console.log(formData, 'ok')
 			const response = await fetch("/api/events/createEvent", {
 				method: "POST",
-				body: formData,
-				headers: { 'Content-Type': 'multipart/form-data' },
-
+				body: formData
 			});
 
 			if (response.status === 200) {
