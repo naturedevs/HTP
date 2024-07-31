@@ -1,8 +1,15 @@
 'use client'
+import { useEffect } from "react";
 import EventItem from "@/components/home/EventItem";
 import MySelect from "@/components/MySelect";
 import "@/styles/home.css"
-import Image from "next/image";
+import { NextPageContext } from "next";
+
+Home.getInitialProps = async (ctx: NextPageContext) => {
+	console.log('ok')
+	const res = await fetch('api/events/getAllEvents')
+	return { events: res }
+  }
 
 export default function Home() {
 
@@ -11,6 +18,10 @@ export default function Home() {
 	const e_music_array = ['Top 40', 'EDM', 'Pop', 'Rock', 'Techno/House', 'Hip-hop', 'R&B', 'Dubstep', 'Latin', 'Salsa', 'Reggaeton', 'Country', 'Jazz', 'Metal'];
 	const e_age_array = ['18+', '21+', '30+', '40+'];
 
+
+	useEffect(() => {
+		console.log('ddddddddddd')
+	},[])
 	return (
 		<>
 			{/* banner start */}
@@ -99,3 +110,4 @@ export default function Home() {
 		</>
 	);
 }
+
