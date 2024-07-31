@@ -7,7 +7,6 @@ const saveFile = async (formData, key) => {
         const fileData = Buffer.from(await file?.arrayBuffer());
         const fileName = `${Date.now()}${file.name.substring(file.name.lastIndexOf('.'))}`; // Change the filename if needed
         const { error } = await supabase.storage.from('upload_img').upload(fileName, fileData)
-        console.log(error)
         const { data } = supabase.storage.from('upload_img').getPublicUrl(fileName)
         return data.publicUrl;
     }
@@ -23,13 +22,13 @@ export async function POST(request: Request, params: { action: string }) {
     const {
         eventName, eventType, musicType, djName, venueName, dressCode, venueType, venueAddress, ageRestrictions, coverCharge, eventDate, eventStart, eventEnd
     } = JSON.parse(main_info as string);
-    ticketList = JSON.parse(ticketList as string);
+    let _ticketList = JSON.parse(ticketList as string);
 
-    const { error } = await supabase
+    const { data, error } = await supabase
         .from('events')
         .insert({
-            event_name: eventName,
-            event_type: eventType,
+            name: eventName,
+            type: eventType,
             music_type: musicType,
             dj_name: djName,
             venue_name: venueName,
@@ -38,13 +37,28 @@ export async function POST(request: Request, params: { action: string }) {
             venue_address: venueAddress,
             age_restrictions: ageRestrictions,
             cover_charge: coverCharge,
-            event_date: eventDate,
-            event_start_time: eventStart,
-            event_end_time: eventEnd,
+            date: eventDate,
+            start_time: eventStart,
+            end_time: eventEnd,
             img_file: imgUrl
+        })
+        .select('id');
+    if (error) NextResponse.json(JSON.stringify(error), { status: 400 });
+    const event_id = data[0].id;
+    console.log(_ticketList)
+    _ticketList.map(async(ticket, index) => {
+        const { error } = await supabase
+        .from('tickets')
+        .insert({
+            eid: event_id,
+            cnt: ticket.count,
+            price: ticket.price,
+            limit_cnt: ticket.limit
         });
-
-    if (error) NextResponse.json(JSON.stringify(error), { status: 400 })
+        console.log(error)
+        if (error) return NextResponse.json(JSON.stringify(error), { status: 400 });
+    })
+    
     return NextResponse.json('ok', { status: 200 });
 }
 

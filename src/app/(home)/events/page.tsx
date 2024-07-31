@@ -1,13 +1,18 @@
 'use client'
 import "./page.css"
-import { useEffect, useState, useRef, MouseEventHandler } from 'react'
+import { useEffect, useState, useRef, CSSProperties } from 'react'
 import Image from "next/image";
-
 import { toast } from "react-hot-toast";
 import config from '@/config';
 import { FaLink, FaRegSquarePlus, FaRegSquareMinus } from "react-icons/fa6";
 import isEmpty from "@/utils/isEmpty";
+import DotLoader from "react-spinners/ClipLoader";
 
+const override: CSSProperties = {
+	display: "block",
+	margin: "0 auto",
+	borderColor: "red",
+};
 
 function EventPage() {
 
@@ -54,19 +59,20 @@ function EventPage() {
 				eventEnd: eventEnd
 			};
 			formData.append('main_info', JSON.stringify(_data));
-			if(open) formData.append('ticketList', JSON.stringify(sellTickets));
-			if(imgFile) formData.append('imgFile', imgFile);
+			if (open) formData.append('ticketList', JSON.stringify(sellTickets));
+			if (imgFile) formData.append('imgFile', imgFile);
 			setIsLoading(true);
 			console.log(formData, 'ok')
 			const response = await fetch("/api/events/createEvent", {
 				method: "POST",
 				body: formData
 			});
+			setIsLoading(false);
 
 			if (response.status === 200) {
 				toast.success("Successful!.");
 			} else {
-				
+
 				console.log('error')
 			}
 		} catch (error) {
@@ -86,7 +92,6 @@ function EventPage() {
 		}
 	};
 	const addSellTicketsList = () => {
-		console.log('ok', ticketCount, ticketType)
 		if (!isEmpty(ticketCount) && !isEmpty(ticketPrice) && !isEmpty(ticketType) && !isEmpty(ticektLimit)) {
 			let _item = {
 				type: ticketType,
@@ -108,8 +113,10 @@ function EventPage() {
 	}
 
 	return (
-		<div>
-			<div className="relative bg-gradient-to-r from-primaryColor via-50% via-[#77C574] to-primaryColor md:h-[409px] h-[274px]">
+		<div className="sweet-loading">
+			{!isLoading && (
+				<>
+				<div className="relative bg-gradient-to-r from-primaryColor via-50% via-[#77C574] to-primaryColor md:h-[409px] h-[274px]">
 				<div className="banner opacity-30 absolute top-0 left-0 right-0 bottom-0 md:h-[409px] h-[274px]"></div>
 				<div className="absolute top-0 left-0 right-0 bottom-0 flex max-w-[1280px] m-auto justify-between px-4">
 					<div className="content-center space-y-5">
@@ -134,7 +141,7 @@ function EventPage() {
 					/>
 				</div>
 			</div>
-			
+
 			<div className="bg-[#f3f3f6] py-20">
 				<div className="max-w-[950px] lg:m-auto mx-4 bg-white pt-10 px-5 rounded-[6px]">
 					<div className=" gap-5 pb-5">
@@ -145,42 +152,42 @@ function EventPage() {
 						<div className="mmd:grid grid-cols-2 mmd:space-y-0 gap-5 space-y-5 w-full">
 							<input value={eventName} onChange={(e) => setEventName(e.target.value)} type="text" placeholder="Event Name" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" />
 							<input value={eventDate} onChange={(e) => setEventDate(e.target.value)} type="date" placeholder="Event Date" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" />
-	
+
 							<input value={eventStart} onChange={(e) => setEventStart(e.target.value)} type="time" placeholder="Event Start" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" />
-					
+
 							<input value={eventEnd} onChange={(e) => setEventEnd(e.target.value)} type="time" placeholder="Event End" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" />
-						
+
 							<select value={eventType} onChange={(e) => setEventType(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
 								<option value="" className="text-[#3D3D3D]">Event Type</option>
 								{config.e_type_array.map((option, index) => (
 									<option value={option} key={index}>{option}</option>
 								))}
 							</select>
-						
+
 							<select value={musicType} onChange={(e) => setMusicType(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
 								<option value="" className="text-[#3D3D3D]">Event Type</option>
 								{config.e_music_array.map((option, index) => (
 									<option value={option} key={index}>{option}</option>
 								))}
 							</select>
-							
+
 							<input value={djName} onChange={(e) => setDjName(e.target.value)} type="text" placeholder="DJ Name" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" />
-						
+
 							<input value={venueName} onChange={(e) => setVenueName(e.target.value)} type="text" placeholder="Venue Name" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" />
-							
+
 							<input value={dressCode} onChange={e => setDressCode(e.target.value)} type="text" placeholder="Dress Code" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" />
-							
+
 							<select value={venueType} onChange={e => setVenueType(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
 								<option value="" className="text-[#3D3D3D]">Venue Type</option>
 								{config.v_type_array.map((option, index) => (
 									<option value={option} key={index}>{option}</option>
 								))}
 							</select>
-							
+
 						</div>
 						<div className="mmd:grid grid-cols-1 mmd:space-y-0 gap-5 space-y-5 w-full">
 							<input value={venueAddress} onChange={e => setVenueAddress(e.target.value)} type="text" placeholder="Venue Address" className="mt-5 mb-5 w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" />
-							
+
 						</div>
 						<div className="mmd:grid grid-cols-2 mmd:space-y-0 gap-5 space-y-5 w-full">
 							<select value={ageRestrictions} onChange={e => setAgeRestrictions(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
@@ -189,38 +196,38 @@ function EventPage() {
 									<option value={option} key={index}>{option}</option>
 								))}
 							</select>
-					
+
 							<input value={coverCharge} onChange={e => setCoverCharge(parseInt(e.target.value))} placeholder="Cover Charge" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" />
-					
+
 						</div>
 						<div className="mmd:grid grid-cols-1 mmd:space-y-0 gap-5 space-y-2 w-full mt-5 mb-5">
 							<label>
-								<input type="checkbox" className="mr-3" onClick={()=>setOpen(!open)} />
+								<input type="checkbox" className="mr-3" onClick={() => setOpen(!open)} />
 								Do you want to sell Tickets?
 							</label>
 							{open && (
 								<div className="transition transition-display">
-								<div className="flex flex-row justify-around gap-3 p-5">
-								<select className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]" value={ticketType} onChange={(e) => setTicketType((e.target.value))}>
-									<option value="" className="text-[#3D3D3D]">Ticket Type</option>
-									{config.e_age_array.map((option, index) => (
-										<option value={option} key={index}>{option}</option>
-									))}
-								</select>
-								<input type="number" placeholder="Ticket Count" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e)=>setTicketCount(parseInt(e.target.value))} value={ticketCount} />
-								<input type="number" placeholder="Ticket Price" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]"  onChange={(e)=>setTicketPrice(parseInt(e.target.value))} value={ticketPrice}/>
-								<input type="number" placeholder="Ticket Limit" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]"  onChange={(e)=>setTicketLimit(parseInt(e.target.value))} value={ticektLimit}/>
-								<button type="button" onClick={addSellTicketsList}><FaRegSquarePlus /></button>
-							</div>
-							{sellTickets.map((ticket, index) => (
-								<div className="flex flex-row justify-around gap-3 p-5">
-									<input type="string"  className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.type}/>
-									<input type="number"  className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.price}/>
-									<input type="number"  className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.count}/>
-									<input type="number"  className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.limit}/>
-									<button type="button" onClick={()=>removeSellTicketsList(ticket.type)}><FaRegSquareMinus /></button>
-								</div>
-							))}</div>
+									<div className="flex flex-row justify-around gap-3 p-5">
+										<select className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]" value={ticketType} onChange={(e) => setTicketType((e.target.value))}>
+											<option value="" className="text-[#3D3D3D]">Ticket Type</option>
+											{config.e_age_array.map((option, index) => (
+												<option value={option} key={index}>{option}</option>
+											))}
+										</select>
+										<input type="number" placeholder="Ticket Count" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketCount(parseInt(e.target.value))} value={ticketCount} />
+										<input type="number" placeholder="Ticket Price" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketPrice(parseInt(e.target.value))} value={ticketPrice} />
+										<input type="number" placeholder="Ticket Limit" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketLimit(parseInt(e.target.value))} value={ticektLimit} />
+										<button type="button" onClick={addSellTicketsList}><FaRegSquarePlus /></button>
+									</div>
+									{sellTickets.map((ticket, index) => (
+										<div className="flex flex-row justify-around gap-3 p-5">
+											<input type="string" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.type} />
+											<input type="number" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.price} />
+											<input type="number" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.count} />
+											<input type="number" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.limit} />
+											<button type="button" onClick={() => removeSellTicketsList(ticket.type)}><FaRegSquareMinus /></button>
+										</div>
+									))}</div>
 							)}
 							<label>
 								<input type="checkbox" className="mr-3" />
@@ -239,13 +246,22 @@ function EventPage() {
 							</div>
 						</div>
 						<div className="flex flex-row justify-center mt-5">
-							<button type="button" className="w-[206px] text-white bg-[#000000] py-[27px] px-[40px] rounded-[4px] mr-[5px] text-[15px]" onClick={()=>alert('ok')}>SAVE FOR LATER</button>
+							<button type="button" className="w-[206px] text-white bg-[#000000] py-[27px] px-[40px] rounded-[4px] mr-[5px] text-[15px]" onClick={() => alert('ok')}>SAVE FOR LATER</button>
 							<button type="button" className="w-[206px] text-white bg-[#34A853] py-[27px] px-[40px] rounded-[4px] ml-[5px] text-[15px]" onClick={onSubmit}>NEXT</button>
 						</div>
 					</div>
 
 				</div>
-			</div>
+			</div></>
+			)}
+			<DotLoader
+				color={'blue'}
+				loading={isLoading}
+				cssOverride={override}
+				size={150}
+				aria-label="Loading Spinner"
+				data-testid="loader"
+			/>
 		</div>
 	);
 }
