@@ -210,7 +210,7 @@ function EventPage() {
 									<div className="flex flex-row justify-around gap-3 p-5">
 										<select className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]" value={ticketType} onChange={(e) => setTicketType((e.target.value))}>
 											<option value="" className="text-[#3D3D3D]">Ticket Type</option>
-											{config.e_age_array.map((option, index) => (
+											{[1, 2].map((option, index) => (
 												<option value={option} key={index}>{option}</option>
 											))}
 										</select>

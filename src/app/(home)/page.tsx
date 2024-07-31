@@ -1,5 +1,5 @@
 'use client'
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import EventItem from "@/components/home/EventItem";
 import MySelect from "@/components/MySelect";
 import "@/styles/home.css"
@@ -17,11 +17,26 @@ export default function Home() {
 	const e_type_array = ['Bar', 'Club', 'Warehouse rave', 'Outdoor rave', 'Megaclub', 'Pool', 'Block', 'Rooftop', 'Other'];
 	const e_music_array = ['Top 40', 'EDM', 'Pop', 'Rock', 'Techno/House', 'Hip-hop', 'R&B', 'Dubstep', 'Latin', 'Salsa', 'Reggaeton', 'Country', 'Jazz', 'Metal'];
 	const e_age_array = ['18+', '21+', '30+', '40+'];
+	const [events, setEvents] = useState<any>([])
 
-
+	const fetchAction = async() => {
+		try{
+			const response =  await fetch('/api/events/getAllEvents');
+		    if(response.ok){
+				const data = await response.json();
+				setEvents(data);
+			} else {
+				const err = await response.json();
+				console.log(err)
+			}
+		} catch(error) {
+			console.log(error);
+		}
+	}
 	useEffect(() => {
-		console.log('ddddddddddd')
+		 fetchAction();
 	},[])
+	console.log(events)
 	return (
 		<>
 			{/* banner start */}
@@ -93,12 +108,10 @@ export default function Home() {
 						</div>
 
 						<div className="w-full mt-5">
-							<EventItem></EventItem>
-							<EventItem></EventItem>
-							<EventItem></EventItem>
-							<EventItem></EventItem>
-							<EventItem></EventItem>
-							<EventItem></EventItem>
+							{console.log(events, '-----------------')}
+							{events&& events.map((event, index) => (
+							<EventItem key={index} event={event} ></EventItem>
+							))}
 						</div>
 
 					</div>

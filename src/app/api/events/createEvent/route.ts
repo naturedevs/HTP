@@ -28,14 +28,14 @@ export async function POST(request: Request, params: { action: string }) {
         .from('events')
         .insert({
             name: eventName,
-            type: eventType,
+            event_type: eventType,
             music_type: musicType,
             dj_name: djName,
             venue_name: venueName,
             dress_code: dressCode,
             venue_type: venueType,
-            venue_address: venueAddress,
-            age_restrictions: ageRestrictions,
+            venue_addr: venueAddress,
+            age_type: ageRestrictions,
             cover_charge: coverCharge,
             date: eventDate,
             start_time: eventStart,
@@ -43,7 +43,8 @@ export async function POST(request: Request, params: { action: string }) {
             img_file: imgUrl
         })
         .select('id');
-    if (error) NextResponse.json(JSON.stringify(error), { status: 400 });
+        console.log(error)
+    if (error) return NextResponse.json(JSON.stringify(error), { status: 400 });
     const event_id = data[0].id;
     console.log(_ticketList)
     _ticketList.map(async(ticket, index) => {
@@ -51,6 +52,7 @@ export async function POST(request: Request, params: { action: string }) {
         .from('tickets')
         .insert({
             eid: event_id,
+            type:ticket.type,
             cnt: ticket.count,
             price: ticket.price,
             limit_cnt: ticket.limit
