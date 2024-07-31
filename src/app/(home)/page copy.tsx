@@ -535,7 +535,7 @@ function Home() {
 					width={308}
 					height={12}
 				/>
-				<p className="md:text-[37px] text-[22px] md:leading-[49px] leading-[23px] font-bold text-[#000000] my-5">Parties Happening Around You Now</p>
+				<p className="md:text-[37px] text-[22px] md:leading-[49px] leading-[23px] font-bold text-[#000000] my-5"></p>
 				<p className="md:text-[17px] md:leading-[18.5px] text-[14px] leading-[16px] text-[#000000]">Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!</p>
 				<Drawer open={isDrawerOpen} onClose={()=>{setIsDrawerOpen(false);}}>
 					<DrawerHeader>
