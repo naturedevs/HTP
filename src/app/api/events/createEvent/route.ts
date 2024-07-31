@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
 import supabase from '@/supabase/supabaseClient';
-
+import multer from 'multer';
+const  upload = multer({ dest: 'uploads/' });
 export async function POST(request: Request, params: { action: string }) {
-
+    upload(request)
     const formData = await request.formData();
 
     let main_info = formData.get('main_info');
@@ -31,7 +32,7 @@ export async function POST(request: Request, params: { action: string }) {
             event_start_time: eventStart,
             event_end_time: eventEnd
         });
-        
+
     if( error ) return NextResponse.json(JSON.stringify(error), {status: 500})
     return NextResponse.json('ok', { status: 200 });
 }
