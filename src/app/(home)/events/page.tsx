@@ -12,7 +12,9 @@ import { useRouter } from 'next/navigation';
 const override: CSSProperties = {
 	display: "block",
 	margin: "0 auto",
-	borderColor: "red",
+	borderColor: "#34A853",
+	backgroundColor: '#34A853'
+
 };
 
 function EventPage() {
@@ -292,18 +294,7 @@ function EventPage() {
 									</label>
 									{isTicketForSel && (
 										<div className="transition transition-display">
-											<div className="flex flex-row justify-around gap-3 p-5">
-												<select defaultValue={""} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]" value={ticketType} onChange={(e) => setTicketType((e.target.value))}>
-													<option value="" className="text-[#3D3D3D]">Ticket Type</option>
-													{tTypes&&tTypes.map((type, index) => (
-														<option value={type.id} key={index}>{type.name}</option>
-													))}
-												</select>
-												<input type="number" placeholder="Ticket Count" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketCount(parseInt(e.target.value))} value={ticketCount} />
-												<input type="number" placeholder="Ticket Price" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketPrice(parseInt(e.target.value))} value={ticketPrice} />
-												<input type="number" placeholder="Ticket Limit" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketLimit(parseInt(e.target.value))} value={ticektLimit} />
-												<button type="button" onClick={addTicketList}><FaRegSquarePlus /></button>
-											</div>
+
 											{tickets.map((ticket, index) => (
 												<div className="flex flex-row justify-around gap-3 p-5" key={index}>
 													<input type="string" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.type} />
@@ -312,7 +303,19 @@ function EventPage() {
 													<input type="number" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.limit} />
 													<button type="button" onClick={() => removeTicketList(ticket.type)}><FaRegSquareMinus /></button>
 												</div>
-											))}</div>
+											))}
+											<div className="flex flex-row justify-around gap-3 p-5">
+												<select defaultValue={""} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]" value={ticketType} onChange={(e) => setTicketType((e.target.value))}>
+													<option value="" className="text-[#3D3D3D]">Ticket Type</option>
+													{tTypes && tTypes.map((type, index) => (
+														<option value={type.id} key={index}>{type.name}</option>
+													))}
+												</select>
+												<input type="number" placeholder="Ticket Count" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketCount(parseInt(e.target.value))} value={ticketCount} />
+												<input type="number" placeholder="Ticket Price" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketPrice(parseInt(e.target.value))} value={ticketPrice} />
+												<input type="number" placeholder="Ticket Limit" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketLimit(parseInt(e.target.value))} value={ticektLimit} />
+												<button type="button" onClick={addTicketList}><FaRegSquarePlus /></button>
+											</div></div>
 									)}
 									<label>
 										<input type="checkbox" className="mr-3" />
