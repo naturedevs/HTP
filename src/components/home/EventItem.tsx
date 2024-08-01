@@ -20,9 +20,9 @@ export default function EventItem({event}) {
                <p className="md:font-[400] md:text-[17px] md:leading-[18px] font-[400] text-[17px] leading-[18px] text-[#7D7D7D]">{' - ' + moment(event.date).format('hh:mm A')}</p>
             </div>
             <p className="md:font-[500] md:text-[23px] md:leading-[25px] font-[500] text-[23px] leading-[25px] text-black">{event.name}</p>
-            <p className="md:font-[400] md:text-[17px] md:leading-[18px] font-[400] text-[17px] leading-[18px] text-[#7D7D7D]">{event.event_type + '_' + event.music_type}</p>
+            <p className="md:font-[400] md:text-[17px] md:leading-[18px] font-[400] text-[17px] leading-[18px] text-[#7D7D7D]">{event.event_type_list.name + '_' + event.music_type_list.name}</p>
             <p className="md:font-[400] md:text-[17px] md:leading-[18px] font-[400] text-[17px] leading-[18px] text-[#7D7D7D]">{event.dj_name + '_' + event.dress_code}</p>
-            <p className="md:font-[400] md:text-[17px] md:leading-[18px] font-[400] text-[17px] leading-[18px] text-[#7D7D7D]">{event.venue_type + '_' + event.venue_name}</p>
+            <p className="md:font-[400] md:text-[17px] md:leading-[18px] font-[400] text-[17px] leading-[18px] text-[#7D7D7D]">{event.venue_type_list.name + '_' + event.venue_name}</p>
          </div>
          <div className="md:w-[245px] flex items-center">
             <button className="w-full md:h-[51px] h-[39px] rounded-[25.5px] bg-primaryColor text-[17px] text-[#FFFFFF]">

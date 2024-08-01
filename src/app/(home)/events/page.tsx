@@ -1,6 +1,6 @@
 'use client'
 import "./page.css"
-import { useState, useRef, CSSProperties } from 'react'
+import { useState, useRef, CSSProperties, useEffect } from 'react'
 import Image from "next/image";
 import { toast } from "react-hot-toast";
 import config from '@/config';
@@ -22,7 +22,8 @@ function EventPage() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [imgFileName, setImgFileName] = useState("");
 	const [imgFile, setImgFile] = useState<File | null>(null);
-	const [open, setOpen] = useState<boolean | null>(false);
+	const [isTicketForSel, setTicketForSel] = useState<boolean | null>(false);
+
 	const [eventName, setEventName] = useState('');
 	const [eventType, setEventType] = useState(null);
 	const [musicType, setMusicType] = useState(null);
@@ -36,12 +37,95 @@ function EventPage() {
 	const [eventDate, setEventDate] = useState<string | null>();
 	const [eventStart, setEventStart] = useState<string | null>();
 	const [eventEnd, setEventEnd] = useState<string | null>();
-	const [sellTickets, setSellTickets] = useState([]);
+
+	const [tickets, setTickets] = useState([]);
 	const [ticketType, setTicketType] = useState<string | null>(null);
 	const [ticketCount, setTicketCount] = useState(0);
 	const [ticketPrice, setTicketPrice] = useState(0);
 	const [ticektLimit, setTicketLimit] = useState(0);
 
+	const [eTypes, setETypes] = useState([]);
+	const [mTypes, setMTypes] = useState([]);
+	const [vTypes, setVTypes] = useState([]);
+	const [aTypes, setATypes] = useState([]);
+	const [tTypes, setTTypes] = useState([]);
+
+	const getEventTypes = async () => {
+		try {
+			const response = await fetch('api/events/getEventTypes');
+			if (response.ok) {
+				const data = await response.json();
+				setETypes(data);
+				console.log('e_types', data)
+			} else {
+				console.log('error');
+			}
+		} catch (err) {
+			console.log(err);
+		}
+
+	}
+
+	const getMusicTypes = async () => {
+		try {
+			const response = await fetch('api/events/getMusicTypes');
+			if (response.ok) {
+				const data = await response.json();
+				setMTypes(data);
+			} else {
+				console.log('error');
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	}
+	const getVenueTypes = async () => {
+		try {
+			const response = await fetch('api/events/getVenueTypes');
+			if (response.ok) {
+				const data = await response.json();
+				setVTypes(data);
+			} else {
+				console.log('error');
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	}
+	const getAgeTypes = async () => {
+		try {
+			const response = await fetch('api/events/getAgeTypes');
+			if (response.ok) {
+				const data = await response.json();
+				setATypes(data);
+			} else {
+				console.log('error');
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	}
+	const getTicketTypes = async () => {
+		try {
+			const response = await fetch('api/events/getTicketTypes');
+			if (response.ok) {
+				const data = await response.json();
+				setTTypes(data);
+			} else {
+				console.log('error');
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	}
+	useEffect(() => {
+		getEventTypes();
+		getMusicTypes();
+		getVenueTypes();
+		getAgeTypes();
+		getTicketTypes();
+		return (() => { });
+	}, []);
 	async function onSubmit() {
 		try {
 			const formData = new FormData();
@@ -61,7 +145,7 @@ function EventPage() {
 				eventEnd: eventEnd
 			};
 			formData.append('main_info', JSON.stringify(_data));
-			if (open) formData.append('ticketList', JSON.stringify(sellTickets));
+			if (open) formData.append('ticketList', JSON.stringify(tickets));
 			if (imgFile) formData.append('imgFile', imgFile);
 
 			setIsLoading(true);
@@ -101,16 +185,16 @@ function EventPage() {
 				count: ticketCount,
 				limit: ticektLimit
 			};
-			let _list = [...sellTickets, _item];
-			setSellTickets(_list);
+			let _list = [...tickets, _item];
+			setTickets(_list);
 			setTicketCount(0);
 			setTicketPrice(0);
 			setTicketLimit(0);
 		}
 	}
 	const removeTicketList = (type: any) => {
-		let _list = [...sellTickets].filter((item, i) => item.type != type);
-		setSellTickets(_list);
+		let _list = [...tickets].filter((item, i) => item.type != type);
+		setTickets(_list);
 	}
 
 	return (
@@ -160,15 +244,15 @@ function EventPage() {
 
 									<select value={eventType} defaultValue={""} onChange={(e) => setEventType(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
 										<option value="" className="text-[#3D3D3D]">Event Type</option>
-										{config.e_type_array.map((option, index) => (
-											<option value={option} key={index}>{option}</option>
+										{eTypes && eTypes.map((type, index) => (
+											<option value={type.id} key={index}>{type.name}</option>
 										))}
 									</select>
 
 									<select value={musicType} defaultValue={""} onChange={(e) => setMusicType(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
-										<option value="" className="text-[#3D3D3D]">Event Type</option>
-										{config.e_music_array.map((option, index) => (
-											<option value={option} key={index}>{option}</option>
+										<option value="" className="text-[#3D3D3D]">Music Type</option>
+										{mTypes && mTypes.map((type, index) => (
+											<option value={type.id} key={index}>{type.name}</option>
 										))}
 									</select>
 
@@ -180,8 +264,8 @@ function EventPage() {
 
 									<select value={venueType} defaultValue={""} onChange={e => setVenueType(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
 										<option value="" className="text-[#3D3D3D]">Venue Type</option>
-										{config.v_type_array.map((option, index) => (
-											<option value={option} key={index}>{option}</option>
+										{vTypes && vTypes.map((type, index) => (
+											<option value={type.id} key={index}>{type.name}</option>
 										))}
 									</select>
 
@@ -193,8 +277,8 @@ function EventPage() {
 								<div className="mmd:grid grid-cols-2 mmd:space-y-0 gap-5 space-y-5 w-full">
 									<select value={ageRestrictions} defaultValue={""} onChange={e => setAgeRestrictions(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
 										<option value="" className="text-[#3D3D3D]">Age Restrictions</option>
-										{config.e_age_array.map((option, index) => (
-											<option value={option} key={index}>{option}</option>
+										{aTypes && aTypes.map((type, index) => (
+											<option value={type.id} key={index}>{type.name}</option>
 										))}
 									</select>
 
@@ -203,16 +287,16 @@ function EventPage() {
 								</div>
 								<div className="mmd:grid grid-cols-1 mmd:space-y-0 gap-5 space-y-2 w-full mt-5 mb-5">
 									<label>
-										<input type="checkbox" className="mr-3" onClick={() => setOpen(!open)} />
+										<input type="checkbox" className="mr-3" onClick={() => setTicketForSel(!isTicketForSel)} />
 										Do you want to sell Tickets?
 									</label>
-									{open && (
+									{isTicketForSel && (
 										<div className="transition transition-display">
 											<div className="flex flex-row justify-around gap-3 p-5">
 												<select defaultValue={""} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]" value={ticketType} onChange={(e) => setTicketType((e.target.value))}>
 													<option value="" className="text-[#3D3D3D]">Ticket Type</option>
-													{[1, 2].map((option, index) => (
-														<option value={option} key={index}>{option}</option>
+													{tTypes&&tTypes.map((type, index) => (
+														<option value={type.id} key={index}>{type.name}</option>
 													))}
 												</select>
 												<input type="number" placeholder="Ticket Count" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketCount(parseInt(e.target.value))} value={ticketCount} />
@@ -220,8 +304,8 @@ function EventPage() {
 												<input type="number" placeholder="Ticket Limit" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketLimit(parseInt(e.target.value))} value={ticektLimit} />
 												<button type="button" onClick={addTicketList}><FaRegSquarePlus /></button>
 											</div>
-											{sellTickets.map((ticket, index) => (
-												<div className="flex flex-row justify-around gap-3 p-5">
+											{tickets.map((ticket, index) => (
+												<div className="flex flex-row justify-around gap-3 p-5" key={index}>
 													<input type="string" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.type} />
 													<input type="number" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.price} />
 													<input type="number" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.count} />

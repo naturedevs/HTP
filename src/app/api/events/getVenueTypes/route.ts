@@ -4,9 +4,8 @@ import supabase from '@/supabase/supabaseClient';
 export async function GET(request: Request, params: { action: string }) {
 
   const { data, error }  = await supabase
-      .from('events')
-      .select(`*, tickets(*, ticket_type_list(*)), event_type_list(*), venue_type_list(*), age_type_list(*), music_type_list(*)`);
-      console.log(error)
+      .from('venue_type_list')
+      .select(`*`);
   if(error) return new NextResponse(JSON.stringify(error), {status: 400})
   return new NextResponse(JSON.stringify(data), {status: 200});
 }
