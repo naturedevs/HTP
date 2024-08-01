@@ -32,11 +32,11 @@ export default function TestPage() {
 
 	return (
 		<>
-			{clientSecret && (
+			{/* {clientSecret && (
 				<Elements options={options} stripe={stripePromise}>
 					<CheckoutForm />
 				</Elements>
-			)}
+			)} */}
 		</>
 	);
 }
