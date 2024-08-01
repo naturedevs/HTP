@@ -4,6 +4,7 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 import { NextResponse } from "next/server";
+import supabase from '@/supabase/supabaseClient';
 
 export async function GET(req) {
 
@@ -18,17 +19,23 @@ export async function POST(request: Request) {
 	const paymentMethodId  = req.paymentMethodId;
 
 	try{
-
+        console.log(req.paymentMethodId, req.event_id);
 		const paymentIntent = await stripe.paymentIntents.create({
 			amount: 1000, // amount in cents
 			currency: 'usd',
-			payment_method: paymentMethodId,
+			payment_method: paymentMethodId.id,
 			confirmation_method: 'manual',
 			confirm: true,
 			return_url: `${process.env.NEXT_PUBLIC_BASE_URL}/media`,
 		});
-
+         console.log(paymentIntent, 'ok')
 		// res.status(200).json(paymentIntent);
+		const {data, error} = await supabase
+		    .from('events')
+			.update({is_paid: true})
+			.eq('id', req.event_id);
+			console.log(error)
+		if(error) throw error;
 		return NextResponse.json(paymentIntent);
 
 		// const paymentIntent = await stripe.paymentIntents.create({
@@ -39,6 +46,7 @@ export async function POST(request: Request) {
 		// return NextResponse.json({ messsage: req.currency });
 	}
 	catch(error){
+		console.log(error)
 		return NextResponse.json({ error });
 	}
 

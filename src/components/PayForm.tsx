@@ -1,14 +1,44 @@
 'use client';
-// import Image from "next/image";
-// import { url } from "inspector";
-// import { useState } from 'react';
-
-import { Elements } from '@stripe/react-stripe-js';
+import { useState } from 'react';
 import { Stripe, loadStripe } from '@stripe/stripe-js';
+import {  useStripe, useElements , CardElement} from '@stripe/react-stripe-js';
+import { useRouter } from 'next/navigation';
 
-import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+const cardStyle = {
+	base: {
+		border: '1px solid red',
+		iconColor: '#c4f0ff',
+		width:'100%',
+      color: '#000',
+      fontWeight: '500',
+      fontFamily: 'Roboto, Open Sans, Segoe UI, sans-serif',
+      fontSize: '20px',
+      fontSmoothing: 'antialiased',
+      ':-webkit-autofill': {
+        color: '#fce883',
+      },
+      '::placeholder': {
+        color: '#87BBFD',
+      },
+	},
+	complete: {
 
-export default function TestPage() {
+	},
+	empty: {
+
+	},
+	invalid: {
+
+	}
+}
+export default function TestPage({event_id}) {
+
+	const router = useRouter();
+
+	const [firstName, setFirstName] = useState("");
+	const [secondName, setSecondName] = useState("");
+	const [email, setEmail] = useState("");
+	const [phoneNum, setPhoneNum] = useState("");
 
 	const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 	const stripe = useStripe();
@@ -25,12 +55,15 @@ export default function TestPage() {
 		const { error, paymentMethod } = await stripe.createPaymentMethod({
 			type: 'card',
 			card: elements.getElement(CardElement),
+			billing_details: {
+				name: firstName + secondName,
+				phone: phoneNum,
+				email: email, 
+			},
 		});
-
-
-    console.log(error)
-
+       console.log('ok')
 		if (error) {
+			console.log('card', error)
 			return;
 		}
 
@@ -39,41 +72,23 @@ export default function TestPage() {
 			headers: {
 			  'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ paymentMethodId: paymentMethod.id }),
+			body: JSON.stringify({ paymentMethodId: paymentMethod , event_id: event_id}),
 		});
 
 		const paymentResponse = await response.json();
-
+		console.log(paymentResponse)
 		if (paymentResponse.error) {
-			// setError(paymentResponse.error);
-			// setLoading(false);
 			return;
 		}
+        // router.push('/tickets/' + event_id);
 
-		// setLoading(false);
-		alert('Payment successful!');
-
-		// try {
-		// 	const response = await fetch(`/api/test`, {
-		// 		body: JSON.stringify({ amount: 1000, currency: 'usd' }),
-		// 		headers: { 'Content-Type': 'application/json' },
-		// 		method: 'POST',
-		// 	});
-
-		// 	const res = await response.json();
-		// 	console.log(res);
-
-		// } catch (error) {
-		// 	console.error(error);
-		// }
-
+		
   	};
 
 	return (
 
 			<form onSubmit={handleSubmit}>
-
-				<CardElement />
+				
 
 				<div className="w-full bg-[#F5F5F5] flex">
 
@@ -86,18 +101,26 @@ export default function TestPage() {
 									Here’s a list of upcoming events by our band in different locations. Please choose a location near to you.
 								</p>
 								<input type="text" 
+								    value={firstName}
+									onChange={(e) => setFirstName(e.target.value)}
 									className="w-full md:h-[50px] h-[45px] pl-3 border-[2px] border-gray-300"
 									placeholder = "First name"
 								/>
 								<input type="text" 
+									value={secondName}
+									onChange={(e) => setSecondName(e.target.value)}
 									className="w-full md:h-[50px] h-[45px] pl-3 border-[2px] border-gray-300"
 									placeholder = "Last name"
 								/>
 								<input type="text" 
+									value={email}
+									onChange={(e) => setEmail(e.target.value)}
 									className="w-full md:h-[50px] h-[45px] pl-3 border-[2px] border-gray-300"
 									placeholder = "Email address"
 								/>
 								<input type="text" 
+								    value={phoneNum}
+									onChange={(e) => setPhoneNum(e.target.value)}
 									className="w-full md:h-[50px] h-[45px] pl-3 border-[2px] border-gray-300"
 									placeholder = "Phone number"
 								/>
@@ -116,20 +139,7 @@ export default function TestPage() {
 									className="w-full md:h-[50px] h-[45px] pl-3 border-[2px] border-gray-300"
 									placeholder = "Name on Card"
 								/>
-								<input type="text" 
-									className="w-full md:h-[50px] h-[45px] pl-3 border-[2px] border-gray-300"
-									placeholder = "Card Number"
-								/>
-								<div className="flex space-x-2">
-									<input type="text" 
-										className="w-full md:h-[50px] h-[45px] pl-3 border-[2px] border-gray-300"
-										placeholder = "CVC"
-									/>
-									<input type="text" 
-										className="w-full md:h-[50px] h-[45px] pl-3 border-[2px] border-gray-300"
-										placeholder = "Monthly/year expire"
-									/>	
-								</div>
+								<div className='border-[2px] border-gray-300 p-3'><CardElement options={{style:cardStyle}}/></div>
 							</div>
 						</div>
 

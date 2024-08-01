@@ -158,8 +158,9 @@ function EventPage() {
 			setIsLoading(false);
 
 			if (response.status === 200) {
+				const {event_id} = await response.json();
 				toast.success("Successful!.");
-				router.push('/');
+				router.push('/payments/' + event_id);
 			} else {
 				console.log('error')
 			}

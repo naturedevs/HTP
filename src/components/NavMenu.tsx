@@ -51,7 +51,7 @@ export function NavMenu() {
 					</NavigationMenuItem>
 
 					<NavigationMenuItem>
-						<Link href="/test" legacyBehavior passHref>
+						<Link href="/payments" legacyBehavior passHref>
 							<NavigationMenuLink>
 								TEST
 							</NavigationMenuLink>

@@ -61,6 +61,6 @@ export async function POST(request: Request, params: { action: string }) {
         if (error) return NextResponse.json(JSON.stringify(error), { status: 400 });
     })
     
-    return NextResponse.json('ok', { status: 200 });
+    return NextResponse.json({event_id: event_id}, { status: 200 });
 }
 
