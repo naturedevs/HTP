@@ -202,7 +202,6 @@ function EventPage() {
 
 	return (
 		<div className="sweet-loading">
-			{!isLoading && (
 				<>
 					<div className="relative bg-gradient-to-r from-primaryColor via-50% via-[#77C574] to-primaryColor md:h-[409px] h-[274px]">
 						<div className="banner opacity-30 absolute top-0 left-0 right-0 bottom-0 md:h-[409px] h-[274px]"></div>
@@ -336,21 +335,12 @@ function EventPage() {
 								</div>
 								<div className="flex flex-row justify-center mt-5">
 									<button type="button" className="w-[206px] text-white bg-[#000000] py-[27px] px-[40px] rounded-[4px] mr-[5px] text-[15px]" onClick={() => alert('ok')}>SAVE FOR LATER</button>
-									<button type="button" className="w-[206px] text-white bg-[#34A853] py-[27px] px-[40px] rounded-[4px] ml-[5px] text-[15px]" onClick={onSubmit}>NEXT</button>
+									<button type="button" className="w-[206px] text-white bg-[#34A853] py-[27px] px-[40px] rounded-[4px] ml-[5px] text-[15px]" onClick={onSubmit} disabled={isLoading?true:false}>{isLoading?'PROCESSING...': 'NEXT'}</button>
 								</div>
 							</div>
 
 						</div>
 					</div></>
-			)}
-			<DotLoader
-				color={'blue'}
-				loading={isLoading}
-				cssOverride={override}
-				size={150}
-				aria-label="Loading Spinner"
-				data-testid="loader"
-			/>
 		</div>
 	);
 }

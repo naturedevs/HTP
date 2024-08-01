@@ -40,6 +40,8 @@ export default function TestPage({event_id}) {
 	const [email, setEmail] = useState("");
 	const [phoneNum, setPhoneNum] = useState("");
 
+	const [isLoding, setLoding] = useState(false);
+
 	const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 	const stripe = useStripe();
 	const elements = useElements();
@@ -51,7 +53,7 @@ export default function TestPage({event_id}) {
 		if (!stripe || !elements) {
 			return;
 		}
-
+        setLoding(true);
 		const { error, paymentMethod } = await stripe.createPaymentMethod({
 			type: 'card',
 			card: elements.getElement(CardElement),
@@ -61,7 +63,6 @@ export default function TestPage({event_id}) {
 				email: email, 
 			},
 		});
-       console.log('ok')
 		if (error) {
 			console.log('card', error)
 			return;
@@ -76,11 +77,11 @@ export default function TestPage({event_id}) {
 		});
 
 		const paymentResponse = await response.json();
-		console.log(paymentResponse)
+		setLoding(false);
 		if (paymentResponse.error) {
 			return;
 		}
-        // router.push('/tickets/' + event_id);
+        router.push('/events/' + event_id);
 
 		
   	};
@@ -158,8 +159,8 @@ export default function TestPage({event_id}) {
 							</div>
 
 							<div className="pr-5 pl-5">
-								<button type="submit" className="w-full md:h-[54px] h-[45px] bg-primaryColor text-[17px] text-[#FFFFFF]">
-									COMPLETE ORDER
+								<button type="submit" className="w-full md:h-[54px] h-[45px] bg-primaryColor text-[17px] text-[#FFFFFF]" disabled={isLoding?true:false}>
+									{isLoding? 'PROCESSING...':'COMPLETE ORDER'}
 								</button>
 							</div>
 						</div>

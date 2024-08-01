@@ -1,8 +1,33 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 
-export default function TestPage({event_id}) {
+export default function EventItem() {
 	
+	const {id} = useParams();
+	const [event, setEvent] = useState(null);
+
+	const getEvent = async () => {
+		
+		try{
+			const response = await fetch('api/events/getEvent', {
+				body: JSON.stringify({id: id})
+			});
+			if(response.status === 200) {
+				const data = response.json();
+				setEvent(data);
+			} else {
+				console.log('error');
+			}
+		} catch(err){
+			console.log(err)
+		}
+	}
+
+	useEffect(() => {
+		getEvent();
+	}, []);
+
 	const handleSubmit = async (e) => {		
 	
   	};
