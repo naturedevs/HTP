@@ -154,7 +154,7 @@ export default function TestPage({event_id}) {
 								<hr className="w-full border-[1px] border-[#E8E8E8]"/>
 								<div className="flex mx-auto justify-between">
 									<p className="text-[#272727] text-[14px] leading-[18px]">Total Cost:</p>
-									<p className="text-primaryColor font-[800] text-[25px] leading-[18px]">$25</p>
+									<p className="text-primaryColor font-[800] text-[25px] leading-[18px]">$50</p>
 								</div>
 							</div>
 
