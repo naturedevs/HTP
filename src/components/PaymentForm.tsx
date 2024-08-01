@@ -36,9 +36,27 @@ const PaymentForm = () => {
     if (error) {
       console.error(error);
     } else {
-      console.log(paymentMethod);
+      // console.log(paymentMethod);
       // Make API call to process the payment using paymentMethod.id
     }
+
+    const response = await fetch('/api/test', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ paymentMethodId: paymentMethod.id }),
+    });
+
+    const paymentResponse = await response.json();
+
+    if (paymentResponse.error) {
+      return;
+    }
+
+    alert('Payment successful!');
+
+
   };
 
   return (
