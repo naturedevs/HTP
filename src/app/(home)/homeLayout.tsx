@@ -1,5 +1,5 @@
 'use client'
-import Footer from "@/components/Footer";
+import Footer from "@/components/footer";
 import { NavBar } from "@/components/NavBar";
 import { ThemeProvider } from "@/components/theme-provider";
 
