@@ -1,8 +1,11 @@
 import Image from "next/image";
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import {useRouter} from 'next/navigation';
 
 export default function EventItem({event}) {
+
+   const router = useRouter();
 
    const month = ['','Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Oct', 'Sep', 'Nob', 'Dec'];
    const day = ['Sun', 'Mon', 'Thu', 'Wed', 'Thi', 'Fri', 'Sat']
@@ -25,7 +28,7 @@ export default function EventItem({event}) {
             <p className="md:font-[400] md:text-[17px] md:leading-[18px] font-[400] text-[17px] leading-[18px] text-[#7D7D7D]">{event.venue_type_list.name + '_' + event.venue_name}</p>
          </div>
          <div className="md:w-[245px] flex items-center">
-            <button className="w-full md:h-[51px] h-[39px] rounded-[25.5px] bg-primaryColor text-[17px] text-[#FFFFFF]">
+            <button className="w-full md:h-[51px] h-[39px] rounded-[25.5px] bg-primaryColor text-[17px] text-[#FFFFFF]" onClick={() => router.push('events/' +event.id )}>
                BUY TICKET
             </button>
          </div>
