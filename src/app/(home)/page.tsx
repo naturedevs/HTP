@@ -108,7 +108,6 @@ export default function Home() {
 						</div>
 
 						<div className="w-full mt-5">
-							{console.log(events, '-----------------')}
 							{events&& events.map((event, index) => (
 							<EventItem key={index} event={event} ></EventItem>
 							))}
