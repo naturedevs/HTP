@@ -14,9 +14,7 @@ Home.getInitialProps = async (ctx: NextPageContext) => {
 export default function Home() {
 
 	const banner_backImageUrl = '/homeBg1.png';
-	const e_type_array = ['Bar', 'Club', 'Warehouse rave', 'Outdoor rave', 'Megaclub', 'Pool', 'Block', 'Rooftop', 'Other'];
-	const e_music_array = ['Top 40', 'EDM', 'Pop', 'Rock', 'Techno/House', 'Hip-hop', 'R&B', 'Dubstep', 'Latin', 'Salsa', 'Reggaeton', 'Country', 'Jazz', 'Metal'];
-	const e_age_array = ['18+', '21+', '30+', '40+'];
+
 	const [events, setEvents] = useState<any>([])
 
 	const fetchAction = async() => {
@@ -24,6 +22,7 @@ export default function Home() {
 			const response =  await fetch('/api/events/getAllEvents');
 		    if(response.ok){
 				const data = await response.json();
+				console.log(data, 'data===')
 				setEvents(data);
 			} else {
 				const err = await response.json();
@@ -102,9 +101,9 @@ export default function Home() {
 						</div>
 
 						<div className="mt-2 md:mt-3">
-							<MySelect data={e_type_array} placeholder="Type"/>
+							{/* <MySelect data={e_type_array} placeholder="Type"/>
 							<MySelect data={e_music_array} placeholder="Music"/>
-							<MySelect data={e_age_array} placeholder="Age"/>
+							<MySelect data={e_age_array} placeholder="Age"/> */}
 						</div>
 
 						<div className="w-full mt-5">
