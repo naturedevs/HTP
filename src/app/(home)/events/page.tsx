@@ -158,14 +158,14 @@ function EventPage() {
 
 									<input value={eventEnd} onChange={(e) => setEventEnd(e.target.value)} type="time" placeholder="Event End" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" />
 
-									<select value={eventType} onChange={(e) => setEventType(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
+									<select value={eventType} defaultValue={""} onChange={(e) => setEventType(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
 										<option value="" className="text-[#3D3D3D]">Event Type</option>
 										{config.e_type_array.map((option, index) => (
 											<option value={option} key={index}>{option}</option>
 										))}
 									</select>
 
-									<select value={musicType} onChange={(e) => setMusicType(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
+									<select value={musicType} defaultValue={""} onChange={(e) => setMusicType(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
 										<option value="" className="text-[#3D3D3D]">Event Type</option>
 										{config.e_music_array.map((option, index) => (
 											<option value={option} key={index}>{option}</option>
@@ -178,7 +178,7 @@ function EventPage() {
 
 									<input value={dressCode} onChange={e => setDressCode(e.target.value)} type="text" placeholder="Dress Code" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" />
 
-									<select value={venueType} onChange={e => setVenueType(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
+									<select value={venueType} defaultValue={""} onChange={e => setVenueType(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
 										<option value="" className="text-[#3D3D3D]">Venue Type</option>
 										{config.v_type_array.map((option, index) => (
 											<option value={option} key={index}>{option}</option>
@@ -191,7 +191,7 @@ function EventPage() {
 
 								</div>
 								<div className="mmd:grid grid-cols-2 mmd:space-y-0 gap-5 space-y-5 w-full">
-									<select value={ageRestrictions} onChange={e => setAgeRestrictions(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
+									<select value={ageRestrictions} defaultValue={""} onChange={e => setAgeRestrictions(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
 										<option value="" className="text-[#3D3D3D]">Age Restrictions</option>
 										{config.e_age_array.map((option, index) => (
 											<option value={option} key={index}>{option}</option>
@@ -209,7 +209,7 @@ function EventPage() {
 									{open && (
 										<div className="transition transition-display">
 											<div className="flex flex-row justify-around gap-3 p-5">
-												<select className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]" value={ticketType} onChange={(e) => setTicketType((e.target.value))}>
+												<select defaultValue={""} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]" value={ticketType} onChange={(e) => setTicketType((e.target.value))}>
 													<option value="" className="text-[#3D3D3D]">Ticket Type</option>
 													{[1, 2].map((option, index) => (
 														<option value={option} key={index}>{option}</option>
