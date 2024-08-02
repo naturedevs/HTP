@@ -42,9 +42,9 @@ function EventPage() {
 
 	const [tickets, setTickets] = useState([]);
 	const [ticketType, setTicketType] = useState<string | null>(null);
-	const [ticketCount, setTicketCount] = useState(0);
-	const [ticketPrice, setTicketPrice] = useState(0);
-	const [ticektLimit, setTicketLimit] = useState(0);
+	const [ticketCount, setTicketCount] = useState('');
+	const [ticketPrice, setTicketPrice] = useState('');
+	const [ticektLimit, setTicketLimit] = useState('');
 
 	const [eTypes, setETypes] = useState([]);
 	const [mTypes, setMTypes] = useState([]);
@@ -184,15 +184,15 @@ function EventPage() {
 		if (!isEmpty(ticketCount) && !isEmpty(ticketPrice) && !isEmpty(ticketType) && !isEmpty(ticektLimit)) {
 			let _item = {
 				type: ticketType,
-				price: ticketPrice,
-				count: ticketCount,
-				limit: ticektLimit
+				price: parseInt(ticketPrice),
+				count: parseInt(ticketCount),
+				limit: parseInt(ticektLimit)
 			};
 			let _list = [...tickets, _item];
 			setTickets(_list);
-			setTicketCount(0);
-			setTicketPrice(0);
-			setTicketLimit(0);
+			setTicketCount('');
+			setTicketPrice('');
+			setTicketLimit('');
 		}
 	}
 	const removeTicketList = (type: any) => {
@@ -298,9 +298,9 @@ function EventPage() {
 											{tickets.map((ticket, index) => (
 												<div className="flex flex-row justify-around gap-3 p-5" key={index}>
 													<input type="string" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.type} />
-													<input type="number" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.price} />
-													<input type="number" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.count} />
-													<input type="number" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.limit} />
+													<input type="string" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.price} />
+													<input type="string" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.count} />
+													<input type="string" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px] disabled" value={ticket.limit} />
 													<button type="button" onClick={() => removeTicketList(ticket.type)}><FaRegSquareMinus /></button>
 												</div>
 											))}
@@ -311,9 +311,9 @@ function EventPage() {
 														<option value={type.id} key={index}>{type.name}</option>
 													))}
 												</select>
-												<input type="number" placeholder="Ticket Count" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketCount(parseInt(e.target.value))} value={ticketCount} />
-												<input type="number" placeholder="Ticket Price" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketPrice(parseInt(e.target.value))} value={ticketPrice} />
-												<input type="number" placeholder="Ticket Limit" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketLimit(parseInt(e.target.value))} value={ticektLimit} />
+												<input type="text" placeholder="Ticket Count" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketCount(parseInt(e.target.value))} value={ticketCount} />
+												<input type="text" placeholder="Ticket Price" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketPrice(parseInt(e.target.value))} value={ticketPrice} />
+												<input type="text" placeholder="Ticket Limit" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketLimit(parseInt(e.target.value))} value={ticektLimit} />
 												<button type="button" onClick={addTicketList}><FaRegSquarePlus /></button>
 											</div></div>
 									)}

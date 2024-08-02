@@ -32,7 +32,7 @@ const cardStyle = {
 
 	}
 }
-export default function TestPage({event_id, quantity, type}) {
+export default function TestPage({event_id}) {
 
 	const month = ['','Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Oct', 'Sep', 'Nob', 'Dec'];
     const day = ['Sun', 'Mon', 'Thu', 'Wed', 'Thi', 'Fri', 'Sat']

@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { Stripe, loadStripe } from '@stripe/stripe-js';
 import {  useStripe, useElements , CardElement} from '@stripe/react-stripe-js';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 import moment from 'moment';
 
 const cardStyle = {
@@ -32,7 +33,7 @@ const cardStyle = {
 
 	}
 }
-export default function TestPage({type, quantity}) {
+export default function TestPage({type, quantity, event_id}) {
 
 	const month = ['','Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Oct', 'Sep', 'Nob', 'Dec'];
     const day = ['Sun', 'Mon', 'Thu', 'Wed', 'Thi', 'Fri', 'Sat']
@@ -98,22 +99,22 @@ export default function TestPage({type, quantity}) {
 			return;
 		}
 
-		const response = await fetch('/api/test', {
+		const response = await fetch('/api/payment', {
 			method: 'POST',
 			headers: {
 			  'Content-Type': 'application/json',
 			},
-			body: JSON.stringify({ paymentMethodId: paymentMethod , event_id: event_id}),
+			body: JSON.stringify({ paymentMethodId: paymentMethod , event_id: event_id, type: type, quantity: quantity}),
 		});
 
 		const paymentResponse = await response.json();
 		setLoding(false);
 		if (paymentResponse.error) {
-			return;
+			return toast.error(paymentResponse.error);
 		}
+		toast.success(paymentResponse.status)
         router.push('/events/' + event_id);
 
-		
   	};
 
 	return (

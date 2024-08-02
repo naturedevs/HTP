@@ -40,7 +40,13 @@ export default function EventItem() {
 
 	const getTicketTypes = async () => {
 		try {
-			const response = await fetch('/api/events/getTicketTypes');
+			const response = await fetch('/api/events/getEventTicketTypes',{
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ id: id}),
+			});
 			if (response.ok) {
 				const data = await response.json();
 				setTTypes(data);
@@ -100,7 +106,7 @@ export default function EventItem() {
 								<select value={tType} defaultValue={""} onChange={e => setTType(e.target.value)} className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md pl-[22px] text-[17px] pr-[22px]">
 										<option value="" className="text-[#3D3D3D]">Choose Tikect Type</option>
 										{tTypes && tTypes.map((type, index) => (
-											<option value={type.id} key={index}>{type.name}</option>
+											<option value={type.id} key={index}>{type.ticket_type_list.name + ', $' + type.price} {type.cnt < 50?", Limited tickets available":""}</option>
 										))}
 									</select>
 								<input type="text" placeholder="Choose Ticket Quentity" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setQuantity(parseInt(e.target.value))}/>
