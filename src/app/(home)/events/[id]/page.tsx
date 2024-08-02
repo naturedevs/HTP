@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import moment from 'moment';
 
 export default function EventItem() {
@@ -9,10 +10,11 @@ export default function EventItem() {
     const day = ['Sun', 'Mon', 'Thu', 'Wed', 'Thi', 'Fri', 'Sat']
 
 	const {id} = useParams();
+	const router = useRouter();
 	const [event, setEvent] = useState({});
 	const [tTypes, setTTypes] = useState([]);
 	const [tType, setTType] = useState(null);
-	const [quentity, setQuentity] = useState(0);
+	const [quantity, setQuantity] = useState(0);
 
 	const getEvent = async () => {
 		
@@ -59,7 +61,7 @@ export default function EventItem() {
 	const handleSubmit = async (e) => {		
 	
   	};
-
+    console.log(event)
 	return (
 
 			<form onSubmit={handleSubmit}>
@@ -71,7 +73,7 @@ export default function EventItem() {
 
 						<div className="flex-1">
 							<div className="bg-white m-5 p-5 space-y-3">
-								<div className="w-full h-[250px] bg-cover bg-center" style={{ backgroundImage: event.img_file }}></div>
+								<img className="w-full h-[250px] bg-cover bg-center" src={ event.img_file } width={'100%'}></img>
 								<p className="md:font-[500] md:text-[24px] md:leading-[24px] font-[500] text-[24px] leading-[24px] text-black line-clamp-2">{event.name}</p>
 								<p className="text-[#777777] text-[14px] leading-[14px]">{month[parseInt(moment(event.date).format('MM'))]} {moment(event.date).format('DD')} {day[(new Date(event.date)).getDay()]} {' - ' + moment(event.date).format('hh:mm A')}</p>
 								<div className="text-[#777777] text-[14px] leading-[14px] grid grid-cols-4">
@@ -101,8 +103,8 @@ export default function EventItem() {
 											<option value={type.id} key={index}>{type.name}</option>
 										))}
 									</select>
-								<input type="text" placeholder="Choose Ticket Quentity" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setQuentity(parseInt(e.target.value))}/>
-								<button type="submit" className="w-full text-white bg-[#34A853] py-[27px] px-[40px] rounded-[4px] ml-[5px] text-[17px]" >BUY TICKET NOW</button>
+								<input type="text" placeholder="Choose Ticket Quentity" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setQuantity(parseInt(e.target.value))}/>
+								<button type="button" className="w-full text-white bg-[#34A853] py-[27px] px-[40px] rounded-[4px] ml-[5px] text-[17px]" onClick={() => router.push(('/payments2/' + id + '/' + tType + '/' + quantity))} >BUY TICKET NOW</button>
 							</div>
 						</div>
 
