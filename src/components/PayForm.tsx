@@ -50,7 +50,7 @@ export default function TestPage({event_id}) {
 	const stripe = useStripe();
 	const elements = useElements();
 
-	const [event, setEvent] = useState({});
+	const [event, setEvent] = useState(null);
 	const getEvent = async () => {
 		
 		try{
