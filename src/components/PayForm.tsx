@@ -176,9 +176,9 @@ export default function TestPage({event_id}) {
 
 						<div className="flex-1">
 							<div className="bg-white m-5 p-5 space-y-3">
-								<img className="w-full h-[250px] bg-cover bg-center" src={event.img_file }></img>
-								<p className="md:font-[500] md:text-[24px] md:leading-[24px] font-[500] text-[24px] leading-[24px] text-black line-clamp-2">{event.name}</p>
-								<p className="text-[#777777] text-[14px] leading-[14px]">{month[parseInt(moment(event.date).format('MM'))]} {moment(event.date).format('DD')} {day[(new Date(event.date)).getDay()]} {' - ' + moment(event.date).format('hh:mm A')}</p>
+								<img className="w-full h-[250px] bg-cover bg-center" src={event && event.img_file }></img>
+								<p className="md:font-[500] md:text-[24px] md:leading-[24px] font-[500] text-[24px] leading-[24px] text-black line-clamp-2">{event && event.name}</p>
+								<p className="text-[#777777] text-[14px] leading-[14px]">{event && month[parseInt(moment(event.date).format('MM'))]} {event && moment(event.date).format('DD')} {event && day[(new Date(event.date)).getDay()]} {event && ' - ' + moment(event.date).format('hh:mm A')}</p>
 								<p className="text-[#777777] text-[14px] leading-[14px]">BankPlus Amphitheater at Snowden Grove, Southaven, MS</p>
 								<p className="text-[#272727] text-[14px] leading-[18px] line-clamp-3">Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!</p>
 								<hr className="w-full border-[1px] border-[#E8E8E8]"/>
