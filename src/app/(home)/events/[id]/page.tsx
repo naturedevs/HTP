@@ -11,7 +11,7 @@ export default function EventItem() {
 
 	const {id} = useParams();
 	const router = useRouter();
-	const [event, setEvent] = useState({});
+	const [event, setEvent] = useState(null);
 	const [tTypes, setTTypes] = useState([]);
 	const [tType, setTType] = useState(null);
 	const [quantity, setQuantity] = useState(0);
@@ -79,20 +79,20 @@ export default function EventItem() {
 
 						<div className="flex-1">
 							<div className="bg-white m-5 p-5 space-y-3">
-								<img className="w-full h-[250px] bg-cover bg-center" src={ event.img_file } width={'100%'}></img>
-								<p className="md:font-[500] md:text-[24px] md:leading-[24px] font-[500] text-[24px] leading-[24px] text-black line-clamp-2">{event.name}</p>
-								<p className="text-[#777777] text-[14px] leading-[14px]">{month[parseInt(moment(event.date).format('MM'))]} {moment(event.date).format('DD')} {day[(new Date(event.date)).getDay()]} {' - ' + moment(event.date).format('hh:mm A')}</p>
+								<img className="w-full h-[250px] bg-cover bg-center" src={ event && event.img_file  } width={'100%'}></img>
+								<p className="md:font-[500] md:text-[24px] md:leading-[24px] font-[500] text-[24px] leading-[24px] text-black line-clamp-2">{event && event.name}</p>
+								<p className="text-[#777777] text-[14px] leading-[14px]">{ event && month[parseInt(moment(event.date).format('MM'))]} {event && moment(event.date).format('DD')} {event && day[(new Date(event.date)).getDay()]} { event && ' - ' + moment(event.date).format('hh:mm A')}</p>
 								<div className="text-[#777777] text-[14px] leading-[14px] grid grid-cols-4">
 									<p className='grid text-[16px] font-[700] text-[#121212]'>DJ:</p>
-									<p className='grid col-span-3'>{event.dj_name}</p>
+									<p className='grid col-span-3'>{event && event.dj_name}</p>
 								</div>
 								<div className="text-[#777777] text-[14px] leading-[14px] grid grid-cols-4">
 									<p className='grid text-[16px] font-[700] text-[#121212]'>Venue:</p>
-									<p className='grid col-span-3'>{event.venue_name}</p>
+									<p className='grid col-span-3'>{event && event.venue_name}</p>
 								</div>
 								<div className="text-[#777777] text-[14px] leading-[14px] grid grid-cols-4">
 									<p className='grid text-[16px] font-[700] text-[#121212]'>Address:</p>
-									<p className='grid col-span-3'>{event.venue_addr}</p>
+									<p className='grid col-span-3'>{event && event.venue_addr}</p>
 								</div>
 								<p className="text-[#272727] text-[14px] leading-[18px] line-clamp-3">Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!</p>
 
