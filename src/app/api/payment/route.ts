@@ -14,25 +14,22 @@ export async function GET(req) {
 export async function POST(request: Request) {
 
 	const req = await request.json();
-	const amount = req.amount;
-	const currency = req.currency;
 	const ticket_type = req.type;
-	const event_id = req.event_id
 	const quantity = req.quantity;
 	const paymentMethodId  = req.paymentMethodId;
 
 	try{
-        const result  = await supabase
+        const {data, error}  = await supabase
 			.from('tickets')
 			.select(`*, ticket_type_list(*))`)
 			.eq('id', ticket_type)
-			.single();
-		const ticket = result.data;
-		if(ticket.cnt < req.quantity) throw('Stock is not sufficient!');
-	    if(req.quantity > ticket.limit_cnt) throw('The quantity is greater than allowed count!');
+			.single(); 
+		const {cnt, limit_cnt, price} = <any>data
+		if(cnt < req.quantity) throw('Stock is not sufficient!');
+	    if(req.quantity > limit_cnt) throw('The quantity is greater than allowed count!');
 
 		const paymentIntent = await stripe.paymentIntents.create({
-			amount: (ticket.price * quantity) * 100, // amount in cents
+			amount: (price * quantity) * 100, // amount in cents
 			currency: 'usd',
 			payment_method: paymentMethodId.id,
 			confirmation_method: 'manual',
@@ -41,7 +38,7 @@ export async function POST(request: Request) {
 		});
 		await supabase
 			.from('tickets')
-			.update({cnt: ticket.cnt - quantity})
+			.update({cnt: cnt - quantity})
 			.eq('id', ticket_type);
 			
 		return NextResponse.json(paymentIntent);
