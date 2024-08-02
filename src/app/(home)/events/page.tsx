@@ -311,9 +311,9 @@ function EventPage() {
 														<option value={type.id} key={index}>{type.name}</option>
 													))}
 												</select>
-												<input type="text" placeholder="Ticket Count" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketCount(parseInt(e.target.value))} value={ticketCount} />
-												<input type="text" placeholder="Ticket Price" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketPrice(parseInt(e.target.value))} value={ticketPrice} />
-												<input type="text" placeholder="Ticket Limit" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketLimit(parseInt(e.target.value))} value={ticektLimit} />
+												<input type="text" placeholder="Ticket Count" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketCount(e.target.value)} value={ticketCount} />
+												<input type="text" placeholder="Ticket Price" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketPrice(e.target.value)} value={ticketPrice} />
+												<input type="text" placeholder="Ticket Limit" className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]" onChange={(e) => setTicketLimit(e.target.value)} value={ticektLimit} />
 												<button type="button" onClick={addTicketList}><FaRegSquarePlus /></button>
 											</div></div>
 									)}
