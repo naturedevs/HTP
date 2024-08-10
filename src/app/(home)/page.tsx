@@ -1,9 +1,10 @@
 'use client'
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import EventItem from "@/components/home/EventItem";
 import MySelect from "@/components/MySelect";
 import "@/styles/home.css"
 import { NextPageContext } from "next";
+import Select from "@/components/Select";
 
 Home.getInitialProps = async (ctx: NextPageContext) => {
 	console.log('ok')
@@ -15,19 +16,56 @@ export default function Home() {
 
 	const banner_backImageUrl = '/homeBg1.png';
 
-	const [events, setEvents] = useState<any>([])
+	const [events, setEvents] = useState<any>([]);
+	const [eTypes, setETypes] = useState<any>([]);
+	const [mTypes, setMTypes] = useState<any>([]);
+	const [aTypes, setATypes] = useState<any>([]);
+
+	const [eType, setEType] = useState<any>(null);
+	const [mType, setMType] = useState<any>(null);
+	const [aType, setAType] = useState<any>(null);
 
 	const fetchAction = async() => {
 		try{
-			const response =  await fetch('/api/events/getAllEvents');
+			const response =  await fetch('/api/events/getAllEvents',{
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ e_type: eType, m_type: mType, a_type: aType}),
+			} );
 		    if(response.ok){
 				const data = await response.json();
-				console.log(data, 'data===')
 				setEvents(data);
 			} else {
 				const err = await response.json();
 				console.log(err)
 			}
+			const e_types_response = await fetch('/api/events/getEventTypes');
+			if(e_types_response.ok){
+				const data = await e_types_response.json();
+				setETypes(data);
+			} else {
+				const err = await e_types_response.json();
+				console.log(err)
+			}
+			const m_types_response = await fetch('/api/events/getMusicTypes');
+			if(m_types_response.ok){
+				const data = await m_types_response.json();
+				setMTypes(data);
+			} else {
+				const err = await m_types_response.json();
+				console.log(err)
+			}
+			const a_types_response = await fetch('/api/events/getAgeTypes');
+			if(a_types_response.ok){
+				const data = await a_types_response.json();
+				setATypes(data);
+			} else {
+				const err = await a_types_response.json();
+				console.log(err)
+			}
+
 		} catch(error) {
 			console.log(error);
 		}
@@ -35,7 +73,30 @@ export default function Home() {
 	useEffect(() => {
 		 fetchAction();
 	},[])
-	console.log(events)
+	
+	const fetchEvents = useCallback(async() => {
+		try{
+			const response = await fetch('/api/events/getAllEvents',{
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ e_type: eType, m_type: mType, a_type: aType}),
+			}
+			);
+			if(response.ok){
+				const data = await response.json();
+				setEvents([...data]);
+			} else console.log('error');
+		} catch(err) {
+			console.log(err)
+		}
+	}, [eType, mType, aType]);
+
+	useEffect(() => {
+		fetchEvents();
+	}, [eType, mType, aType]);
+
 	return (
 		<>
 			{/* banner start */}
@@ -100,10 +161,10 @@ export default function Home() {
 							</p>
 						</div>
 
-						<div className="mt-2 md:mt-3">
-							{/* <MySelect data={e_type_array} placeholder="Type"/>
-							<MySelect data={e_music_array} placeholder="Music"/>
-							<MySelect data={e_age_array} placeholder="Age"/> */}
+						<div className="mt-2 md:mt-3 flex justify-between w-full gap-3">
+							<Select value={eType} onSelect={(v) => setEType(v)} placeHolder={'Event Type'} options={eTypes}/>
+							<Select value={mType} onSelect={(v) => setMType(v)} placeHolder={'Music Type'} options={mTypes}/>
+							<Select value={aType} onSelect={(v) => setAType(v)} placeHolder={'Age Type'} options={aTypes}/>
 						</div>
 
 						<div className="w-full mt-5">
