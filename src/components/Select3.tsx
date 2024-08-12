@@ -1,4 +1,4 @@
-const Select = ({value, onSelect, options, placeHolder}) => {
+const Select3 = ({ value, onSelect, options, placeHolder }) => {
   return (
     <select
       value={value}
@@ -11,12 +11,21 @@ const Select = ({value, onSelect, options, placeHolder}) => {
       </option>
       {options &&
         options.map((option, index) => (
-          <option value={option.id} key={index}>
-            {option.name}
+          <option value={index} key={index}>
+            {index == 0
+              ? "within 1 mile"
+              : options[index - 1].name + "-" + options[index].name}
           </option>
         ))}
+      {options.length > 0 ? (
+        <option value={options.length}>
+          {options[options.length - 1].name + "+"}
+        </option>
+      ) : (
+        <></>
+      )}
     </select>
   );
 };
 
-export default Select;
+export default Select3;

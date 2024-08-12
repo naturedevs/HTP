@@ -14,6 +14,10 @@
 .bar {
   position: relative;
 }
+.filter-btn{
+  height: 64px !important;
+  font-size: 22px;
+}
 .bar:after,
 .bar:before {
   content: "";
