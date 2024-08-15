@@ -18,10 +18,13 @@ export async function POST(request: Request, params: { action: string }) {
     const imgUrl = await saveFile(formData, "imgFile");
     let main_info = formData.get('main_info');
     let ticketList = formData.get('ticketList');
-
+    let payload = JSON.parse(main_info as string);
     const {
         eventName, eventType, musicType, djName, venueName, dressCode, venueType, venueAddress, ageRestrictions, coverCharge, eventDate, eventStart, eventEnd
-    } = JSON.parse(main_info as string);
+    } = payload;
+    const lati = payload.location.lat;
+    const lng = payload.location.lng;
+
     let _ticketList = JSON.parse(ticketList as string);
 
     const { data, error } = await supabase
@@ -40,7 +43,9 @@ export async function POST(request: Request, params: { action: string }) {
             date: eventDate,
             start_time: eventStart,
             end_time: eventEnd,
-            img_file: imgUrl
+            img_file: imgUrl,
+            location_lati: lati,
+            location_lng: lng
         })
         .select('id');
         console.log(error)

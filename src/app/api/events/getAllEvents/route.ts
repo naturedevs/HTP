@@ -56,10 +56,10 @@ export async function POST(request: Request, params: { action: string }) {
 
    if(req.distance){
     const _data = data.filter((item, index) => {
-      console.log(req.location.lati, req.location.long, item.location_lati, item.location_lng)
+      console.log('ddd',req.location.lati, req.location.long, item.location_lati, item.location_lng)
       let _dist = calculateDistance(req.location.lati, req.location.long, item.location_lati, item.location_lng);
       let _distance = _dist * 0.62;
-      console.log(_distance)
+      console.log(_distance, 'distance ========')
       if(req.distance.from == req.distance.to) {
         return _distance >= req.distance.to;
       } else {

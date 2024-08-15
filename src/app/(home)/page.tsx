@@ -207,7 +207,7 @@ export default function Home() {
 		  to: distances[locaDisatance].name,
 		}
 	: locaDisatance;
-	console.log(comLocation)
+	console.log('comLocation==',comLocation)
     const payload = {
       distance: _distance,
       location: {

@@ -130,40 +130,51 @@ function EventPage() {
 	}, []);
 	async function onSubmit() {
 		try {
-			const formData = new FormData();
-			let _data = {
-				eventName: eventName,
-				eventType: eventType,
-				musicType: musicType,
-				djName: djName,
-				venueName: venueName,
-				dressCode: dressCode,
-				venueType: venueType,
-				venueAddress: venueAddress,
-				ageRestrictions: ageRestrictions,
-				coverCharge: coverCharge,
-				eventDate: eventDate,
-				eventStart: eventStart,
-				eventEnd: eventEnd
-			};
-			formData.append('main_info', JSON.stringify(_data));
-			if (open) formData.append('ticketList', JSON.stringify(tickets));
-			if (imgFile) formData.append('imgFile', imgFile);
+			if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(
+				  async (position) => {
+					const { latitude, longitude } = position.coords;
+					const formData = new FormData();
+					let _data = {
+						eventName: eventName,
+						eventType: eventType,
+						musicType: musicType,
+						djName: djName,
+						venueName: venueName,
+						dressCode: dressCode,
+						venueType: venueType,
+						venueAddress: venueAddress,
+						ageRestrictions: ageRestrictions,
+						coverCharge: coverCharge,
+						eventDate: eventDate,
+						eventStart: eventStart,
+						eventEnd: eventEnd,
+						location: {
+							lat: latitude,
+							lng: longitude
+						}
+					};
+					formData.append('main_info', JSON.stringify(_data));
+					if (open) formData.append('ticketList', JSON.stringify(tickets));
+					if (imgFile) formData.append('imgFile', imgFile);
 
-			setIsLoading(true);
-			const response = await fetch("/api/events/createEvent", {
-				method: "POST",
-				body: formData
-			});
-			setIsLoading(false);
+					setIsLoading(true);
+					const response = await fetch("/api/events/createEvent", {
+						method: "POST",
+						body: formData
+					});
+					setIsLoading(false);
 
-			if (response.status === 200) {
-				const {event_id} = await response.json();
-				toast.success("Successful!.");
-				router.push('/payments/' + event_id);
-			} else {
-				console.log('error')
-			}
+					if (response.status === 200) {
+						const {event_id} = await response.json();
+						toast.success("Successful!.");
+						router.push('/payments/' + event_id);
+					} else {
+						console.log('error')
+					}
+				}
+			);
+		}
 		} catch (error) {
 			console.log('ddd')
 			toast.error(error.message);
