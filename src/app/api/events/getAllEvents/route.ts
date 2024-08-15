@@ -34,11 +34,9 @@ export async function POST(request: Request, params: { action: string }) {
   if (req.m_type) query = query.eq("music_type", req.m_type);
   if (req.a_type) query = query.eq("age_type", req.a_type);
   if (req.c_charge) {
-    console.log(req.c_charge, 'ddfdfdfd')
     if (req.c_charge.from >0  && req.c_charge.from == req.c_charge.to) {
       query = query.gte(`cover_charge`, req.c_charge.from);
     }else {
-      console.log(req.c_charge, 'cover charge')
       query = query.gte(`cover_charge`, req.c_charge.from);
       query = query.lte(`cover_charge`, req.c_charge.to);
     }
@@ -56,14 +54,12 @@ export async function POST(request: Request, params: { action: string }) {
 
    if(req.distance){
     const _data = data.filter((item, index) => {
-      console.log('ddd',req.location.lati, req.location.long, item.location_lati, item.location_lng)
       let _dist = calculateDistance(req.location.lati, req.location.long, item.location_lati, item.location_lng);
       let _distance = _dist * 0.62;
-      console.log(_distance, 'distance ========')
       if(req.distance.from == req.distance.to) {
         return _distance >= req.distance.to;
       } else {
-        return _distance >= req.distance.from && _distance <= req.distance.to
+        return _distance <= req.distance.to
       }
      });
      if (error) return new NextResponse(JSON.stringify(error), { status: 400 });
