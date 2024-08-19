@@ -1,6 +1,6 @@
 const Options = ({ data, setPosition }) => {
   return (
-    <div className="text-white absolute  w-full">
+    <div className="text-white absolute  w-80">
       {data &&
         data.map((item, index) => (
           <div

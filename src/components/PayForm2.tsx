@@ -52,6 +52,7 @@ export default function TestPage({type, quantity, event_id}) {
 	const elements = useElements();
 
 	const [event, setEvent] = useState(null);
+	const [ticket, setTicket] = useState(null);
 	const getEvent = async () => {
 		
 		try{
@@ -73,7 +74,30 @@ export default function TestPage({type, quantity, event_id}) {
 			console.log(err, '---------------------')
 		}
 	}
+
+	const getTicket = async() => {
+		try{
+			const response = await fetch('/api/events/getTicket', {
+				method: 'POST',
+				headers: {
+				  'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ id: type}),
+			});
+			if(response.status === 200) {
+				console.log('ok')
+				const data = await response.json();
+				setTicket(data);
+				console.log(data)
+			} else {
+				console.log('error');
+			}
+		} catch(err){
+			console.log(err, '---------------------')
+		}
+	}
 	useEffect(() => {
+		getTicket();
 		getEvent();
 	}, []);
 
@@ -184,8 +208,20 @@ export default function TestPage({type, quantity, event_id}) {
 								<p className="text-[#272727] text-[14px] leading-[18px] line-clamp-3">Here’s a list of upcoming events by our band in different locations. Please choose a location near to you. We’re thrilled to see you there. Let’s rock!</p>
 								<hr className="w-full border-[1px] border-[#E8E8E8]"/>
 								<div className="flex mx-auto justify-between">
+									<p className="text-[#272727] text-[14px] leading-[18px]">Ticket Type:</p>
+									<p className="text-primaryColor font-[800] text-[25px] leading-[18px]">{ticket && ticket.ticket_type_list.name}</p>
+								</div>
+								<div className="flex mx-auto justify-between">
+									<p className="text-[#272727] text-[14px] leading-[18px]">Ticket Cost:</p>
+									<p className="text-primaryColor font-[800] text-[25px] leading-[18px]">{ticket && ticket.price}</p>
+								</div>
+								<div className="flex mx-auto justify-between">
+									<p className="text-[#272727] text-[14px] leading-[18px]">Ticket Quantity:</p>
+									<p className="text-primaryColor font-[800] text-[25px] leading-[18px]">{quantity}</p>
+								</div>
+								<div className="flex mx-auto justify-between">
 									<p className="text-[#272727] text-[14px] leading-[18px]">Total Cost:</p>
-									<p className="text-primaryColor font-[800] text-[25px] leading-[18px]">$50</p>
+									<p className="text-primaryColor font-[800] text-[25px] leading-[18px]">{ticket && (ticket.price * quantity)}</p>
 								</div>
 							</div>
 

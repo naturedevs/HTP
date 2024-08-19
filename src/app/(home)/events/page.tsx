@@ -35,7 +35,7 @@ function EventPage() {
   const [venueType, setVenueType] = useState(null);
   const [venueAddress, setVenueAddress] = useState("");
   const [ageRestrictions, setAgeRestrictions] = useState(null);
-  const [coverCharge, setCoverCharge] = useState(0);
+  const [coverCharge, setCoverCharge] = useState<string | null>();
   const [eventDate, setEventDate] = useState<string | null>();
   const [eventStart, setEventStart] = useState<string | null>();
   const [eventEnd, setEventEnd] = useState<string | null>();
@@ -385,7 +385,7 @@ function EventPage() {
                     ))}
                 </select>
               </div>
-              <div className="mmd:grid grid-cols-1 mmd:space-y-0 gap-5 space-y-5 w-full py-4 relative">
+              <div className="mmd:grid grid-cols-1 mmd:space-y-0 space-y-5 w-full py-4 relative">
                 <input
                   type="text"
                   className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]"
@@ -393,6 +393,7 @@ function EventPage() {
                   value={venueAddress}
                   onChange={(e) => setVenueAddress(e.target.value)}
                 />
+                <div className="relative">
                 <Options
                   data={locations && locations}
                   setPosition={(p) => {
@@ -403,6 +404,7 @@ function EventPage() {
                     setLocations(x);
                   }}
                 />
+                </div>
               </div>
               <div className="mmd:grid grid-cols-2 mmd:space-y-0 gap-5 space-y-5 w-full">
                 <select
@@ -423,8 +425,9 @@ function EventPage() {
                 </select>
 
                 <input
+                 type="text"
                   value={coverCharge}
-                  onChange={(e) => setCoverCharge(parseInt(e.target.value))}
+                  onChange={(e) => setCoverCharge(e.target.value)}
                   placeholder="Cover Charge"
                   className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]"
                 />
