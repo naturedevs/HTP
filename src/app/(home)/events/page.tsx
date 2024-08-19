@@ -385,7 +385,7 @@ function EventPage() {
                     ))}
                 </select>
               </div>
-              <div className="mmd:grid grid-cols-1 mmd:space-y-0 gap-5 space-y-5 w-full py-4">
+              <div className="mmd:grid grid-cols-1 mmd:space-y-0 gap-5 space-y-5 w-full py-4 relative">
                 <input
                   type="text"
                   className="w-full bg-white mt-0 mmd:h-[64px] h-[45px] border rounded-md p-[22px] text-[17px]"
